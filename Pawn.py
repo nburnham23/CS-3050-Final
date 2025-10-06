@@ -8,8 +8,8 @@ class Pawn(Piece):
     
     def move(self):
         moveset = []
-        moveset.append((self.curr_position[0] + 1, self.curr_position[1]))
+        moveset.append( (self.curr_position[0] + 1, self.curr_position[1]) )
         if not self.has_moved:
-            moveset.append((self.curr_position[0] + 2, self.curr_position[1]))
+            moveset.append( (self.curr_position[0] + 2, self.curr_position[1]) )
         
         return moveset
