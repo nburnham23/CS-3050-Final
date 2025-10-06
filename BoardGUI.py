@@ -1,17 +1,6 @@
 """
-Array Backed Grid
-
-Show how to use a two-dimensional list/array to back the display of a
-grid on-screen.
-
-Note: Regular drawing commands are slow. Particularly when drawing a lot of
-items, like the rectangles in this example.
-
-For faster drawing, create the shapes and then draw them as a batch.
-See array_backed_grid_buffered.py
-
-If Python and Arcade are installed, this example can be run from the command line with:
-python -m arcade.examples.array_backed_grid
+Chess Board GUI
+CS 3050 Final Project
 """
 import arcade
 
@@ -45,13 +34,12 @@ class GameView(arcade.View):
 
         super().__init__()
 
-        # Create a 2 dimensional array. A two-dimensional
-        # array is simply a list of lists.
+        # Create a 2 dimensional array.
         self.grid = []
         for row in range(ROW_COUNT):
-            # Add an empty array that will hold each cell
-            # in this row
+            # Add an empty array that will hold each cell in this row
             self.grid.append([])
+            # Mark the which color to make each cell
             if row % 2 == 0:
                 for column in range(COLUMN_COUNT):
                     if column % 2 == 0:
@@ -79,12 +67,13 @@ class GameView(arcade.View):
         # Draw the grid
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
-                # Figure out what color to draw the box
+                # Color the cells in Beige,, Bistre, or Chartreuse according to position / state
                 if self.grid[row][column] == 0:
                     color = arcade.color.BEIGE
                 elif self.grid[row][column] == 1:
                     color = arcade.color.BISTRE
                 else:
+                    # cell is Chartreuse if it is selected
                     color = arcade.color.CHARTREUSE
 
                 # Do the math to figure out where the box is
@@ -109,7 +98,7 @@ class GameView(arcade.View):
         # Make sure we are on-grid. It is possible to click in the upper right
         # corner in the margin and go to a grid location that doesn't exist
         if row < ROW_COUNT and column < COLUMN_COUNT:
-
+            # allow only one selected square at a time
             if self.selected_square:
                 prev_row, prev_col = self.selected_square
                 if (prev_row + prev_col) % 2 == 0:
