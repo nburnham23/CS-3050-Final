@@ -1,4 +1,5 @@
 import Piece
+from Board import BOARD_LENGTH, BOARD_WIDTH
 
 class Bishop(Piece):
     def move(self):

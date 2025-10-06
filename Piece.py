@@ -1,4 +1,6 @@
 import arcade
+from enum import Enum
+
 
 class Piece(arcade.Sprite):
     def __init__(self, color, board_position, image_path, scale):
