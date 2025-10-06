@@ -1,6 +1,6 @@
 import Piece
 
-class Queen(Piece):
+class King(Piece):
     def move(self):
         moveset = []
         
