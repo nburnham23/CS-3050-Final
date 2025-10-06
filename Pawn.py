@@ -13,3 +13,5 @@ class Pawn(Piece):
             moveset.append( (self.curr_position[0] + 2, self.curr_position[1]) )
         
         return moveset
+    
+# TODO: change all pieces' moves to consider their color (white or black)
