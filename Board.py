@@ -5,8 +5,15 @@ from Rook import Rook
 from Queen import Queen
 from King import King
 
+
+# Board is 8x8 tiles
+BOARD_LENGTH, BOARD_WIDTH = 8
+
+
+
 class Board():
     def __init__(self):
+
         self.array = [ [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()],
                        [Pawn(), Pawn(), Pawn(), Pawn(), Pawn(), Pawn(), Pawn(), Pawn()],
                        [None, None, None, None, None, None, None, None],
