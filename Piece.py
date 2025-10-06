@@ -1,4 +1,6 @@
-class Piece:
+import arcade
+
+class Piece(arcade.Sprite):
     def __init__(self, color, start_position):
         self.color = color
         self.start_position, self.curr_position = start_position
