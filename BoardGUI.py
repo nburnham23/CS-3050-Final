@@ -30,7 +30,7 @@ MARGIN = 5
 # Do the math to figure out our screen dimensions
 WINDOW_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN
 WINDOW_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
-WINDOW_TITLE = "Array Backed Grid Example"
+WINDOW_TITLE = "Welcome to chess!"
 
 
 class GameView(arcade.View):
@@ -66,6 +66,7 @@ class GameView(arcade.View):
                         self.grid[row].append(0)  # Append a cell
 
         self.background_color = arcade.color.BLACK
+        self.selected_square = None
 
     def on_draw(self):
         """
@@ -79,10 +80,12 @@ class GameView(arcade.View):
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
                 # Figure out what color to draw the box
-                if self.grid[row][column] == 1:
+                if self.grid[row][column] == 0:
                     color = arcade.color.BEIGE
-                else:
+                elif self.grid[row][column] == 1:
                     color = arcade.color.BISTRE
+                else:
+                    color = arcade.color.CHARTREUSE
 
                 # Do the math to figure out where the box is
                 x = (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
@@ -94,6 +97,7 @@ class GameView(arcade.View):
     def on_mouse_press(self, x, y, button, modifiers):
         """
         Called when the user presses a mouse button.
+        TODO: change to move pieces
         """
 
         # Change the x/y screen coordinates to grid coordinates
@@ -106,11 +110,23 @@ class GameView(arcade.View):
         # corner in the margin and go to a grid location that doesn't exist
         if row < ROW_COUNT and column < COLUMN_COUNT:
 
-            # Flip the location between 1 and 0.
-            if self.grid[row][column] == 0:
-                self.grid[row][column] = 1
-            else:
-                self.grid[row][column] = 0
+            if self.selected_square:
+                prev_row, prev_col = self.selected_square
+                if (prev_row + prev_col) % 2 == 0:
+                    self.grid[prev_row][prev_col] = 1
+                else:
+                    self.grid[prev_row][prev_col] = 0
+
+            if self.selected_square == (row, column):
+                if (row + column) % 2 == 0:
+                    self.grid[row][column] = 1
+                else:
+                    self.grid[row][column] = 0
+                self.selected_square = None
+                return
+            self.selected_square = (row, column)
+            self.grid[row][column] = 2
+
 
 
 def main():
