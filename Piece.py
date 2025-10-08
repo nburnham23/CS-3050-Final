@@ -1,5 +1,4 @@
 import arcade
-from enum import Enum
 
 
 class Piece(arcade.Sprite):
