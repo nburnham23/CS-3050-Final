@@ -1,5 +1,6 @@
 import arcade
 
+# TODO: Replace scale with constant for all pieces
 
 # TODO: Replace scale with constant for all pieces
 
