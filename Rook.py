@@ -7,7 +7,7 @@ class Rook(Piece):
         
         for i in range(BOARD_LENGTH):
             for j in range(BOARD_WIDTH):
-                # All spaces in the row and spaces in the column
+                # unlimited lateral movement
                 if i == self.curr_position[0] or j == self.curr_position[1]:
                     moveset.append( (i, j) )
         

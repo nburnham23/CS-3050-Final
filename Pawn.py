@@ -6,6 +6,7 @@ class Pawn(Piece):
         super().__init__(self, color, start_position)
         # Attribute for determining if pawn can move 2 spaces
         self.has_moved = False
+        promotion_available = False
     
     def move(self):
         moveset = []
@@ -16,3 +17,8 @@ class Pawn(Piece):
             moveset.append( (self.curr_position[0] + (2 if self.color == "BLACK" else -2), self.curr_position[1]) )
         
         return moveset
+    
+    # Checks if pawn has reached end of board and must be promoted
+    def check_promotion(self):
+        if self.curr_position[0] == 0 or self.curr_position[0] == BOARD_LENGTH - 1:
+            self.promotion_available = True
