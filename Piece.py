@@ -1,5 +1,6 @@
 import arcade
 
+# TODO: Replace scale with constant for all pieces
 
 class Piece(arcade.Sprite):
     def __init__(self, color, board_position, image_path, scale):
