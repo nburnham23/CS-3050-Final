@@ -1,5 +1,4 @@
 import arcade
-from enum import Enum
 
 
 # TODO: Replace scale with constant for all pieces
