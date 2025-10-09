@@ -22,10 +22,10 @@ class Piece(arcade.Sprite):
     def move(self):
         pass
 
-    # Verify and move piece to valid position, recalculate possible moveset from new position
-    def move_to(self, new_position):
-        if new_position not in self.possible_moves:
-            return False
+    # # Verify and move piece to valid position, recalculate possible moveset from new position
+    # def move_to(self, new_position):
+    #     if new_position not in self.possible_moves:
+    #         return False
         
-        self.curr_position = new_position
-        self.calculate_moves()
+    #     self.curr_position = new_position
+    #     self.calculate_moves()

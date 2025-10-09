@@ -47,3 +47,37 @@ class Board():
                         King("WHITE", (7,4), img_path['king']['WHITE']), Bishop("WHITE", (7,5), img_path['bishop']['WHITE']), 
                         Knight("WHITE", (7,6), img_path['knight']['WHITE']), Rook("WHITE", (7,7), img_path['rook']['WHITE'])] ]
         
+        white_taken = []
+        black_taken = []
+    
+    def get_piece(self, board_position):
+        row, col = board_position
+        return self.board[row][col]
+    
+    def set_piece(self, board_position, piece):
+        row, col = board_position
+        self.board[row][col] = piece
+    
+    # Check if move is valid, then update board and piece's moveset
+    def move(self, piece_position, new_position):
+        piece = self.get_piece(piece_position)
+
+        # Validate move
+        if new_position not in piece.moveset:
+            return False
+        
+        # Check if enemy piece is in spot, and if so add to taken list
+        enemy_piece = self.get_piece(new_position)
+        if enemy_piece:
+            if enemy_piece.color == 'BLACK':
+                self.black_taken.append(enemy_piece)
+            else:
+                self.white_taken.append(enemy_piece)
+        
+        # Update pieces information
+        piece.board_position = new_position
+        piece.calculate_moves()
+
+        # Make move on board
+        self.set_piece(new_position, piece)
+        self.set_piece(piece_position, None)
