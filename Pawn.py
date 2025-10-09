@@ -10,15 +10,17 @@ class Pawn(Piece):
     
     def move(self):
         moveset = []
+        row, col = self.curr_position
         
         # Moves down rows (positive translation in array) if piece is black, otherwise moves up rows (negative translation)
-        moveset.append( (self.curr_position[0] + (1 if self.color == "BLACK" else -1), self.curr_position[1]) )
+        moveset.append( (row + (1 if self.color == "BLACK" else -1), col) )
         if not self.has_moved:
-            moveset.append( (self.curr_position[0] + (2 if self.color == "BLACK" else -2), self.curr_position[1]) )
+            moveset.append( (row + (2 if self.color == "BLACK" else -2), col) )
         
         return moveset
     
     # Checks if pawn has reached end of board and must be promoted
     def check_promotion(self):
-        if self.curr_position[0] == 0 or self.curr_position[0] == BOARD_LENGTH - 1:
+        row, col = self.curr_position
+        if row == 0 or row == BOARD_LENGTH - 1:
             self.promotion_available = True
