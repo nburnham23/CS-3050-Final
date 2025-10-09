@@ -4,11 +4,12 @@ from Board import BOARD_LENGTH, BOARD_WIDTH
 class Rook(Piece):
     def move(self):
         moveset = []
+        row, col = self.curr_position
         
         for i in range(BOARD_LENGTH):
             for j in range(BOARD_WIDTH):
                 # unlimited lateral movement
-                if i == self.curr_position[0] or j == self.curr_position[1]:
+                if i == row or j == col:
                     moveset.append( (i, j) )
         
         return moveset
