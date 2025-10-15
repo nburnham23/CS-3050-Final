@@ -34,6 +34,8 @@ class GameView(arcade.View):
 
         super().__init__()
 
+
+
         # Create a 2 dimensional array.
         self.grid = []
         for row in range(ROW_COUNT):
