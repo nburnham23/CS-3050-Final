@@ -8,7 +8,7 @@ class Piece(arcade.Sprite):
     def __init__(self, color, board_position, image_path, scale = 1):
         self.piece_color = color
         self.curr_position = board_position
-        self.moveset = self.calculate_moves()
+        self.moveset = self.move()
 
         # Initialize Sprite parent class
         super().__init__(filename = image_path, scale = scale)

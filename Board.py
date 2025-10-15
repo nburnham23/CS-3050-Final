@@ -75,6 +75,7 @@ class Board():
             return False
 
         # Validate move
+        # if new_position not in piece.move():
         if new_position not in piece.moveset:
             return False
         
