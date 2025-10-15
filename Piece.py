@@ -6,20 +6,20 @@ BOARD_LENGTH = 8
 
 class Piece(arcade.Sprite):
     def __init__(self, color, board_position, image_path, scale = 1):
-        # Initialize Sprite parent class
-        super().__init__(image_path, scale)
-
-        self.color = color
+        self.piece_color = color
         self.curr_position = board_position
-        self.possible_moves = self.calculate_moves()
+        self.moveset = self.calculate_moves()
+
+        # Initialize Sprite parent class
+        super().__init__(filename = image_path, scale = scale)
 
     def calculate_moves(self):
         # Clear moveset
-        self.possible_moves = []
+        self.moveset = []
 
         # Update moveset
-        self.possible_moves(self.move(self.curr_position))
+        self.moveset = self.move()
 
     # Move function to be overriden by subclasses
     def move(self):
-        pass
+        return []
