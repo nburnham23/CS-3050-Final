@@ -1,5 +1,4 @@
-from Piece import Piece
-from Board import BOARD_LENGTH, BOARD_WIDTH
+from Piece import Piece, BOARD_LENGTH
 
 class Queen(Piece):
     def __init__(self, color, start_position, image_path, scale = 1):
@@ -10,7 +9,7 @@ class Queen(Piece):
         row, col = self.curr_position
         
         for i in range(BOARD_LENGTH):
-            for j in range(BOARD_WIDTH):
+            for j in range(BOARD_LENGTH):
                 # unlimited diagonal and lateral movements
                 if (abs(row - i) == abs(col - j) and (row, col) != (i, j)) or (i == row or j == col):
                     moveset.append( (i, j) )

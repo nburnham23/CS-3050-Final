@@ -57,8 +57,8 @@ class Board():
                         King("WHITE", (7,4), img_path['king']['WHITE']), Bishop("WHITE", (7,5), img_path['bishop']['WHITE']), 
                         Knight("WHITE", (7,6), img_path['knight']['WHITE']), Rook("WHITE", (7,7), img_path['rook']['WHITE'])] ]
         
-        self.white_taken = []
-        self.black_taken = []
+        white_taken = []
+        black_taken = []
     
     def get_piece(self, board_position):
         row, col = board_position
