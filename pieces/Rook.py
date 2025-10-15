@@ -1,4 +1,4 @@
-import Piece
+from pieces.Piece import Piece
 
 class Rook(Piece):
     def __init__(self, color, row, col):
