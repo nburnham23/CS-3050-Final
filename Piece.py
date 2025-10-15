@@ -2,8 +2,10 @@ import arcade
 
 # TODO: Replace scale with constant for all pieces
 
+BOARD_LENGTH = 8
+
 class Piece(arcade.Sprite):
-    def __init__(self, color, board_position, image_path, scale):
+    def __init__(self, color, board_position, image_path, scale = 1):
         # Initialize Sprite parent class
         super().__init__(image_path, scale)
 
@@ -21,11 +23,3 @@ class Piece(arcade.Sprite):
     # Move function to be overriden by subclasses
     def move(self):
         pass
-
-    # # Verify and move piece to valid position, recalculate possible moveset from new position
-    # def move_to(self, new_position):
-    #     if new_position not in self.possible_moves:
-    #         return False
-        
-    #     self.curr_position = new_position
-    #     self.calculate_moves()
