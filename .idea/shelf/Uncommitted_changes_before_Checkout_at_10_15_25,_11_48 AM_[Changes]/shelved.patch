@@ -1,0 +1,217 @@
+Index: Piece.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import arcade\n\nclass Piece:\n    def __init__(self, color, start_position):\n        self.color = color\n        self.start_position, self.curr_position = start_position\n        self.possible_moves = []\n\n    def calculate_moves(self):\n        # Clear moveset\n        self.possible_moves = []\n\n        # Update moveset\n        self.possible_moves(self.move(self.curr_position))\n\n    # Move function to be overriden by subclasses\n    def move(self):\n        pass
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Piece.py b/Piece.py
+--- a/Piece.py	(revision 16e5381c4faac8d9932af003a867002fc9996d48)
++++ b/Piece.py	(date 1759767658923)
+@@ -1,8 +1,10 @@
+ import arcade
+ 
+-class Piece:
+-    def __init__(self, color, start_position):
++class Piece(arcade.Sprite):
++    def __init__(self, image_file, center_x, center_y, color, start_position, piece_type):
++        super().__init__(image_file, center_x=center_x, center_y=center_y)
+         self.color = color
++        self.piece_type = piece_type
+         self.start_position, self.curr_position = start_position
+         self.possible_moves = []
+ 
+@@ -15,4 +17,6 @@
+ 
+     # Move function to be overriden by subclasses
+     def move(self):
+-        pass
+\ No newline at end of file
++        pass
++
++white_pawn = Piece('white_pawn.png', 0, 0)
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"bea9b8c0-93e0-44ae-b9f6-9320272553ec\" name=\"Changes\" comment=\"Took what even had for &quot;piece&quot; so I can add GUI\" />\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Python Script\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"evan_branch\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\n  \"lastFilter\": {\n    \"state\": \"OPEN\",\n    \"assignee\": \"wrspence\"\n  }\n}]]></component>\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\n  \"selectedUrlAndAccountId\": {\n    \"url\": \"https://github.com/nburnham23/CS-3050-Final.git\",\n    \"accountId\": \"7bfc6086-a803-4500-a898-62c9b5a1a51d\"\n  }\n}]]></component>\n  <component name=\"ProjectColorInfo\"><![CDATA[{\n  \"associatedIndex\": 8\n}]]></component>\n  <component name=\"ProjectId\" id=\"33hO1Ha8E6RXb5NHXsJYFCGmoFL\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PY-242.21829.153\" />\n        <option value=\"bundled-python-sdk-464836ebc622-b74155a9e76b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.21829.153\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"bea9b8c0-93e0-44ae-b9f6-9320272553ec\" name=\"Changes\" comment=\"\" />\n      <created>1759765621458</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1759765621458</updated>\n      <workItem from=\"1759765622856\" duration=\"599000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Began liam branch for piece GUI\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1759765898833</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1759765898833</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"Began liam branch for piece GUI\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1759765922950</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1759765922950</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"Took what even had for &quot;piece&quot; so I can add GUI\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1759766046713</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1759766046713</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"4\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Began liam branch for piece GUI\" />\n    <MESSAGE value=\"Took what even had for &quot;piece&quot; so I can add GUI\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Took what even had for &quot;piece&quot; so I can add GUI\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 16e5381c4faac8d9932af003a867002fc9996d48)
++++ b/.idea/workspace.xml	(date 1759769309297)
+@@ -4,7 +4,11 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="bea9b8c0-93e0-44ae-b9f6-9320272553ec" name="Changes" comment="Took what even had for &quot;piece&quot; so I can add GUI" />
++    <list default="true" id="bea9b8c0-93e0-44ae-b9f6-9320272553ec" name="Changes" comment="Downloaded piece pngs from the internet">
++      <change afterPath="$PROJECT_DIR$/PawnImage.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/Piece.py" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -25,37 +29,39 @@
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+-  "lastFilter": {
+-    "state": "OPEN",
+-    "assignee": "wrspence"
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;wrspence&quot;
+   }
+-}]]></component>
+-  <component name="GithubPullRequestsUISettings"><![CDATA[{
+-  "selectedUrlAndAccountId": {
+-    "url": "https://github.com/nburnham23/CS-3050-Final.git",
+-    "accountId": "7bfc6086-a803-4500-a898-62c9b5a1a51d"
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/nburnham23/CS-3050-Final.git&quot;,
++    &quot;accountId&quot;: &quot;7bfc6086-a803-4500-a898-62c9b5a1a51d&quot;
+   }
+-}]]></component>
+-  <component name="ProjectColorInfo"><![CDATA[{
+-  "associatedIndex": 8
+-}]]></component>
++}</component>
++  <component name="ProjectColorInfo">{
++  &quot;associatedIndex&quot;: 8
++}</component>
+   <component name="ProjectId" id="33hO1Ha8E6RXb5NHXsJYFCGmoFL" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Python.PawnImage.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;Liam-branch&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+@@ -73,6 +79,8 @@
+       <option name="presentableId" value="Default" />
+       <updated>1759765621458</updated>
+       <workItem from="1759765622856" duration="599000" />
++      <workItem from="1759766359337" duration="1845000" />
++      <workItem from="1759768219348" duration="709000" />
+     </task>
+     <task id="LOCAL-00001" summary="Began liam branch for piece GUI">
+       <option name="closed" value="true" />
+@@ -98,7 +106,23 @@
+       <option name="project" value="LOCAL" />
+       <updated>1759766046713</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="Took what even had for &quot;piece&quot; so I can add GUI pt 2">
++      <option name="closed" value="true" />
++      <created>1759766376477</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1759766376477</updated>
++    </task>
++    <task id="LOCAL-00005" summary="Downloaded piece pngs from the internet">
++      <option name="closed" value="true" />
++      <created>1759767551458</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1759767551458</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -107,6 +131,11 @@
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="Began liam branch for piece GUI" />
+     <MESSAGE value="Took what even had for &quot;piece&quot; so I can add GUI" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Took what even had for &quot;piece&quot; so I can add GUI" />
++    <MESSAGE value="Took what even had for &quot;piece&quot; so I can add GUI pt 2" />
++    <MESSAGE value="Downloaded piece pngs from the internet" />
++    <option name="LAST_COMMIT_MESSAGE" value="Downloaded piece pngs from the internet" />
++  </component>
++  <component name="com.intellij.coverage.CoverageDataManagerImpl">
++    <SUITE FILE_PATH="coverage/PyChess$PawnImage.coverage" NAME="PawnImage Coverage Results" MODIFIED="1759768573930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: PawnImage.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PawnImage.py b/PawnImage.py
+new file mode 100644
+--- /dev/null	(date 1759768573923)
++++ b/PawnImage.py	(date 1759768573923)
+@@ -0,0 +1,39 @@
++import arcade
++
++class GameView(arcade.View):
++
++    def __init__(self):
++        super().__init__()
++        # 1. Create the SpriteList
++        self.sprites = arcade.SpriteList()
++
++        # 2. Create & append your Sprite instance to the SpriteList
++        self.circle = arcade.Sprite()  # Sprite with the default texture
++        self.circle.position = self.center  # center sprite on screen
++        self.sprites.append(self.circle)  # Append the instance to the SpriteList
++
++    def on_draw(self):
++        # 3. Clear the screen
++        self.clear()
++
++        # 4. Call draw() on the SpriteList inside an on_draw() method
++        self.sprites.draw()
++
++
++def main():
++    """ Main function """
++    # Create a window class. This is what actually shows up on screen
++    window = arcade.Window(1280, 720, "Minimal SPrite Example")
++
++    # Create and setup the GameView
++    game = GameView()
++
++    # Show GameView on screen
++    window.show_view(game)
++
++    # Start the arcade game loop
++    arcade.run()
++
++
++if __name__ == "__main__":
++    main()
+\ No newline at end of file

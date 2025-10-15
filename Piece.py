@@ -1,22 +1,25 @@
 import arcade
 
+WIDTH = 80
+HEIGHT = 80
+MARGIN = 5
+
+
 class Piece(arcade.Sprite):
-    def __init__(self, image_file, center_x, center_y, color, start_position, piece_type):
-        super().__init__(image_file, center_x=center_x, center_y=center_y)
-        self.color = color
-        self.piece_type = piece_type
-        self.start_position, self.curr_position = start_position
-        self.possible_moves = []
+    def __init__(self, color: str, row: int, col: int, image_path: str):
+        super().__init__(image_path, scale=0.4)
+        self.color = color  # 'white' or 'black'
+        self.row = row
+        self.col = col
+        self.update_position()
 
-    def calculate_moves(self):
-        # Clear moveset
-        self.possible_moves = []
+    def update_position(self):
+        """Convert row/col to pixel coordinates."""
+        x = (MARGIN + WIDTH) * self.col + MARGIN + WIDTH // 2
+        y = (MARGIN + HEIGHT) * self.row + MARGIN + HEIGHT // 2
+        self.center_x = x
+        self.center_y = y
 
-        # Update moveset
-        self.possible_moves(self.move(self.curr_position))
-
-    # Move function to be overriden by subclasses
-    def move(self):
-        pass
-
-white_pawn = Piece('white_pawn.png', 0, 0)
+    def calculate_moves(self, grid):
+        """Override this in subclasses."""
+        return []
