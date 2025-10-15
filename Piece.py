@@ -16,7 +16,7 @@ class Piece(arcade.Sprite):
         self.possible_moves = []
 
         # Update moveset
-        self.possible_moves(self.move(self.curr_position))
+        self.possible_moves = self.move(self.curr_position)
 
     # Move function to be overriden by subclasses
     def move(self):

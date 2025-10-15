@@ -1,4 +1,4 @@
-import Piece
+from Piece import Piece
 from Board import BOARD_LENGTH, BOARD_WIDTH
 
 class Queen(Piece):

@@ -1,9 +1,11 @@
-import Piece
+from Piece import Piece
 from Board import BOARD_LENGTH, BOARD_WIDTH
 
 class Pawn(Piece):
     def __init__(self, color, start_position):
         super().__init__(self, color, start_position)
+        # need to unclude image_path and scale
+        #super().__init__(color, start_position, image_path, scale)
         # Attribute for determining if pawn can move 2 spaces
         self.has_moved = False
         promotion_available = False
