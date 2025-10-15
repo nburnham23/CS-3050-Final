@@ -1,5 +1,5 @@
 import arcade
-import Gameview
+from Gameview import Gameview
 
 WINDOW_WIDTH = 685
 WINDOW_HEIGHT = 685

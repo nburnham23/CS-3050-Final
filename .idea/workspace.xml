@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bea9b8c0-93e0-44ae-b9f6-9320272553ec" name="Changes" comment="Downloaded piece pngs from the internet">
-      <change afterPath="$PROJECT_DIR$/PawnImage.py" afterDir="false" />
+    <list default="true" id="bea9b8c0-93e0-44ae-b9f6-9320272553ec" name="Changes" comment="Set of Piece classes for liam">
+      <change beforePath="$PROJECT_DIR$/.idea/PyChess.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/Piece.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +51,12 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Python.Gameview.executor&quot;: &quot;Run&quot;,
+    &quot;Python.King.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Pawn.executor&quot;: &quot;Run&quot;,
     &quot;Python.PawnImage.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Piece.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;Liam-branch&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -62,6 +67,41 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pieces" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PyChess" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -81,6 +121,7 @@
       <workItem from="1759765622856" duration="599000" />
       <workItem from="1759766359337" duration="1845000" />
       <workItem from="1759768219348" duration="709000" />
+      <workItem from="1760545483881" duration="302000" />
     </task>
     <task id="LOCAL-00001" summary="Began liam branch for piece GUI">
       <option name="closed" value="true" />
@@ -122,7 +163,23 @@
       <option name="project" value="LOCAL" />
       <updated>1759767551458</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Start of Piece classes for liam">
+      <option name="closed" value="true" />
+      <created>1760544469590</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1760544469590</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Set of Piece classes for liam">
+      <option name="closed" value="true" />
+      <created>1760545437889</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1760545437889</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,9 +190,17 @@
     <MESSAGE value="Took what even had for &quot;piece&quot; so I can add GUI" />
     <MESSAGE value="Took what even had for &quot;piece&quot; so I can add GUI pt 2" />
     <MESSAGE value="Downloaded piece pngs from the internet" />
-    <option name="LAST_COMMIT_MESSAGE" value="Downloaded piece pngs from the internet" />
+    <MESSAGE value="a" />
+    <MESSAGE value="Start of Piece classes for liam" />
+    <MESSAGE value="Set of Piece classes for liam" />
+    <option name="LAST_COMMIT_MESSAGE" value="Set of Piece classes for liam" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/PyChess$main.coverage" NAME="main Coverage Results" MODIFIED="1760545669322" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PyChess$Pawn.coverage" NAME="Pawn Coverage Results" MODIFIED="1760545019116" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pieces" />
+    <SUITE FILE_PATH="coverage/PyChess$King.coverage" NAME="King Coverage Results" MODIFIED="1760545205800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pieces" />
+    <SUITE FILE_PATH="coverage/PyChess$Gameview.coverage" NAME="Gameview Coverage Results" MODIFIED="1760545214115" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/PyChess$PawnImage.coverage" NAME="PawnImage Coverage Results" MODIFIED="1759768573930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PyChess$Piece.coverage" NAME="Piece Coverage Results" MODIFIED="1760543978412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
