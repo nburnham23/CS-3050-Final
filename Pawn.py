@@ -1,21 +1,21 @@
-import Piece
-from Board import BOARD_LENGTH, BOARD_WIDTH
+from Piece import Piece, BOARD_LENGTH
 
 class Pawn(Piece):
-    def __init__(self, color, start_position):
-        super().__init__(self, color, start_position)
+    def __init__(self, color, start_position, image_path, scale = 1):
         # Attribute for determining if pawn can move 2 spaces
         self.has_moved = False
         promotion_available = False
+
+        super().__init__(color, start_position, image_path, scale)
     
     def move(self):
         moveset = []
         row, col = self.curr_position
         
         # Moves down rows (positive translation in array) if piece is black, otherwise moves up rows (negative translation)
-        moveset.append( (row + (1 if self.color == "BLACK" else -1), col) )
+        moveset.append( (row + (1 if self.piece_color == "BLACK" else -1), col) )
         if not self.has_moved:
-            moveset.append( (row + (2 if self.color == "BLACK" else -2), col) )
+            moveset.append( (row + (2 if self.piece_color == "BLACK" else -2), col) )
         
         return moveset
     

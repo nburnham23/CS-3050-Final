@@ -5,23 +5,33 @@ from Rook import Rook
 from Queen import Queen
 from King import King
 
-
-# Board is 8x8 tiles
-BOARD_LENGTH, BOARD_WIDTH = 8
-
 # Dictionary for pieces' image paths
-img_path = {'pawn': {'BLACK': 'pieceimages/black_pawn.png',
-                     'WHITE': 'pieceimages/white_pawn.png'},
-            'knight': {'BLACK': 'pieceimages/black_knight.png',
-                     'WHITE': 'pieceimages/white_knight.png'},
-            'bishop': {'BLACK': 'pieceimages/black_bishop.png',
-                     'WHITE': 'pieceimages/white_bishop.png'},
-            'rook': {'BLACK': 'pieceimages/black_rook.png',
-                     'WHITE': 'pieceimages/white_rook.png'},
-            'queen': {'BLACK': 'pieceimages/black_queen.png',
-                     'WHITE': 'pieceimages/white_queen.png'},
-            'king': {'BLACK': 'pieceimages/black_king.png',
-                     'WHITE': 'pieceimages/white_king.png'}}
+img_path = {
+    'pawn': {
+        'BLACK': 'pieceimages/black_pawn.png',
+        'WHITE': 'pieceimages/white_pawn.png'
+    },
+    'knight': {
+        'BLACK': 'pieceimages/black_knight.png',
+        'WHITE': 'pieceimages/white_knight.png'
+    },
+    'bishop': {
+        'BLACK': 'pieceimages/black_bishop.png',
+        'WHITE': 'pieceimages/white_bishop.png'
+    },
+    'rook': {
+        'BLACK': 'pieceimages/black_rook.png',
+        'WHITE': 'pieceimages/white_rook.png'
+    },
+    'queen': {
+        'BLACK': 'pieceimages/black_queen.png',
+        'WHITE': 'pieceimages/white_queen.png'
+    },
+    'king': {
+        'BLACK': 'pieceimages/black_king.png',
+        'WHITE': 'pieceimages/white_king.png'
+    }
+}
 
 class Board():
     def __init__(self):
@@ -61,15 +71,18 @@ class Board():
     # Check if move is valid, then update board and piece's moveset
     def move(self, piece_position, new_position):
         piece = self.get_piece(piece_position)
+        if piece is None:
+            return False
 
         # Validate move
+        # if new_position not in piece.move():
         if new_position not in piece.moveset:
             return False
         
         # Check if enemy piece is in spot, and if so add to taken list
         enemy_piece = self.get_piece(new_position)
         if enemy_piece:
-            if enemy_piece.color == 'BLACK':
+            if enemy_piece.piece_color == 'BLACK':
                 self.black_taken.append(enemy_piece)
             else:
                 self.white_taken.append(enemy_piece)
@@ -81,3 +94,7 @@ class Board():
         # Make move on board
         self.set_piece(new_position, piece)
         self.set_piece(piece_position, None)
+    
+    # toString method
+    def display(self):
+        print(self.board)
