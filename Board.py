@@ -5,10 +5,6 @@ from Rook import Rook
 from Queen import Queen
 from King import King
 
-
-# Board is 8x8 tiles
-BOARD_LENGTH, BOARD_WIDTH = 8
-
 # Dictionary for pieces' image paths
 img_path = {'pawn': {'BLACK': 'pieceimages/black_pawn.png',
                      'WHITE': 'pieceimages/white_pawn.png'},
@@ -81,3 +77,7 @@ class Board():
         # Make move on board
         self.set_piece(new_position, piece)
         self.set_piece(piece_position, None)
+    
+    # toString method
+    def display(self):
+        print(self.board)
