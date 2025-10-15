@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bea9b8c0-93e0-44ae-b9f6-9320272553ec" name="Changes" comment="Took what even had for &quot;piece&quot; so I can add GUI" />
+    <list default="true" id="bea9b8c0-93e0-44ae-b9f6-9320272553ec" name="Changes" comment="Downloaded piece pngs from the internet">
+      <change afterPath="$PROJECT_DIR$/PawnImage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/Piece.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,37 +29,39 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "wrspence"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;wrspence&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/nburnham23/CS-3050-Final.git",
-    "accountId": "7bfc6086-a803-4500-a898-62c9b5a1a51d"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/nburnham23/CS-3050-Final.git&quot;,
+    &quot;accountId&quot;: &quot;7bfc6086-a803-4500-a898-62c9b5a1a51d&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="33hO1Ha8E6RXb5NHXsJYFCGmoFL" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.PawnImage.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Liam-branch&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -73,6 +79,8 @@
       <option name="presentableId" value="Default" />
       <updated>1759765621458</updated>
       <workItem from="1759765622856" duration="599000" />
+      <workItem from="1759766359337" duration="1845000" />
+      <workItem from="1759768219348" duration="709000" />
     </task>
     <task id="LOCAL-00001" summary="Began liam branch for piece GUI">
       <option name="closed" value="true" />
@@ -98,7 +106,23 @@
       <option name="project" value="LOCAL" />
       <updated>1759766046713</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Took what even had for &quot;piece&quot; so I can add GUI pt 2">
+      <option name="closed" value="true" />
+      <created>1759766376477</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1759766376477</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Downloaded piece pngs from the internet">
+      <option name="closed" value="true" />
+      <created>1759767551458</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1759767551458</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +131,11 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Began liam branch for piece GUI" />
     <MESSAGE value="Took what even had for &quot;piece&quot; so I can add GUI" />
-    <option name="LAST_COMMIT_MESSAGE" value="Took what even had for &quot;piece&quot; so I can add GUI" />
+    <MESSAGE value="Took what even had for &quot;piece&quot; so I can add GUI pt 2" />
+    <MESSAGE value="Downloaded piece pngs from the internet" />
+    <option name="LAST_COMMIT_MESSAGE" value="Downloaded piece pngs from the internet" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/PyChess$PawnImage.coverage" NAME="PawnImage Coverage Results" MODIFIED="1759768573930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
