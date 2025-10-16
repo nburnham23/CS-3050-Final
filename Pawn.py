@@ -1,7 +1,7 @@
 from Piece import Piece, BOARD_LENGTH
 
 class Pawn(Piece):
-    def __init__(self, color, start_position, image_path, scale = 1):
+    def __init__(self, color, start_position, image_path, scale = .3):
         # Attribute for determining if pawn can move 2 spaces
         self.has_moved = False
         promotion_available = False

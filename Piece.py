@@ -6,7 +6,7 @@ import os
 BOARD_LENGTH = 8
 
 class Piece(arcade.Sprite):
-    def __init__(self, color, board_position, image_path, scale = 1):
+    def __init__(self, color, board_position, image_path, scale = .3):
         self.piece_color = color
         self.curr_position = board_position
         self.moveset = self.move()

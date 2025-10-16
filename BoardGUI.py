@@ -36,6 +36,7 @@ class GameView(arcade.View):
 
         self.chess_board = Board()
         self.sprites = arcade.SpriteList()
+        # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
                 piece = self.chess_board.board[row][column]
@@ -70,7 +71,6 @@ class GameView(arcade.View):
         """
         Render the screen.
         """
-
         # This command has to happen before we start drawing
         self.clear()
 
@@ -92,6 +92,7 @@ class GameView(arcade.View):
 
                 # Draw the box
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
+        # draw the pieces
         self.sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):

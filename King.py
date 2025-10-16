@@ -1,7 +1,7 @@
 from Piece import Piece, BOARD_LENGTH
 
 class King(Piece):
-    def __init__(self, color, start_position, image_path, scale = 1):
+    def __init__(self, color, start_position, image_path, scale = .3):
         super().__init__(color, start_position, image_path, scale)
 
     def move(self):
