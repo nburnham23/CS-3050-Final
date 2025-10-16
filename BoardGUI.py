@@ -3,6 +3,7 @@ Chess Board GUI
 CS 3050 Final Project
 """
 import arcade
+from Board import Board
 
 # Set how many rows and columns we will have
 ROW_COUNT = 8
@@ -26,7 +27,6 @@ class GameView(arcade.View):
     """
     Main application class.
     """
-
     def __init__(self):
         """
         Set up the application.
@@ -34,7 +34,15 @@ class GameView(arcade.View):
 
         super().__init__()
 
-
+        self.chess_board = Board()
+        self.sprites = arcade.SpriteList()
+        for row in range(ROW_COUNT):
+            for column in range(COLUMN_COUNT):
+                piece = self.chess_board.board[row][column]
+                if piece is not None:
+                    # Set the sprite's position on screen
+                    piece.set_sprite_position(MARGIN, WIDTH, HEIGHT)
+                    self.sprites.append(piece)
 
         # Create a 2 dimensional array.
         self.grid = []
@@ -69,7 +77,7 @@ class GameView(arcade.View):
         # Draw the grid
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
-                # Color the cells in Beige,, Bistre, or Chartreuse according to position / state
+                # Color the cells in Beige, Bistre, or Chartreuse according to position / state
                 if self.grid[row][column] == 0:
                     color = arcade.color.BEIGE
                 elif self.grid[row][column] == 1:
@@ -84,6 +92,7 @@ class GameView(arcade.View):
 
                 # Draw the box
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
+        self.sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         """
