@@ -11,12 +11,6 @@ class Piece(arcade.Sprite):
         self.curr_position = board_position
         self.moveset = self.move()
 
-        # Check if file exists
-        full_path = os.path.abspath(image_path)
-        print(f"Loading: {image_path}")
-        print(f"Full path: {full_path}")
-        print(f"Exists: {os.path.exists(image_path)}")
-
         # Initialize Sprite parent class
         super().__init__(image_path, scale)
 
