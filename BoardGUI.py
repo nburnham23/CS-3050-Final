@@ -67,8 +67,13 @@ class GameView(arcade.View):
         self.background_color = arcade.color.BLACK
         self.selected_square = None
         self.destination_square = None # the destination for the selected piece
+        self.selected_piece = None
+
 
     def reset_color(self, row, column):
+        """
+        resets the color of a square on the grid depending on its position
+        """
         if (row + column) % 2 == 0:
             self.grid[row][column] = 1
         else:
@@ -155,6 +160,7 @@ class GameView(arcade.View):
                 print(self.destination_square)
                 # move the piece to the destination square
                 self.chess_board.move(self.selected_square, self.destination_square)
+                self.selected_piece = self.chess_board.get_piece(self.destination_square)
                 # reset the color of the selected and destination squares
                 self.reset_color(row, column)
                 self.reset_color(self.selected_square[0], self.selected_square[1])
@@ -162,6 +168,9 @@ class GameView(arcade.View):
                 self.selected_square = None
                 self.destination_square = None
                 # TODO: and update the position of the sprites
+                # this is WRONG
+                self.selected_piece.set_sprite_position(MARGIN, WIDTH, HEIGHT)
+
             # the user has not selected a piece, so the user will select one
             else:
                 # select the piece
