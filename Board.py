@@ -90,7 +90,7 @@ class Board():
                 self.white_taken.append(enemy_piece)
         
         # Update pieces information
-        piece.board_position = new_position
+        piece.curr_position = new_position
         piece.calculate_moves()
 
         # Make move on board

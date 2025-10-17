@@ -42,7 +42,7 @@ class GameView(arcade.View):
                 piece = self.chess_board.board[row][column]
                 if piece is not None:
                     # Set the sprite's position on screen
-                    piece.set_sprite_position(MARGIN, WIDTH, HEIGHT)
+                    piece.set_sprite_position()
                     self.sprites.append(piece)
 
         # Create a 2 dimensional array.
@@ -167,9 +167,8 @@ class GameView(arcade.View):
                 # reset the selected and destination squares to None
                 self.selected_square = None
                 self.destination_square = None
-                # TODO: and update the position of the sprites
-                # this is WRONG
-                self.selected_piece.set_sprite_position(MARGIN, WIDTH, HEIGHT)
+                # set the position of the sprite
+                self.selected_piece.set_sprite_position()
 
             # the user has not selected a piece, so the user will select one
             else:
