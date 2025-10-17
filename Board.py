@@ -72,11 +72,13 @@ class Board():
     def move(self, piece_position, new_position):
         piece = self.get_piece(piece_position)
         if piece is None:
+            print("Piece does not exist")
             return False
 
         # Validate move
         # if new_position not in piece.move():
         if new_position not in piece.moveset:
+            print("move not in moveset")
             return False
         
         # Check if enemy piece is in spot, and if so add to taken list
