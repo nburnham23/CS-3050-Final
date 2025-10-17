@@ -42,7 +42,7 @@ class GameView(arcade.View):
                 piece = self.chess_board.board[row][column]
                 if piece is not None:
                     # Set the sprite's position on screen
-                    piece.set_sprite_position(MARGIN, WIDTH, HEIGHT)
+                    piece.set_sprite_position()
                     self.sprites.append(piece)
 
         # Create a 2 dimensional array.
@@ -66,6 +66,18 @@ class GameView(arcade.View):
 
         self.background_color = arcade.color.BLACK
         self.selected_square = None
+        self.destination_square = None # the destination for the selected piece
+        self.selected_piece = None
+
+
+    def reset_color(self, row, column):
+        """
+        resets the color of a square on the grid depending on its position
+        """
+        if (row + column) % 2 == 0:
+            self.grid[row][column] = 1
+        else:
+            self.grid[row][column] = 0
 
     def on_draw(self):
         """
@@ -99,6 +111,16 @@ class GameView(arcade.View):
         """
         Called when the user presses a mouse button.
         TODO: change to move pieces
+        get piece at selected square
+        use chess_board move function to move it
+        if self.selected piece:
+            the mouse press is the destination
+            move the piece to the destination
+            using the chess_board move function
+            then clear the selected piece and the destination
+        if not self.selected piece
+            select the piece
+            color that square green
         """
 
         # Change the x/y screen coordinates to grid coordinates
@@ -110,24 +132,53 @@ class GameView(arcade.View):
         # Make sure we are on-grid. It is possible to click in the upper right
         # corner in the margin and go to a grid location that doesn't exist
         if row < ROW_COUNT and column < COLUMN_COUNT:
-            # allow only one selected square at a time
+            """
+            if self.selected piece:
+                the mouse press is the destination
+                move the piece to the destination
+                using the chess_board move function
+                then clear the selected piece and the destination
+                UPDATE POSITION OF SPRITES
+            if not self.selected piece
+                select the piece
+                color that square green
+            """
+            # there is a piece selected and we can move it
             if self.selected_square:
                 prev_row, prev_col = self.selected_square
-                if (prev_row + prev_col) % 2 == 0:
-                    self.grid[prev_row][prev_col] = 1
-                else:
-                    self.grid[prev_row][prev_col] = 0
-
-            if self.selected_square == (row, column):
-                if (row + column) % 2 == 0:
-                    self.grid[row][column] = 1
-                else:
-                    self.grid[row][column] = 0
+                # reset the color of the square
+                self.reset_color(row, column)
+                # reset the color of the previous selected_square if pressing the same square again
+                if self.selected_square == (row, column):
+                    self.reset_color(row, column)
+                    self.selected_square = None
+                    return
+                self.destination_square = (row, column)
+                # change the color of the square
+                self.grid[row][column] = 2
+                print("destination square: ")
+                print(self.destination_square)
+                # move the piece to the destination square
+                self.chess_board.move(self.selected_square, self.destination_square)
+                self.selected_piece = self.chess_board.get_piece(self.destination_square)
+                # reset the color of the selected and destination squares
+                self.reset_color(row, column)
+                self.reset_color(self.selected_square[0], self.selected_square[1])
+                # reset the selected and destination squares to None
                 self.selected_square = None
-                return
-            self.selected_square = (row, column)
-            self.grid[row][column] = 2
+                self.destination_square = None
+                # set the position of the sprite
+                self.selected_piece.set_sprite_position()
 
+            # the user has not selected a piece, so the user will select one
+            else:
+                # select the piece
+                # and color that square green
+                self.selected_square = (row, column)
+                print(self.selected_square)
+                self.grid[row][column] = 2
+                print("selected square: " )
+                print(self.selected_square)
 
 
 def main():
