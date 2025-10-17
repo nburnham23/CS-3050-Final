@@ -68,6 +68,12 @@ class GameView(arcade.View):
         self.selected_square = None
         self.destination_square = None # the destination for the selected piece
 
+    def reset_color(self, row, column):
+        if (row + column) % 2 == 0:
+            self.grid[row][column] = 1
+        else:
+            self.grid[row][column] = 0
+
     def on_draw(self):
         """
         Render the screen.
@@ -136,16 +142,10 @@ class GameView(arcade.View):
             if self.selected_square:
                 prev_row, prev_col = self.selected_square
                 # reset the color of the square
-                if (prev_row + prev_col) % 2 == 0:
-                    self.grid[prev_row][prev_col] = 1
-                else:
-                    self.grid[prev_row][prev_col] = 0
+                self.reset_color(row, column)
                 # reset the color of the previous selected_square if pressing the same square again
                 if self.selected_square == (row, column):
-                    if (row + column) % 2 == 0:
-                        self.grid[row][column] = 1
-                    else:
-                        self.grid[row][column] = 0
+                    self.reset_color(row, column)
                     self.selected_square = None
                     return
                 self.destination_square = (row, column)
@@ -155,8 +155,12 @@ class GameView(arcade.View):
                 print(self.destination_square)
                 # move the piece to the destination square
                 self.chess_board.move(self.selected_square, self.destination_square)
-                # TODO: reset the colors of the selected_square and destination_square
-                # TODO: and set selected_square and destination_square to None
+                # reset the color of the selected and destination squares
+                self.reset_color(row, column)
+                self.reset_color(self.selected_square[0], self.selected_square[1])
+                # reset the selected and destination squares to None
+                self.selected_square = None
+                self.destination_square = None
                 # TODO: and update the position of the sprites
             # the user has not selected a piece, so the user will select one
             else:
