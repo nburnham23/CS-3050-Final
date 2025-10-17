@@ -66,7 +66,6 @@ class GameView(arcade.View):
 
         self.background_color = arcade.color.BLACK
         self.selected_square = None
-        self.selected_piece = None # the piece at selected_square
         self.destination_square = None # the destination for the selected piece
 
     def on_draw(self):
@@ -135,10 +134,6 @@ class GameView(arcade.View):
             """
             # there is a piece selected and we can move it
             if self.selected_square:
-                # the mouse press will be the destination
-                # move the piece to the destination using chess_board move function
-                # the clear the selected_square and destination
-                # allow only one selected square at a time
                 prev_row, prev_col = self.selected_square
                 # reset the color of the square
                 if (prev_row + prev_col) % 2 == 0:
@@ -170,7 +165,6 @@ class GameView(arcade.View):
                 self.selected_square = (row, column)
                 print(self.selected_square)
                 self.grid[row][column] = 2
-                self.selected_piece = self.chess_board.get_piece(self.selected_square)
                 print("selected square: " )
                 print(self.selected_square)
 
