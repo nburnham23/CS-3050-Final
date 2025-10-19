@@ -67,6 +67,10 @@ class GameView(arcade.View):
         self.background_color = arcade.color.BLACK
         self.selected_square = None
 
+        # Initialize move_start and move_end for proposed moves
+        self.move_start = None
+        self.move_end = None
+
     def on_draw(self):
         """
         Render the screen.
@@ -127,8 +131,37 @@ class GameView(arcade.View):
                 return
             self.selected_square = (row, column)
             self.grid[row][column] = 2
+        
+        # Assign mouse press to move_start if empty, otherwise move_end
+        if not self.move_start:
+            self.move_start = (row, column)
+        elif not self.move_end:
+            self.move_end = (row, column)
 
 
+        if not self.move_start or not self.move_end:
+            # move has yet to be proposed, do nothing
+            return
+        
+        print(f"Start: {self.move_start}, End: {self.move_end}")
+
+        if self.chess_board.move(self.move_start, self.move_end):
+            print("Move was succesful!")
+
+            self.move_start = None
+            self.move_end = None
+
+            return True
+        
+        print("Move could not be made")
+
+        self.move_start = None
+        self.move_end = None
+
+        return False
+
+    def make_move(self):
+        pass
 
 def main():
     """ Main function """
