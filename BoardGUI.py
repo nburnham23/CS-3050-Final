@@ -3,8 +3,6 @@ Chess Board GUI
 CS 3050 Final Project
 """
 import arcade
-from arcade import SpriteList
-
 from Board import Board
 
 # Set how many rows and columns we will have
@@ -58,13 +56,13 @@ class GameView(arcade.View):
                     if column % 2 == 0:
                         self.grid[row].append(1)
                     else:
-                        self.grid[row].append(0)  # Append a cell
+                        self.grid[row].append(0)
             else:
                 for column in range(COLUMN_COUNT):
                     if column % 2 == 1:
                         self.grid[row].append(1)
                     else:
-                        self.grid[row].append(0)  # Append a cell
+                        self.grid[row].append(0)
 
         self.background_color = arcade.color.BLACK
         self.selected_square = None
@@ -118,7 +116,6 @@ class GameView(arcade.View):
                 # Draw the box
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
         # draw the pieces
-        # sprites needs to be updated to the pieces that are not in chess_board.white_taken and chess_board.black_taken
         self.sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -133,7 +130,6 @@ class GameView(arcade.View):
         if row < ROW_COUNT and column < COLUMN_COUNT:
             # there is a piece selected and we can move it
             if self.selected_square:
-                prev_row, prev_col = self.selected_square
                 # reset the color of the square
                 self.reset_color(row, column)
                 # reset the color of the previous selected_square if pressing the same square again
@@ -157,6 +153,7 @@ class GameView(arcade.View):
                 self.destination_square = None
                 # set the position of the sprite
                 self.selected_piece.set_sprite_position()
+                # check to see if any of the pieces have been taken and update them
                 self.update_sprites()
 
             # the user has not selected a piece, so the user will select one
