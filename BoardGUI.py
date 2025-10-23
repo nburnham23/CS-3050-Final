@@ -6,6 +6,9 @@ import arcade
 from Board import Board
 import arcade.gui
 
+import arcade.gui.widgets.buttons
+import arcade.gui.widgets.layout
+
 # Set how many rows and columns we will have
 ROW_COUNT = 8
 COLUMN_COUNT = 8
@@ -26,54 +29,68 @@ WINDOW_TITLE = "Welcome to chess!"
 class MenuView(arcade.View):
     """
     Menu class
+    Allows the user to select their desired game mode
+    TODO: change the on_click_ functions to appropriate functions
     """
-    def on_show_view(self):
-        self.window.background_color = arcade.color.WHITE
-    def on_draw(self):
-        self.clear()
-        # TODO: change to buttons that control the mode
-        arcade.draw_text("Welcome to Chess! Select the game mode",
-                         self.window.width / 2,
-                         self.window.height / 1.1,
-                         arcade.color.BLACK,
-                         font_size=20,
-                         anchor_x="center")
-        arcade.draw_text("2-player Mode",
-                         self.window.width / 2,
-                         self.window.height * 3 / 5,
-                         arcade.color.GRAY,
-                         font_size=30,
-                         anchor_x="center")
-        arcade.draw_text("Easy Player v. Computer Mode",
-                         self.window.width / 2,
-                         self.window.height * 2 / 5,
-                         arcade.color.GRAY,
-                         font_size=30,
-                         anchor_x="center")
-        arcade.draw_text("Difficult Player v. Computer Mode",
-                         self.window.width / 2,
-                         self.window.height * 1 / 5,
-                         arcade.color.GRAY,
-                         font_size=30,
-                         anchor_x="center")
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        instructions_view = InstructionView()
-        self.window.show_view(instructions_view)
-class InstructionView(arcade.View):
-    def on_show_view(self):
-        self.window.background_color = arcade.color.ORANGE_PEEL
+    def __init__(self):
+        super().__init__()
+        # a UIManager to handle the UI.
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        self.background_color = arcade.color.WHITE
 
-    def on_draw(self):
-        self.clear()
-        arcade.draw_text("Instructions",
-                         self.window.width / 2,
-                         self.window.height / 2,
-                         arcade.color.BLACK,
-                         font_size=50,
-                         anchor_x="center")
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        # Create a vertical BoxGroup to align buttons
+        self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
+
+        # Create the buttons
+        two_player_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Two-player mode", width=300
+        )
+        self.v_box.add(two_player_button)
+        two_player_button.on_click = self.on_click_two_player
+
+        ai_easy_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Player v. Computer: Easy", width=300
+        )
+        self.v_box.add(ai_easy_button)
+        ai_easy_button.on_click = self.on_click_ai_easy
+
+        ai_hard_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Player v. Computer: Hard", width=300
+        )
+        self.v_box.add(ai_hard_button)
+        ai_hard_button.on_click = self.on_click_ai_hard
+
+        quit_button = arcade.gui.widgets.buttons.UIFlatButton(text="Quit", width=300)
+        self.v_box.add(quit_button)
+        quit_button.on_click = self.on_click_quit
+
+        # Create a widget to hold the v_box widget, that will center the buttons
+        ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
+        ui_anchor_layout.add(child=self.v_box, anchor_x="center_x", anchor_y="center_y")
+
+        self.manager.add(ui_anchor_layout)
+
+    def on_click_two_player(self, event):
+        print("two-player:", event)
         game_view = GameView()
         self.window.show_view(game_view)
+        # TODO: set mode to two-player
+    def on_click_ai_easy(self, event):
+        print("ai-easy:", event)
+        game_view = GameView()
+        self.window.show_view(game_view)
+        # TODO: set mode to easy ai
+    def on_click_ai_hard(self, event):
+        print("ai-hard:", event)
+        game_view = GameView()
+        self.window.show_view(game_view)
+        # TODO: set mode to hard ai
+    def on_click_quit(self, event):
+        arcade.exit()
+    def on_draw(self):
+        self.clear()
+        self.manager.draw()
 
 class GameView(arcade.View):
     """
@@ -83,7 +100,6 @@ class GameView(arcade.View):
         """
         Set up the application.
         """
-
         super().__init__()
 
         self.chess_board = Board()
@@ -223,11 +239,9 @@ def main():
     """ Main function """
     # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-    window.total_score = 0
 
     # Create the GameView
     menu_view = MenuView()
-    #game = GameView()
 
     # Show GameView on screen
     window.show_view(menu_view)
