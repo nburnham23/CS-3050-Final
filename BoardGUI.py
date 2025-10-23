@@ -4,6 +4,7 @@ CS 3050 Final Project
 """
 import arcade
 from Board import Board
+import arcade.gui
 
 # Set how many rows and columns we will have
 ROW_COUNT = 8
@@ -30,15 +31,28 @@ class MenuView(arcade.View):
         self.window.background_color = arcade.color.WHITE
     def on_draw(self):
         self.clear()
-        arcade.draw_text("Welcome to Chess!",
+        # TODO: change to buttons that control the mode
+        arcade.draw_text("Welcome to Chess! Select the game mode",
                          self.window.width / 2,
-                         self.window.height / 2,
+                         self.window.height / 1.1,
                          arcade.color.BLACK,
-                         font_size=50,
+                         font_size=20,
                          anchor_x="center")
-        arcade.draw_text("Click to advance",
+        arcade.draw_text("2-player Mode",
                          self.window.width / 2,
-                         self.window.height / 4,
+                         self.window.height * 3 / 5,
+                         arcade.color.GRAY,
+                         font_size=30,
+                         anchor_x="center")
+        arcade.draw_text("Easy Player v. Computer Mode",
+                         self.window.width / 2,
+                         self.window.height * 2 / 5,
+                         arcade.color.GRAY,
+                         font_size=30,
+                         anchor_x="center")
+        arcade.draw_text("Difficult Player v. Computer Mode",
+                         self.window.width / 2,
+                         self.window.height * 1 / 5,
                          arcade.color.GRAY,
                          font_size=30,
                          anchor_x="center")
