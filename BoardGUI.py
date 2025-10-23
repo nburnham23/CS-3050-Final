@@ -3,11 +3,11 @@ Chess Board GUI
 CS 3050 Final Project
 """
 import arcade
-from Board import Board
 import arcade.gui
-
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
+from Board import Board
+
 
 # Set how many rows and columns we will have
 ROW_COUNT = 8
