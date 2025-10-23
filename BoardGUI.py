@@ -22,10 +22,48 @@ WINDOW_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN
 WINDOW_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
 WINDOW_TITLE = "Welcome to chess!"
 
+class MenuView(arcade.View):
+    """
+    Menu class
+    """
+    def on_show_view(self):
+        self.window.background_color = arcade.color.WHITE
+    def on_draw(self):
+        self.clear()
+        arcade.draw_text("Welcome to Chess!",
+                         self.window.width / 2,
+                         self.window.height / 2,
+                         arcade.color.BLACK,
+                         font_size=50,
+                         anchor_x="center")
+        arcade.draw_text("Click to advance",
+                         self.window.width / 2,
+                         self.window.height / 4,
+                         arcade.color.GRAY,
+                         font_size=30,
+                         anchor_x="center")
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        instructions_view = InstructionView()
+        self.window.show_view(instructions_view)
+class InstructionView(arcade.View):
+    def on_show_view(self):
+        self.window.background_color = arcade.color.ORANGE_PEEL
+
+    def on_draw(self):
+        self.clear()
+        arcade.draw_text("Instructions",
+                         self.window.width / 2,
+                         self.window.height / 2,
+                         arcade.color.BLACK,
+                         font_size=50,
+                         anchor_x="center")
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        game_view = GameView()
+        self.window.show_view(game_view)
 
 class GameView(arcade.View):
     """
-    Main application class.
+    Chess game class.
     """
     def __init__(self):
         """
@@ -171,12 +209,14 @@ def main():
     """ Main function """
     # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
+    window.total_score = 0
 
     # Create the GameView
-    game = GameView()
+    menu_view = MenuView()
+    #game = GameView()
 
     # Show GameView on screen
-    window.show_view(game)
+    window.show_view(menu_view)
 
     # Start the arcade game loop
     arcade.run()
