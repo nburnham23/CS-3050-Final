@@ -190,13 +190,14 @@ class GameView(arcade.View):
 
                 # Draw the box
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
-        # draw the pieces
-        self.sprites.draw()
+        # draw a circle where the piece can move to
         if self.possible_moves is not None:
             for move in self.possible_moves:
                 arcade.draw_circle_filled((MARGIN + WIDTH) * move[1] + MARGIN + WIDTH // 2,
                                           (MARGIN + WIDTH) * move[0] + MARGIN + WIDTH // 2,
-                                          15, arcade.color.RED)
+                                          20, arcade.color.RED)
+        # draw the pieces
+        self.sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         # Change the x/y screen coordinates to grid coordinates
@@ -219,18 +220,15 @@ class GameView(arcade.View):
                     self.possible_moves = None
                     return
                 self.destination_square = (row, column)
-                # change the color of the square
-                self.grid[row][column] = 2
                 print("destination square: ")
                 print(self.destination_square)
                 # move the piece to the destination square
                 self.chess_board.move(self.selected_square, self.destination_square)
                 self.selected_piece = self.chess_board.get_piece(self.destination_square)
-
                 # reset the color of the selected and destination squares
                 self.reset_color(row, column)
                 self.reset_color(self.selected_square[0], self.selected_square[1])
-                # reset the selected and destination squares to None
+                # reset the selected and destination squares and possible moves to None
                 self.selected_square = None
                 self.destination_square = None
                 self.possible_moves = None
