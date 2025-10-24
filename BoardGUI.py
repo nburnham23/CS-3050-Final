@@ -91,6 +91,7 @@ class MenuView(arcade.View):
         # TODO: set mode to hard ai
     def on_click_quit(self, event):
         """ Closes the arcade window """
+        print('goodbye')
         arcade.exit()
     def on_draw(self):
         """ draws the menu """
@@ -141,6 +142,7 @@ class GameView(arcade.View):
         self.selected_square = None
         self.destination_square = None # the destination for the selected piece
         self.selected_piece = None
+        self.possible_moves = None
 
 
     def reset_color(self, row, column):
@@ -190,6 +192,11 @@ class GameView(arcade.View):
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
         # draw the pieces
         self.sprites.draw()
+        if self.possible_moves is not None:
+            for move in self.possible_moves:
+                arcade.draw_circle_filled((MARGIN + WIDTH) * move[1] + MARGIN + WIDTH // 2,
+                                          (MARGIN + WIDTH) * move[0] + MARGIN + WIDTH // 2,
+                                          15, arcade.color.RED)
 
     def on_mouse_press(self, x, y, button, modifiers):
         # Change the x/y screen coordinates to grid coordinates
@@ -209,6 +216,7 @@ class GameView(arcade.View):
                 if self.selected_square == (row, column):
                     self.reset_color(row, column)
                     self.selected_square = None
+                    self.possible_moves = None
                     return
                 self.destination_square = (row, column)
                 # change the color of the square
@@ -218,12 +226,14 @@ class GameView(arcade.View):
                 # move the piece to the destination square
                 self.chess_board.move(self.selected_square, self.destination_square)
                 self.selected_piece = self.chess_board.get_piece(self.destination_square)
+
                 # reset the color of the selected and destination squares
                 self.reset_color(row, column)
                 self.reset_color(self.selected_square[0], self.selected_square[1])
                 # reset the selected and destination squares to None
                 self.selected_square = None
                 self.destination_square = None
+                self.possible_moves = None
                 # set the position of the sprite
                 self.selected_piece.set_sprite_position()
                 # check to see if any of the pieces have been taken and update them
@@ -238,6 +248,13 @@ class GameView(arcade.View):
                 self.grid[row][column] = 2
                 print("selected square: " )
                 print(self.selected_square)
+                self.selected_piece = self.chess_board.get_piece(self.selected_square)
+                self.possible_moves = self.selected_piece.move()
+                print("Possible moves: ")
+                print(self.possible_moves)
+
+
+
 
 
 def main():
