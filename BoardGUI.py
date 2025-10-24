@@ -3,6 +3,8 @@ Chess Board GUI
 CS 3050 Final Project
 """
 import arcade
+from arcade import SpriteList
+
 from Board import Board
 
 # Set how many rows and columns we will have
@@ -78,7 +80,18 @@ class GameView(arcade.View):
             self.grid[row][column] = 1
         else:
             self.grid[row][column] = 0
-
+    def update_sprites(self):
+        """
+        resets the sprites to the pieces that are still in the game (not taken)
+        """
+        self.sprites = arcade.SpriteList()
+        for row in range(ROW_COUNT):
+            for column in range(COLUMN_COUNT):
+                piece = self.chess_board.board[row][column]
+                if piece is not None:
+                    # Set the sprite's position on screen
+                    piece.set_sprite_position()
+                    self.sprites.append(piece)
     def on_draw(self):
         """
         Render the screen.
@@ -105,24 +118,10 @@ class GameView(arcade.View):
                 # Draw the box
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
         # draw the pieces
+        # sprites needs to be updated to the pieces that are not in chess_board.white_taken and chess_board.black_taken
         self.sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        """
-        Called when the user presses a mouse button.
-        TODO: change to move pieces
-        get piece at selected square
-        use chess_board move function to move it
-        if self.selected piece:
-            the mouse press is the destination
-            move the piece to the destination
-            using the chess_board move function
-            then clear the selected piece and the destination
-        if not self.selected piece
-            select the piece
-            color that square green
-        """
-
         # Change the x/y screen coordinates to grid coordinates
         column = int(x // (WIDTH + MARGIN))
         row = int(y // (HEIGHT + MARGIN))
@@ -132,17 +131,6 @@ class GameView(arcade.View):
         # Make sure we are on-grid. It is possible to click in the upper right
         # corner in the margin and go to a grid location that doesn't exist
         if row < ROW_COUNT and column < COLUMN_COUNT:
-            """
-            if self.selected piece:
-                the mouse press is the destination
-                move the piece to the destination
-                using the chess_board move function
-                then clear the selected piece and the destination
-                UPDATE POSITION OF SPRITES
-            if not self.selected piece
-                select the piece
-                color that square green
-            """
             # there is a piece selected and we can move it
             if self.selected_square:
                 prev_row, prev_col = self.selected_square
@@ -169,6 +157,7 @@ class GameView(arcade.View):
                 self.destination_square = None
                 # set the position of the sprite
                 self.selected_piece.set_sprite_position()
+                self.update_sprites()
 
             # the user has not selected a piece, so the user will select one
             else:
