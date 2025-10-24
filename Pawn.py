@@ -16,6 +16,7 @@ class Pawn(Piece):
         moveset.append( (row + (1 if self.piece_color == "BLACK" else -1), col) )
         if not self.has_moved:
             moveset.append( (row + (2 if self.piece_color == "BLACK" else -2), col) )
+            self.has_moved = True
         
         return moveset
     
