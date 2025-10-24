@@ -1,9 +1,10 @@
 import arcade
-import os
-
 # TODO: Replace scale with constant for all pieces
 
 BOARD_LENGTH = 8
+MARGIN = 5
+WIDTH = 80
+HEIGHT = 80
 
 class Piece(arcade.Sprite):
     def __init__(self, color, board_position, image_path, scale = 1):
@@ -21,12 +22,11 @@ class Piece(arcade.Sprite):
         # Update moveset
         self.moveset = self.move()
 
-    def set_sprite_position(self, margin, width, height):
+    def set_sprite_position(self):
         """Set the sprite's screen position based on board position"""
         row, col = self.curr_position
-        self.center_x = (margin + width) * col + margin + width // 2
-        # Flip the row: arcade's (0,0) is bottom-left, but board array (0,0) is top-left
-        self.center_y = (margin + height) * (7 - row) + margin + height // 2
+        self.center_x = (MARGIN + WIDTH) * col + MARGIN + WIDTH // 2
+        self.center_y = (MARGIN + HEIGHT) * row + MARGIN + HEIGHT // 2
 
     # Move function to be overriden by subclasses
     def move(self):

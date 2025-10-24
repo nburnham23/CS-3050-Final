@@ -3,6 +3,8 @@ Chess Board GUI
 CS 3050 Final Project
 """
 import arcade
+from arcade import SpriteList
+
 from Board import Board
 
 # Set how many rows and columns we will have
@@ -42,7 +44,7 @@ class GameView(arcade.View):
                 piece = self.chess_board.board[row][column]
                 if piece is not None:
                     # Set the sprite's position on screen
-                    piece.set_sprite_position(MARGIN, WIDTH, HEIGHT)
+                    piece.set_sprite_position()
                     self.sprites.append(piece)
 
         # Create a 2 dimensional array.
@@ -66,11 +68,30 @@ class GameView(arcade.View):
 
         self.background_color = arcade.color.BLACK
         self.selected_square = None
+        self.destination_square = None # the destination for the selected piece
+        self.selected_piece = None
 
-        # Initialize move_start and move_end for proposed moves
-        self.move_start = None
-        self.move_end = None
 
+    def reset_color(self, row, column):
+        """
+        resets the color of a square on the grid depending on its position
+        """
+        if (row + column) % 2 == 0:
+            self.grid[row][column] = 1
+        else:
+            self.grid[row][column] = 0
+    def update_sprites(self):
+        """
+        resets the sprites to the pieces that are still in the game (not taken)
+        """
+        self.sprites = arcade.SpriteList()
+        for row in range(ROW_COUNT):
+            for column in range(COLUMN_COUNT):
+                piece = self.chess_board.board[row][column]
+                if piece is not None:
+                    # Set the sprite's position on screen
+                    piece.set_sprite_position()
+                    self.sprites.append(piece)
     def on_draw(self):
         """
         Render the screen.
@@ -97,14 +118,10 @@ class GameView(arcade.View):
                 # Draw the box
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
         # draw the pieces
+        # sprites needs to be updated to the pieces that are not in chess_board.white_taken and chess_board.black_taken
         self.sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        """
-        Called when the user presses a mouse button.
-        TODO: change to move pieces
-        """
-
         # Change the x/y screen coordinates to grid coordinates
         column = int(x // (WIDTH + MARGIN))
         row = int(y // (HEIGHT + MARGIN))
@@ -114,51 +131,43 @@ class GameView(arcade.View):
         # Make sure we are on-grid. It is possible to click in the upper right
         # corner in the margin and go to a grid location that doesn't exist
         if row < ROW_COUNT and column < COLUMN_COUNT:
-            # allow only one selected square at a time
+            # there is a piece selected and we can move it
             if self.selected_square:
                 prev_row, prev_col = self.selected_square
-                if (prev_row + prev_col) % 2 == 0:
-                    self.grid[prev_row][prev_col] = 1
-                else:
-                    self.grid[prev_row][prev_col] = 0
-
-            if self.selected_square == (row, column):
-                if (row + column) % 2 == 0:
-                    self.grid[row][column] = 1
-                else:
-                    self.grid[row][column] = 0
+                # reset the color of the square
+                self.reset_color(row, column)
+                # reset the color of the previous selected_square if pressing the same square again
+                if self.selected_square == (row, column):
+                    self.reset_color(row, column)
+                    self.selected_square = None
+                    return
+                self.destination_square = (row, column)
+                # change the color of the square
+                self.grid[row][column] = 2
+                print("destination square: ")
+                print(self.destination_square)
+                # move the piece to the destination square
+                self.chess_board.move(self.selected_square, self.destination_square)
+                self.selected_piece = self.chess_board.get_piece(self.destination_square)
+                # reset the color of the selected and destination squares
+                self.reset_color(row, column)
+                self.reset_color(self.selected_square[0], self.selected_square[1])
+                # reset the selected and destination squares to None
                 self.selected_square = None
-                return
-            self.selected_square = (row, column)
-            self.grid[row][column] = 2
-        
-        # Assign mouse press to move_start if empty, otherwise move_end
-        if not self.move_start:
-            self.move_start = (row, column)
-        elif not self.move_end:
-            self.move_end = (row, column)
+                self.destination_square = None
+                # set the position of the sprite
+                self.selected_piece.set_sprite_position()
+                self.update_sprites()
 
-
-        if not self.move_start or not self.move_end:
-            # move has yet to be proposed, do nothing
-            return
-        
-        print(f"Start: {self.move_start}, End: {self.move_end}")
-
-        if self.chess_board.move(self.move_start, self.move_end):
-            print("Move was succesful!")
-
-            self.move_start = None
-            self.move_end = None
-
-            return True
-        
-        print("Move could not be made")
-
-        self.move_start = None
-        self.move_end = None
-
-        return False
+            # the user has not selected a piece, so the user will select one
+            else:
+                # select the piece
+                # and color that square green
+                self.selected_square = (row, column)
+                print(self.selected_square)
+                self.grid[row][column] = 2
+                print("selected square: " )
+                print(self.selected_square)
 
     def make_move(self):
         pass
