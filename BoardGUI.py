@@ -74,24 +74,28 @@ class MenuView(arcade.View):
     def on_click_two_player(self, event):
         """ Sets the game mode to two-player and creates the Game View """
         print("two-player:", event)
+        self.manager.disable()
         game_view = GameView()
         self.window.show_view(game_view)
         # TODO: set mode to two-player
     def on_click_ai_easy(self, event):
         """ Sets the game mode to Easy AI and creates the Game View """
         print("ai-easy:", event)
+        self.manager.disable()
         game_view = GameView()
         self.window.show_view(game_view)
         # TODO: set mode to easy ai
     def on_click_ai_hard(self, event):
         """ Sets the game mode to Hard AI and creates the Game View """
         print("ai-hard:", event)
+        self.manager.disable()
         game_view = GameView()
         self.window.show_view(game_view)
         # TODO: set mode to hard ai
     def on_click_quit(self, event):
         """ Closes the arcade window """
         print('goodbye')
+        self.manager.disable()
         arcade.exit()
     def on_draw(self):
         """ draws the menu """
