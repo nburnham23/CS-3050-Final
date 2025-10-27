@@ -25,6 +25,11 @@ CAPTURE_MARGIN = 2 # in columns
 BOARD_OFFSET_X = (WIDTH + MARGIN) * CAPTURE_MARGIN
 BOARD_OFFSET_Y = 0
 
+LEFT_CAPTURE_X = MARGIN + WIDTH // 2
+RIGHT_CAPTURE_X = BOARD_OFFSET_X + (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN) - WIDTH // 2
+
+BASE_Y = BOARD_OFFSET_Y + MARGIN + HEIGHT // 2
+
 # Do the math to figure out our screen dimensions
 WINDOW_WIDTH = (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN * 2) + MARGIN
 WINDOW_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
@@ -146,7 +151,7 @@ class GameView(arcade.View):
                     else:
                         self.grid[row].append(0)
 
-        self.background_color = arcade.color.BLACK
+        self.background_color = arcade.color.CHARCOAL
         self.selected_square = None
         self.destination_square = None # the destination for the selected piece
         self.selected_piece = None
@@ -173,6 +178,8 @@ class GameView(arcade.View):
                     # Set the sprite's position on screen
                     piece.set_sprite_position()
                     self.sprites.append(piece)
+        # TODO: draw the taken sprites in the margin
+
     def on_draw(self):
         """
         Render the screen.
@@ -214,9 +221,8 @@ class GameView(arcade.View):
 
         print(f"Click coordinates: ({x}, {y}). Grid coordinates: ({row}, {column})")
 
-        # Make sure we are on-grid. It is possible to click in the upper right
-        # corner in the margin and go to a grid location that doesn't exist
-        if  row < ROW_COUNT and column < COLUMN_COUNT:
+        # Make sure that the click is on the board
+        if  0 <= row < ROW_COUNT and 0 <= column < COLUMN_COUNT:
             # there is a piece selected and we can move it
             if self.selected_square:
                 # reset the color of the square
@@ -233,8 +239,7 @@ class GameView(arcade.View):
                 # move the piece to the destination square
                 self.chess_board.move(self.selected_square, self.destination_square)
                 self.selected_piece = self.chess_board.get_piece(self.destination_square)
-                # reset the color of the selected and destination squares
-                self.reset_color(row, column)
+                # reset the color of the selected square
                 self.reset_color(self.selected_square[0], self.selected_square[1])
                 # reset the selected and destination squares and possible moves to None
                 self.selected_square = None
@@ -258,10 +263,6 @@ class GameView(arcade.View):
                 self.possible_moves = self.selected_piece.move()
                 print("Possible moves: ")
                 print(self.possible_moves)
-
-
-
-
 
 def main():
     """ Main function """
