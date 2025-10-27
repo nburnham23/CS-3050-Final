@@ -20,9 +20,13 @@ HEIGHT = 80
 # This sets the margin between each cell
 # and on the edges of the screen.
 MARGIN = 5
+CAPTURE_MARGIN = 2
+
+BOARD_OFFSET_X = (WIDTH + MARGIN) * CAPTURE_MARGIN
+BOARD_OFFSET_Y = 0
 
 # Do the math to figure out our screen dimensions
-WINDOW_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN
+WINDOW_WIDTH = (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN * 2) + MARGIN
 WINDOW_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
 WINDOW_TITLE = "Welcome to chess!"
 
@@ -189,8 +193,8 @@ class GameView(arcade.View):
                     color = arcade.color.CHARTREUSE
 
                 # Do the math to figure out where the box is
-                x = (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
-                y = (MARGIN + HEIGHT) * row + MARGIN + HEIGHT // 2
+                x = BOARD_OFFSET_X + (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
+                y = BOARD_OFFSET_Y + (MARGIN + HEIGHT) * row + MARGIN + HEIGHT // 2
 
                 # Draw the box
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
