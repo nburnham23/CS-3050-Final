@@ -20,7 +20,7 @@ HEIGHT = 80
 # This sets the margin between each cell
 # and on the edges of the screen.
 MARGIN = 5
-CAPTURE_MARGIN = 2
+CAPTURE_MARGIN = 2 # in columns
 
 BOARD_OFFSET_X = (WIDTH + MARGIN) * CAPTURE_MARGIN
 BOARD_OFFSET_Y = 0
@@ -201,7 +201,7 @@ class GameView(arcade.View):
         # draw a circle where the piece can move to
         if self.possible_moves is not None:
             for move in self.possible_moves:
-                arcade.draw_circle_filled((MARGIN + WIDTH) * move[1] + MARGIN + WIDTH // 2,
+                arcade.draw_circle_filled((MARGIN + WIDTH) * move[1] + MARGIN + WIDTH // 2 + BOARD_OFFSET_X,
                                           (MARGIN + WIDTH) * move[0] + MARGIN + WIDTH // 2,
                                           20, arcade.color.RED)
         # draw the pieces
@@ -209,14 +209,14 @@ class GameView(arcade.View):
 
     def on_mouse_press(self, x, y, button, modifiers):
         # Change the x/y screen coordinates to grid coordinates
-        column = int(x // (WIDTH + MARGIN))
-        row = int(y // (HEIGHT + MARGIN))
+        column = int((x - BOARD_OFFSET_X) // (WIDTH + MARGIN))
+        row = int((y - BOARD_OFFSET_Y) // (HEIGHT + MARGIN))
 
         print(f"Click coordinates: ({x}, {y}). Grid coordinates: ({row}, {column})")
 
         # Make sure we are on-grid. It is possible to click in the upper right
         # corner in the margin and go to a grid location that doesn't exist
-        if row < ROW_COUNT and column < COLUMN_COUNT:
+        if  row < ROW_COUNT and column < COLUMN_COUNT:
             # there is a piece selected and we can move it
             if self.selected_square:
                 # reset the color of the square
