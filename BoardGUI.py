@@ -189,7 +189,6 @@ class GameView(arcade.View):
                 piece.center_y = BASE_Y * height_multiplier
                 self.white_taken_sprites.append(piece)
                 height_multiplier += 1
-        # TODO: fix the black_taken margin problem
         self.black_taken_sprites = arcade.SpriteList()
         height_multiplier = 1
         for piece in self.chess_board.black_taken:
