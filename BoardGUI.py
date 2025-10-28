@@ -156,6 +156,8 @@ class GameView(arcade.View):
         self.destination_square = None # the destination for the selected piece
         self.selected_piece = None
         self.possible_moves = None
+        self.white_taken_sprites = arcade.SpriteList()
+        self.black_taken_sprites = arcade.SpriteList()
 
 
     def reset_color(self, row, column):
@@ -166,6 +168,7 @@ class GameView(arcade.View):
             self.grid[row][column] = 1
         else:
             self.grid[row][column] = 0
+
     def update_sprites(self):
         """
         resets the sprites to the pieces that are still in the game (not taken)
@@ -178,7 +181,23 @@ class GameView(arcade.View):
                     # Set the sprite's position on screen
                     piece.set_sprite_position()
                     self.sprites.append(piece)
-        # TODO: draw the taken sprites in the margin
+        self.white_taken_sprites = arcade.SpriteList()
+        height_multiplier = 1
+        for piece in self.chess_board.white_taken:
+            if piece is not None:
+                piece.center_x = LEFT_CAPTURE_X
+                piece.center_y = BASE_Y * height_multiplier
+                self.white_taken_sprites.append(piece)
+                height_multiplier += 1
+        # TODO: fix the black_taken margin problem
+        self.black_taken_sprites = arcade.SpriteList()
+        height_multiplier = 1
+        for piece in self.chess_board.black_taken:
+            if piece is not None:
+                piece.center_x = RIGHT_CAPTURE_X
+                piece.center_y = BASE_Y * height_multiplier
+                self.black_taken_sprites.append(piece)
+                height_multiplier += 1
 
     def on_draw(self):
         """
@@ -213,6 +232,8 @@ class GameView(arcade.View):
                                           20, arcade.color.RED)
         # draw the pieces
         self.sprites.draw()
+        self.white_taken_sprites.draw()
+        self.black_taken_sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         # Change the x/y screen coordinates to grid coordinates
