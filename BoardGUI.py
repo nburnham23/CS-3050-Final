@@ -182,21 +182,39 @@ class GameView(arcade.View):
                     piece.set_sprite_position()
                     self.sprites.append(piece)
         self.white_taken_sprites = arcade.SpriteList()
-        height_multiplier = 1
+        row_one_index = 1
+        row_two_index = 1
         for piece in self.chess_board.white_taken:
             if piece is not None:
-                piece.center_x = LEFT_CAPTURE_X
-                piece.center_y = BASE_Y * height_multiplier
-                self.white_taken_sprites.append(piece)
-                height_multiplier += 1
+                # create two columns of captured pieces
+                # TODO: make 12 a constant
+                if row_one_index < 12:
+                    piece.center_x = LEFT_CAPTURE_X
+                    piece.center_y = BASE_Y * row_one_index
+                    self.white_taken_sprites.append(piece)
+                    row_one_index += 1
+                else:
+                    piece.center_x = LEFT_CAPTURE_X * 3
+                    piece.center_y = BASE_Y * row_two_index
+                    self.white_taken_sprites.append(piece)
+                    row_two_index += 1
         self.black_taken_sprites = arcade.SpriteList()
-        height_multiplier = 1
+        row_one_index = 1
+        row_two_index = 1
         for piece in self.chess_board.black_taken:
             if piece is not None:
-                piece.center_x = RIGHT_CAPTURE_X
-                piece.center_y = BASE_Y * height_multiplier
-                self.black_taken_sprites.append(piece)
-                height_multiplier += 1
+                # create two columns of captured pieces
+                # TODO: change 12 to a constant
+                if row_one_index < 12:
+                    piece.center_x = RIGHT_CAPTURE_X
+                    piece.center_y = BASE_Y * row_one_index
+                    self.white_taken_sprites.append(piece)
+                    row_one_index += 1
+                else:
+                    piece.center_x = RIGHT_CAPTURE_X - WIDTH
+                    piece.center_y = BASE_Y * row_two_index
+                    self.white_taken_sprites.append(piece)
+                    row_two_index += 1
 
     def on_draw(self):
         """
