@@ -41,12 +41,13 @@ class MenuView(arcade.View):
     Allows the user to select their desired game mode
     TODO: change the on_click_ functions to appropriate functions
     """
-    def __init__(self):
+    def __init__(self, board: Board):
         super().__init__()
         # a UIManager to handle the UI.
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.background_color = arcade.color.WHITE
+        self.board = board
 
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
@@ -84,21 +85,21 @@ class MenuView(arcade.View):
         """ Sets the game mode to two-player and creates the Game View """
         print("two-player:", event)
         self.manager.disable()
-        game_view = GameView()
+        game_view = GameView(self.board)
         self.window.show_view(game_view)
         # TODO: set mode to two-player
     def on_click_ai_easy(self, event):
         """ Sets the game mode to Easy AI and creates the Game View """
         print("ai-easy:", event)
         self.manager.disable()
-        game_view = GameView()
+        game_view = GameView(self.board)
         self.window.show_view(game_view)
         # TODO: set mode to easy ai
     def on_click_ai_hard(self, event):
         """ Sets the game mode to Hard AI and creates the Game View """
         print("ai-hard:", event)
         self.manager.disable()
-        game_view = GameView()
+        game_view = GameView(self.board)
         self.window.show_view(game_view)
         # TODO: set mode to hard ai
     def on_click_quit(self, event):
@@ -115,13 +116,13 @@ class GameView(arcade.View):
     """
     Chess game class.
     """
-    def __init__(self):
+    def __init__(self, board: Board):
         """
         Set up the application.
         """
         super().__init__()
 
-        self.chess_board = Board()
+        self.chess_board = board
         self.sprites = arcade.SpriteList()
         # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
@@ -308,7 +309,7 @@ def main():
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
     # Create the GameView
-    menu_view = MenuView()
+    menu_view = MenuView(Board())
 
     # Show GameView on screen
     window.show_view(menu_view)
