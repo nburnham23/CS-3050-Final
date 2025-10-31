@@ -4,14 +4,30 @@ class Rook(Piece):
     def __init__(self, color, start_position, image_path, scale = 1):
         super().__init__(color, start_position, image_path, scale)
 
-    def move(self):
+    def move(self, board):
         moveset = []
         row, col = self.curr_position
+
+        # Vectors of rook's move directions
+        # in order: east, south, west, north
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         
-        for i in range(BOARD_LENGTH):
-            for j in range(BOARD_LENGTH):
-                # unlimited lateral movement
-                if (i == row or j == col) and (i, j) != (row, col):
-                    moveset.append( (i, j) )
+        # get possible square for move
+        for dx, dy in directions:
+            new_row, new_col = row + dx, col + dy
+
+            while 0 <= new_row < BOARD_LENGTH and 0 <= new_col < BOARD_LENGTH:
+                target_square = board.get_piece()
+            
+                if target_square is None:
+                    moveset.append((new_row, new_col))
+                else:
+                    # piece in square
+                    if target_square.color != self.color:
+                        moveset.append((new_row, new_col))
+                    # stop when piece in direction
+                    break
+                new_row += dx
+                new_col += dy
         
         return moveset

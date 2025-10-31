@@ -29,5 +29,5 @@ class Piece(arcade.Sprite):
         self.center_y = (MARGIN + HEIGHT) * row + MARGIN + HEIGHT // 2
 
     # Move function to be overriden by subclasses
-    def move(self):
+    def move(self, board):
         return []
