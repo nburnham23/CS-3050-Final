@@ -1,5 +1,7 @@
+'''
+Piece class
+'''
 import arcade
-# TODO: Replace scale with constant for all pieces
 
 BOARD_LENGTH = 8
 MARGIN = 5
@@ -8,9 +10,10 @@ HEIGHT = 80
 CAPTURE_MARGIN = 2
 BOARD_OFFSET_X = (WIDTH + MARGIN) * CAPTURE_MARGIN
 BOARD_OFFSET_Y = 0
+SCALE = 1
 
 class Piece(arcade.Sprite):
-    def __init__(self, color, board_position, image_path, scale = 1):
+    def __init__(self, color, board_position, image_path, scale = SCALE):
         self.piece_color = color
         self.curr_position = board_position
         self.moveset = self.move()

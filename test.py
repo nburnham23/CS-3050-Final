@@ -1,3 +1,7 @@
+"""
+testing file to test the board
+"""
+
 from Board import Board
 
 def main():
