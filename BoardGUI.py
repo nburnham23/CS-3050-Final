@@ -169,6 +169,8 @@ class GameView(arcade.View):
                 print("selected square: " )
                 print(self.selected_square)
 
+    def make_move(self):
+        pass
 
 def main():
     """ Main function """

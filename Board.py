@@ -1,3 +1,4 @@
+from Piece import Piece
 from Pawn import Pawn
 from Bishop import Bishop
 from Knight import Knight
@@ -81,13 +82,13 @@ class Board():
             print("move not in moveset")
             return False
         
-        # Check if enemy piece is in spot, and if so add to taken list
-        enemy_piece = self.get_piece(new_position)
-        if enemy_piece:
-            if enemy_piece.piece_color == 'BLACK':
-                self.black_taken.append(enemy_piece)
-            else:
-                self.white_taken.append(enemy_piece)
+        # # Check if enemy piece is in spot, and if so add to taken list
+        # enemy_piece = self.get_piece(new_position)
+        # if enemy_piece:
+        #     if enemy_piece.piece_color == 'BLACK':
+        #         self.black_taken.append(enemy_piece)
+        #     else:
+        #         self.white_taken.append(enemy_piece)
         
         # Update pieces information
         piece.curr_position = new_position
@@ -96,6 +97,8 @@ class Board():
         # Make move on board
         self.set_piece(new_position, piece)
         self.set_piece(piece_position, None)
+
+        return True
     
     # toString method
     def display(self):
