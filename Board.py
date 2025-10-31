@@ -57,9 +57,6 @@ class Board():
                         Bishop("WHITE", (7,2), img_path['bishop']['WHITE']), Queen("WHITE", (7,3), img_path['queen']['WHITE']), 
                         King("WHITE", (7,4), img_path['king']['WHITE']), Bishop("WHITE", (7,5), img_path['bishop']['WHITE']), 
                         Knight("WHITE", (7,6), img_path['knight']['WHITE']), Rook("WHITE", (7,7), img_path['rook']['WHITE'])] ]
-        
-        self.white_taken = []
-        self.black_taken = []
     
     def get_piece(self, board_position):
         row, col = board_position
@@ -68,6 +65,21 @@ class Board():
     def set_piece(self, board_position, piece):
         row, col = board_position
         self.board[row][col] = piece
+
+    # Removes collisions and prevents invalid piece jumping from piece's moveset
+    def refine_moves(self, piece):
+        curr_moveset = piece.moveset
+        invalid_moves = []
+
+        for position in curr_moveset:
+            # Remove friendly takes
+            if self.get_piece(position).color == piece.color:
+                invalid_moves.append(position)
+            # Prevent piece hopping (unless piece is knight)
+        
+        valid_moves = list(set(curr_moveset).difference(set(invalid_moves)))
+        piece.moveset = valid_moves
+
     
     # Check if move is valid, then update board and piece's moveset
     def move(self, piece_position, new_position):
@@ -93,6 +105,7 @@ class Board():
         # Update pieces information
         piece.curr_position = new_position
         piece.calculate_moves()
+        self.refine_moves(piece)
 
         # Make move on board
         self.set_piece(new_position, piece)
