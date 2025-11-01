@@ -6,7 +6,8 @@ def main():
 
     # print(game.get_piece((0, 0)))
 
-    game.move((1, 0), (4, 0))
+    game.move((1, 0), (2, 0))
+    # print(game.get_piece((2,0)))
     game.display()
 
 if __name__ == '__main__':
