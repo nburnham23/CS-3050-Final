@@ -1,4 +1,3 @@
-from Piece import Piece
 from Pawn import Pawn
 from Bishop import Bishop
 from Knight import Knight
@@ -36,6 +35,8 @@ img_path = {
 
 class Board():
     def __init__(self):
+        self.black_taken = []
+        self.white_taken = []
 
         self.board = [ [Rook("BLACK", (0,0), img_path['rook']["BLACK"]), Knight("BLACK", (0,1), img_path['knight']["BLACK"]), 
                         Bishop("BLACK", (0,2), img_path['bishop']["BLACK"]), Queen("BLACK", (0,3), img_path['queen']["BLACK"]), 
@@ -57,6 +58,9 @@ class Board():
                         Bishop("WHITE", (7,2), img_path['bishop']['WHITE']), Queen("WHITE", (7,3), img_path['queen']['WHITE']), 
                         King("WHITE", (7,4), img_path['king']['WHITE']), Bishop("WHITE", (7,5), img_path['bishop']['WHITE']), 
                         Knight("WHITE", (7,6), img_path['knight']['WHITE']), Rook("WHITE", (7,7), img_path['rook']['WHITE'])] ]
+
+        # initialize movesets for all pieces
+        self.calculate_movesets()
     
     def get_piece(self, board_position):
         row, col = board_position
@@ -66,19 +70,12 @@ class Board():
         row, col = board_position
         self.board[row][col] = piece
 
-    # Removes collisions and prevents invalid piece jumping from piece's moveset
-    def refine_moves(self, piece):
-        curr_moveset = piece.moveset
-        invalid_moves = []
-
-        for position in curr_moveset:
-            # Remove friendly takes
-            if self.get_piece(position).color == piece.color:
-                invalid_moves.append(position)
-            # Prevent piece hopping (unless piece is knight)
-        
-        valid_moves = list(set(curr_moveset).difference(set(invalid_moves)))
-        piece.moveset = valid_moves
+    # Updates all pieces' movesets
+    def calculate_movesets(self):
+        for row in self.board:
+            for piece in row:
+                if piece:
+                    piece.calculate_moves(self)
 
     
     # Check if move is valid, then update board and piece's moveset
@@ -91,25 +88,28 @@ class Board():
         # Validate move
         # if new_position not in piece.move():
         if new_position not in piece.moveset:
-            print("move not in moveset")
+            print("Move not in moveset")
             return False
         
-        # # Check if enemy piece is in spot, and if so add to taken list
-        # enemy_piece = self.get_piece(new_position)
-        # if enemy_piece:
-        #     if enemy_piece.piece_color == 'BLACK':
-        #         self.black_taken.append(enemy_piece)
-        #     else:
-        #         self.white_taken.append(enemy_piece)
-        
+        captured_piece = self.get_piece(new_position)
+        if captured_piece and captured_piece.piece_color == 'BLACK':
+            self.black_taken.append(captured_piece)
+        elif captured_piece and captured_piece.piece_color == 'WHITE':
+            self.white_taken.append(captured_piece)
+
         # Update pieces information
         piece.curr_position = new_position
-        piece.calculate_moves()
-        self.refine_moves(piece)
 
         # Make move on board
         self.set_piece(new_position, piece)
         self.set_piece(piece_position, None)
+
+        # Update if pawn has moved
+        if isinstance(piece, Pawn):
+            piece.has_moved = True
+
+        # Update board state
+        self.calculate_movesets()
 
         return True
     

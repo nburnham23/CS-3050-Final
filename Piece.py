@@ -7,20 +7,21 @@ WIDTH = 80
 HEIGHT = 80
 
 class Piece(arcade.Sprite):
-    def __init__(self, color, board_position, image_path, scale = 1):
-        self.piece_color = color
+    def __init__(self, piece_color, board_position, image_path, scale = 1):
+        self.piece_color = piece_color
         self.curr_position = board_position
-        self.moveset = self.move()
+        self.moveset = []
 
         # Initialize Sprite parent class
         super().__init__(image_path, scale)
 
-    def calculate_moves(self):
+    def calculate_moves(self, board):
         # Clear moveset
         self.moveset = []
 
         # Update moveset
-        self.moveset = self.move()
+        # Pass the Board object to the subclass move() implementation
+        self.moveset = self.move(board)
 
     def set_sprite_position(self):
         """Set the sprite's screen position based on board position"""

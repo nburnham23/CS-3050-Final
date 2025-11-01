@@ -146,18 +146,27 @@ class GameView(arcade.View):
                 self.grid[row][column] = 2
                 print("destination square: ")
                 print(self.destination_square)
-                # move the piece to the destination square
-                self.chess_board.move(self.selected_square, self.destination_square)
-                self.selected_piece = self.chess_board.get_piece(self.destination_square)
+                # attempt to move the piece to the destination square
+                moved = self.chess_board.move(self.selected_square, self.destination_square)
+                # get the piece at the destination only if the move succeeded
+                if moved:
+                    self.selected_piece = self.chess_board.get_piece(self.destination_square)
+                else:
+                    self.selected_piece = None
+
                 # reset the color of the selected and destination squares
                 self.reset_color(row, column)
                 self.reset_color(self.selected_square[0], self.selected_square[1])
                 # reset the selected and destination squares to None
                 self.selected_square = None
                 self.destination_square = None
-                # set the position of the sprite
-                self.selected_piece.set_sprite_position()
-                self.update_sprites()
+
+                # if the move succeeded, update sprite position and sprite list
+                if self.selected_piece:
+                    self.selected_piece.set_sprite_position()
+                    self.update_sprites()
+                else:
+                    print("Move failed; no piece at destination or invalid move")
 
             # the user has not selected a piece, so the user will select one
             else:
