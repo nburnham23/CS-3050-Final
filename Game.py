@@ -62,42 +62,9 @@ class Game:
     # Linking BoardGUI with Game logic
     @staticmethod
     def start_game():
-        class LinkedBoardGUI(BoardGUI.GameView):
-            def __init__(self, game):
-                super().__init__()
-                self.game = game
-                self.chess_board = game.board
-
-            def on_mouse_press(self, x, y, button, modifiers):
-                column = int(x // (BoardGUI.WIDTH + BoardGUI.MARGIN))
-                row = int(y // (BoardGUI.HEIGHT + BoardGUI.MARGIN))
-
-                if row >= BoardGUI.ROW_COUNT or column >= BoardGUI.COLUMN_COUNT:
-                    return
-
-                if self.selected_square:
-                    from_pos = self.selected_square
-                    to_pos = (row, column)
-
-                    # Attempt the move
-                    if self.game.make_move(from_pos, to_pos):
-                        # Update piece sprite positions
-                        self.update_sprites()
-
-                    # Reset GUI
-                    self.reset_color(from_pos[0], from_pos[1])
-                    self.reset_color(to_pos[0], to_pos[1])
-                    self.selected_square = None
-                    self.destination_square = None
-                else:
-                    piece = self.chess_board.get_piece((row, column))
-                    if piece and piece.piece_color == self.game.current_turn:
-                        self.selected_square = (row, column)
-                        self.grid[row][column] = 2
-
         window = arcade.Window(BoardGUI.WINDOW_WIDTH, BoardGUI.WINDOW_HEIGHT, BoardGUI.WINDOW_TITLE)
         game = Game()
-        game_view = LinkedBoardGUI(game)
+        game_view = BoardGUI.MenuView(game.board)
         window.show_view(game_view)
         arcade.run()
 
