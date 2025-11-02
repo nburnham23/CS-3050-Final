@@ -39,16 +39,6 @@ class Game:
             print("INVALID MOVE FOR PIECE")
             return False
 
-        # simulate move to check for self-check
-        # TODO: FIND SOLUTION THAT DOESN'T INCLUDE COPIES
-        """ test_board = copy.deepcopy(self.board)
-        test_board.move(from_position, to_position)
-        temp_game = Game()
-        temp_game.board = test_board
-        if temp_game.is_in_check(self.current_turn):
-            print("ILLEGAL MOVE — KING WOULD BE IN CHECK")
-            return False """
-
         # make the actual move
         self.board.move(from_position, to_position)
         self.move_history.append((piece, from_position, to_position))
@@ -63,9 +53,13 @@ class Game:
             print(f"{enemy_color} is in CHECK!")
 
             if self.is_checkmate(enemy_color):
-                print(f"CHECKMATE! {self.current_turn} wins!")
                 self.winner = self.current_turn
+                print(f"CHECKMATE! {self.winner} wins!")
                 self.is_game_over = True
+                # TODO: show the game over view
+                self.reset_game()
+                self.start_game()
+
                 return True
 
         self.switch_turn()
@@ -85,39 +79,31 @@ class Game:
     
     # Return true if king is in check
     def is_in_check(self, color):
+        # if king_pos is none, it should be game over?
         king_pos = self.find_king(color)
+
         if not king_pos:
-            return False
-        
+            print("GAME OVER FROM is_in_check")
+            return True
+
         enemy_color = "BLACK" if color == "WHITE" else "WHITE"
 
         for r in range(8):
             for c in range(8):
                 piece = self.board.get_piece((r, c))
                 if piece and piece.piece_color == enemy_color:
-                    piece.calculate_moves(self.board)
                     if king_pos in piece.moveset:
                         return True
         return False
     
     def is_checkmate(self, color):
-        if not self.is_in_check(color):
-            return False
-        
-        # test every possible move for all pieces of that color
-        for r in range(8):
-            for c in range(8):
-                piece = self.board.get_piece((r, c))
-                if piece and piece.piece_color == color:
-                    for move in piece.moveset:
-                        test_board = copy.deepcopy(self.board)
-                        test_board.move((r, c), move)
-                        # temp wrap board in dummy game
-                        temp_game = Game()
-                        temp_game.board = test_board
-                        if not temp_game.is_in_check(color):
-                            return False
-        return True
+        # TODO: change to constants
+        # this isn't getting hit
+        king_pos = self.find_king(color)
+        if not king_pos:
+            print("GAME OVER FROM is_checkmate")
+            return True
+
 
     # Display the board
     def display_board(self):
@@ -134,6 +120,7 @@ class Game:
 
     # Reset game
     def reset_game(self):
+        arcade.close_window()
         self.__init__()
 
 def main():
