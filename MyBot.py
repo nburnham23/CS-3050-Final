@@ -1,3 +1,7 @@
+"""
+Easy Bot class
+"""
+
 import random
 import time
 from Board import Board
