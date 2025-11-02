@@ -67,7 +67,20 @@ class Board():
     def set_piece(self, board_position, piece):
         row, col = board_position
         self.board[row][col] = piece
-    
+
+    def refined_moves(self, piece):
+        curr_moveset = piece.moveset
+        invalid_moves = []
+
+        for position in curr_moveset:
+            # Remove friendly takes
+            if self.get_piece(position).color == piece.color:
+                invalid_moves.append(position)
+            # Prevent piece hopping (unless knight)
+
+        valid_moves = list(set(curr_moveset).difference(set(invalid_moves)))
+        piece.moveset = valid_moves
+
     # Check if move is valid, then update board and piece's moveset
     def move(self, piece_position, new_position):
         piece = self.get_piece(piece_position)

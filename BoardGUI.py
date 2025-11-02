@@ -3,9 +3,11 @@ Chess Board GUI
 CS 3050 Final Project
 """
 import arcade
+import random
 from arcade import SpriteList
 
 from Board import Board
+from MyBot import BotPlayer
 
 # Set how many rows and columns we will have
 ROW_COUNT = 8
@@ -37,6 +39,7 @@ class GameView(arcade.View):
         super().__init__()
 
         self.chess_board = Board()
+        self.bot = BotPlayer('BLACK', self.chess_board)
         self.sprites = arcade.SpriteList()
         # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
@@ -70,6 +73,8 @@ class GameView(arcade.View):
         self.selected_square = None
         self.destination_square = None # the destination for the selected piece
         self.selected_piece = None
+        self.bot_thinking = False
+        self.bot_timer = 0.0  # countdown for bot thinking
 
 
     def reset_color(self, row, column):
@@ -92,6 +97,17 @@ class GameView(arcade.View):
                     # Set the sprite's position on screen
                     piece.set_sprite_position()
                     self.sprites.append(piece)
+
+    def on_update(self, delta_time):
+        """Called every frame; delta_time is seconds since last call"""
+        if self.bot_thinking:
+            self.bot_timer -= delta_time
+            if self.bot_timer <= 0:
+                # Bot finishes thinking, make move
+                self.bot.make_move()
+                self.update_sprites()
+                self.bot_thinking = False
+
     def on_draw(self):
         """
         Render the screen.
@@ -122,6 +138,8 @@ class GameView(arcade.View):
         self.sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
+        if self.bot_thinking:
+            return  # ignore clicks while bot is thinking
         # Change the x/y screen coordinates to grid coordinates
         column = int(x // (WIDTH + MARGIN))
         row = int(y // (HEIGHT + MARGIN))
@@ -158,6 +176,10 @@ class GameView(arcade.View):
                 # set the position of the sprite
                 self.selected_piece.set_sprite_position()
                 self.update_sprites()
+                # Start bot thinking (random delay 3-6 seconds)
+                self.bot_thinking = True
+                self.bot_timer = random.uniform(3, 6)
+
 
             # the user has not selected a piece, so the user will select one
             else:
