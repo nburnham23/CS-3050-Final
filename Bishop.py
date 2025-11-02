@@ -1,9 +1,6 @@
 """
 Bishop class
 """
-"""
-Bishop class
-"""
 from Piece import Piece, BOARD_LENGTH
 
 class Bishop(Piece):
