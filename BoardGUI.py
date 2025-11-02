@@ -284,6 +284,10 @@ class GameView(arcade.View):
                 # get the piece at the destination only if the move succeeded
                 if moved:
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
+                    if self.game.is_game_over:
+                        game_over_view = GameOverView(self.game.winner)
+                        self.window.show_view(game_over_view)
+                        return
                 else:
                     self.selected_piece = None
 
@@ -315,12 +319,13 @@ class GameView(arcade.View):
                 self.possible_moves = piece.moveset
 
 class GameOverView(arcade.View):
-    def __init__(self):
+    def __init__(self, winner):
         super().__init__()
         # a UIManager to handle the UI.
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.background_color = arcade.color.WHITE
+        self.winner = winner
 
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
@@ -336,20 +341,34 @@ class GameOverView(arcade.View):
             text="Quit", width=300
         )
         self.v_box.add(quit_button)
-        quit_button.on_click = self.on_click_quit()
+        quit_button.on_click = self.on_click_quit
+
+        # Create a widget to hold the v_box widget, that will center the buttons
+        ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
+        ui_anchor_layout.add(child=self.v_box, anchor_x="center_x", anchor_y="center_y")
+
+        self.manager.add(ui_anchor_layout)
+
     def on_click_play_again(self, event):
-        print("two-player:", event)
+        print("play again:", event)
         self.manager.disable()
-        self.window.show_view(MenuView)
+        self.window.show_view(MenuView())
 
     def on_click_quit(self, event):
         """ Closes the arcade window """
         print('goodbye')
         self.manager.disable()
         arcade.exit()
+
     def on_draw(self):
         """ draws the menu """
         self.clear()
+        arcade.draw_text(f"{self.winner} WINS!",
+                         self.window.width / 2,
+                         self.window.height / 2 + 100,
+                         arcade.color.BLACK,
+                         font_size=30,
+                         anchor_x="center")
         self.manager.draw()
 
 def main():
