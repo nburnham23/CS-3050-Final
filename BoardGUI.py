@@ -6,6 +6,8 @@ import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
+import time
+import random
 from Board import Board
 from Game import Game
 
@@ -42,13 +44,12 @@ class MenuView(arcade.View):
     Allows the user to select their desired game mode
     TODO: change the on_click_ functions to appropriate functions
     """
-    def __init__(self, board: Board):
+    def __init__(self):
         super().__init__()
         # a UIManager to handle the UI.
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.background_color = arcade.color.WHITE
-        self.board = board
 
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
@@ -89,28 +90,30 @@ class MenuView(arcade.View):
         game = Game()
         game_view = GameView(game)
         self.window.show_view(game_view)
-        # TODO: set mode to two-player
+
     def on_click_ai_easy(self, event):
         """ Sets the game mode to Easy AI and creates the Game View """
         print("ai-easy:", event)
         self.manager.disable()
-        game = Game()
+        game = Game(bot=True)
         game_view = GameView(game)
         self.window.show_view(game_view)
-        # TODO: set mode to easy ai
+
     def on_click_ai_hard(self, event):
         """ Sets the game mode to Hard AI and creates the Game View """
         print("ai-hard:", event)
         self.manager.disable()
-        game = Game()
+        # temporarily using stupid bot
+        game = Game(bot=True)
         game_view = GameView(game)
         self.window.show_view(game_view)
-        # TODO: set mode to hard ai
+
     def on_click_quit(self, event):
         """ Closes the arcade window """
         print('goodbye')
         self.manager.disable()
         arcade.exit()
+
     def on_draw(self):
         """ draws the menu """
         self.clear()
@@ -131,7 +134,7 @@ class GameView(arcade.View):
         # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
-                piece = self.chess_board.board[row][column]
+                piece = self.chess_board.get_piece((row, column))
                 if piece is not None:
                     # Set the sprite's position on screen
                     piece.set_sprite_position()
@@ -157,10 +160,17 @@ class GameView(arcade.View):
                         self.grid[row].append(0)
 
         self.background_color = arcade.color.CHARCOAL
+
         self.selected_square = None
         self.destination_square = None # the destination for the selected piece
+        self.bot_selected_square = None
+        self.bot_destination_square = None # the destination for the bot's selected piece
+
         self.selected_piece = None
+        self.bot_selected_piece = None # the bot's selected piece
+
         self.possible_moves = None
+
         self.white_taken_sprites = arcade.SpriteList()
         self.black_taken_sprites = arcade.SpriteList()
 
@@ -181,7 +191,7 @@ class GameView(arcade.View):
         self.sprites = arcade.SpriteList()
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
-                piece = self.chess_board.board[row][column]
+                piece = self.chess_board.get_piece((row, column))
                 if piece is not None:
                     # Set the sprite's position on screen
                     piece.set_sprite_position()
@@ -299,6 +309,29 @@ class GameView(arcade.View):
                 if self.selected_piece:
                     self.selected_piece.set_sprite_position()
                     self.update_sprites()
+
+                    # if bot is playing, make bot move
+                    if self.game.bot_player and moved:
+                        # make random time delay between 3-5 seconds to pretend bot is thinking
+                        delay_time = random.uniform(3, 5)
+
+                        # create bot move function to be scheduled after delay
+                        def bot_move_func(dt):
+                            try: 
+                                self.bot_selected_piece, self.bot_selected_square, self.bot_destination_square = self.game.bot_player.generate_move()
+                                print(f"Bot selected square: {self.bot_selected_square} containing {self.bot_selected_piece}, destination square: {self.bot_destination_square}")
+                                if self.bot_selected_piece:
+                                    # bot moved, update its board state again and sprites
+                                    self.game.make_move(self.bot_selected_square, self.bot_destination_square)
+
+                                    self.bot_selected_piece.set_sprite_position()
+                                    self.update_sprites()
+                            except Exception as e:
+                                print(f"Error during bot move: {e}")
+                            # ensures bot_move_func only runs once
+                            arcade.unschedule(bot_move_func)
+                        arcade.schedule(bot_move_func, delay_time)
+
                 else:
                     print("Move failed; no piece at destination or invalid move")
 

@@ -1,75 +1,164 @@
 from Board import Board
 import BoardGUI
 import arcade
+from MyBot import BotPlayer
 
 class Game:
-    def __init__(self):
+    """
+    Main game logic class for chess
+    Class handles turns, moves, check/checkmate, and connects BoardGUI
+    """
+    def __init__(self, bot=False):
+        """
+        Initialize a new game
+        """
+        # Create new chess board
         self.board = Board()
+        # Set current turn to white following chess rules
         self.current_turn = "WHITE"
+        # Store the winner color
         self.winner = None
+        # Track if game is over
         self.is_game_over = False
+        # Keeps history of all moves made
         self.move_history = []
+        # Optional: bot player
+        self.bot_player = BotPlayer("BLACK", self.board) if bot else None
 
-    # Switch turns
+    # Function to switch the current turn between WHITE and BLACK
     def switch_turn(self):
         if self.current_turn == "WHITE":
             self.current_turn = "BLACK"
         else:
             self.current_turn = "WHITE"
     
-    # Implement logic for making a move
+    # Logic for making a move
     def make_move(self, from_position, to_position):
-        # Game is over no moves to be made
+        """
+        Check if piece has legal move and if yes moves from_position to to_position on board
+        Checks for self check, check/checkmate
+        """
+        # If game is over no more moves allowed
         if self.is_game_over:
             print("GAME OVER")
             return False
-        
-        # Select piece
-        piece = self.board.get_piece(from_position)
-        print(f"PIECE SELECTED AT: {from_position}")
 
-        # No piece selected
+        # Get the piece at the clicked on position
+        piece = self.board.get_piece(from_position)
         if piece is None:
             print("NO PIECE SELECTED")
             return False
 
-        # Debug statement to get what piece
+        # Output piece selected (debug purposes)
         print(f"SELECTED PIECE: {piece.__class__.__name__}")
 
-        # Turn enforcement
+        # If piece does not belong to current player print error statement
         if piece.piece_color != self.current_turn:
             print("TRIED MOVING PIECE OUT OF TURN")
             return False
-        
+
+        # Validate that to_position in selected pieces moveset
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
             return False
-        
-        enemy_piece = self.board.get_piece(to_position)
+
+        # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
         self.move_history.append((piece, from_position, to_position))
+
+        # Determine opponents color 
+        if self.current_turn == "WHITE":
+            enemy_color = "BLACK"
+        else:
+            enemy_color = "WHITE"
+
+        # Check if the move puts the oppenent in check
+        if self.is_in_check(enemy_color):
+            # If enemy is in checkmate output in terminal
+            print(f"{enemy_color} is in CHECK!")
+            # Check for checkmate
+            if self.is_checkmate(enemy_color):
+                self.winner = self.current_turn
+                print(f"CHECKMATE! {self.winner} wins!")
+                self.is_game_over = True
+                # TODO: show the game over view
+                self.reset_game()
+                self.start_game()
+                return True
+            
+        # Switch to opponents turn
         self.switch_turn()
         return True
     
     # Return the position of a piece
     def get_piece(self, position):
         return self.board.get_piece(position)
+    
+    def find_king(self, color):
+        """
+        Locates the king of a given color on the board
+        Returns the position
+        """
+        # Loop through each row and column
+        for r in range(8):
+            for c in range(8):
+                piece = self.board.get_piece((r, c))
+                # Check if piece is correct color and is the king
+                if piece is not None and piece.piece_color == color and piece.__class__.__name__ == "King":
+                    return (r, c)
+        return None
+
+    def is_in_check(self, color):
+        """
+        Returns True if the king of given color is in check
+        """
+        king_pos = self.find_king(color)
+        if not king_pos:
+            print("GAME OVER FROM is_in_check")
+            return True
+        # Determine enemy color
+        if color == "WHITE":
+            enemy_color = "BLACK"
+        else:
+            enemy_color = "WHITE"
+        # Loop through each row and column
+        for r in range(8):
+            for c in range(8):
+                piece = self.board.get_piece((r, c))
+                # Check if piece is in moveset and can attack the king
+                if piece and piece.piece_color == enemy_color:
+                    if king_pos in piece.moveset:
+                        return True
+        return False
+    
+    def is_checkmate(self, color):
+        # TODO: change to constants
+        # this isn't getting hit
+        king_pos = self.find_king(color)
+        if not king_pos:
+            print("GAME OVER FROM is_checkmate")
+            return True
+
 
     # Display the board
     def display_board(self):
         self.board.display()
 
-    # Linking BoardGUI with Game logic
+    # Start the game with BoardGUI
     @staticmethod
     def start_game():
+        """
+        Creat GUI window and show menu
+        """
         window = arcade.Window(BoardGUI.WINDOW_WIDTH, BoardGUI.WINDOW_HEIGHT, BoardGUI.WINDOW_TITLE)
-        game = Game()
-        game_view = BoardGUI.MenuView(game.board)
-        window.show_view(game_view)
+        # game = Game()
+        menu_view = BoardGUI.MenuView()
+        window.show_view(menu_view)
         arcade.run()
 
     # Reset game
     def reset_game(self):
+        arcade.close_window()
         self.__init__()
 
 def main():
