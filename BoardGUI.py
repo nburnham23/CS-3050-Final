@@ -269,6 +269,10 @@ class GameView(arcade.View):
         self.black_taken_sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
+        # if bot is making a move, ignore player input
+        if self.game.bot_move_pending:
+            return
+
         # Change the x/y screen coordinates to grid coordinates
         column = int((x - BOARD_OFFSET_X) // (WIDTH + MARGIN))
         row = int((y - BOARD_OFFSET_Y) // (HEIGHT + MARGIN))
@@ -317,6 +321,8 @@ class GameView(arcade.View):
 
                     # if bot is playing, make bot move
                     if self.game.bot_player and moved:
+                        # lock player input until bot move is complete
+                        self.game.bot_move_pending = True
                         # make random time delay between 3-5 seconds to pretend bot is thinking
                         delay_time = random.uniform(3, 5)
 
@@ -333,6 +339,7 @@ class GameView(arcade.View):
                                     self.update_sprites()
                             except Exception as e:
                                 print(f"Error during bot move: {e}")
+                            self.game.bot_move_pending = False
                             # ensures bot_move_func only runs once
                             arcade.unschedule(bot_move_func)
                         arcade.schedule(bot_move_func, delay_time)

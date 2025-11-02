@@ -27,6 +27,7 @@ class Game:
         self.move_history = []
         # Optional: bot player
         self.bot_player = BotPlayer("BLACK", self.board) if bot else None
+        self.bot_move_pending = False
 
     # Function to switch the current turn between WHITE and BLACK
     def switch_turn(self):
