@@ -266,7 +266,7 @@ class GameView(arcade.View):
         print(f"Click coordinates: ({x}, {y}). Grid coordinates: ({row}, {column})")
 
         # Make sure that the click is on the board
-        if  0 <= row < ROW_COUNT and 0 <= column < COLUMN_COUNT:
+        if 0 <= row < ROW_COUNT and 0 <= column < COLUMN_COUNT:
             # there is a piece selected and we can move it
             if self.selected_square:
                 # reset the color of the square
@@ -294,6 +294,7 @@ class GameView(arcade.View):
                 # reset the selected and destination squares and possible moves to None
                 self.selected_square = None
                 self.destination_square = None
+                self.possible_moves = None
 
                 # if the move succeeded, update sprite position and sprite list
                 if self.selected_piece:
@@ -311,6 +312,8 @@ class GameView(arcade.View):
                 self.grid[row][column] = 2
                 print("selected square: " )
                 print(self.selected_square)
+                piece = self.chess_board.get_piece((row, column))
+                self.possible_moves = piece.moveset
 
 def main():
     """ Main function """
