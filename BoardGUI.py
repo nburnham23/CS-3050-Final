@@ -7,6 +7,7 @@ import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 from Board import Board
+from Game import Game
 
 
 # Set how many rows and columns we will have
@@ -85,21 +86,24 @@ class MenuView(arcade.View):
         """ Sets the game mode to two-player and creates the Game View """
         print("two-player:", event)
         self.manager.disable()
-        game_view = GameView(self.board)
+        game = Game()
+        game_view = GameView(game)
         self.window.show_view(game_view)
         # TODO: set mode to two-player
     def on_click_ai_easy(self, event):
         """ Sets the game mode to Easy AI and creates the Game View """
         print("ai-easy:", event)
         self.manager.disable()
-        game_view = GameView(self.board)
+        game = Game()
+        game_view = GameView(game)
         self.window.show_view(game_view)
         # TODO: set mode to easy ai
     def on_click_ai_hard(self, event):
         """ Sets the game mode to Hard AI and creates the Game View """
         print("ai-hard:", event)
         self.manager.disable()
-        game_view = GameView(self.board)
+        game = Game()
+        game_view = GameView(game)
         self.window.show_view(game_view)
         # TODO: set mode to hard ai
     def on_click_quit(self, event):
@@ -116,13 +120,13 @@ class GameView(arcade.View):
     """
     Chess game class.
     """
-    def __init__(self, board: Board):
+    def __init__(self, game: Game):
         """
         Set up the application.
         """
         super().__init__()
-
-        self.chess_board = board
+        self.game = game
+        self.chess_board = game.board
         self.sprites = arcade.SpriteList()
         # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
@@ -276,7 +280,7 @@ class GameView(arcade.View):
                 print("destination square: ")
                 print(self.destination_square)
                 # attempt to move the piece to the destination square
-                moved = self.chess_board.move(self.selected_square, self.destination_square)
+                moved = self.game.make_move(self.selected_square, self.destination_square)
                 # get the piece at the destination only if the move succeeded
                 if moved:
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
