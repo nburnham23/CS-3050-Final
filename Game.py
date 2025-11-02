@@ -148,8 +148,7 @@ class Game:
         Creat GUI window and show menu
         """
         window = arcade.Window(BoardGUI.WINDOW_WIDTH, BoardGUI.WINDOW_HEIGHT, BoardGUI.WINDOW_TITLE)
-        game = Game()
-        game_view = BoardGUI.MenuView(game.board)
+        game_view = BoardGUI.MenuView()
         window.show_view(game_view)
         arcade.run()
 

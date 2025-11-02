@@ -42,13 +42,12 @@ class MenuView(arcade.View):
     Allows the user to select their desired game mode
     TODO: change the on_click_ functions to appropriate functions
     """
-    def __init__(self, board: Board):
+    def __init__(self):
         super().__init__()
         # a UIManager to handle the UI.
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.background_color = arcade.color.WHITE
-        self.board = board
 
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
@@ -315,13 +314,51 @@ class GameView(arcade.View):
                 piece = self.chess_board.get_piece((row, column))
                 self.possible_moves = piece.moveset
 
+class GameOverView(arcade.View):
+    def __init__(self):
+        super().__init__()
+        # a UIManager to handle the UI.
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        self.background_color = arcade.color.WHITE
+
+        # Create a vertical BoxGroup to align buttons
+        self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
+
+        # Create the buttons
+        play_again_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Play Again", width=300
+        )
+        self.v_box.add(play_again_button)
+        play_again_button.on_click = self.on_click_play_again
+
+        quit_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Quit", width=300
+        )
+        self.v_box.add(quit_button)
+        quit_button.on_click = self.on_click_quit()
+    def on_click_play_again(self, event):
+        print("two-player:", event)
+        self.manager.disable()
+        self.window.show_view(MenuView)
+
+    def on_click_quit(self, event):
+        """ Closes the arcade window """
+        print('goodbye')
+        self.manager.disable()
+        arcade.exit()
+    def on_draw(self):
+        """ draws the menu """
+        self.clear()
+        self.manager.draw()
+
 def main():
     """ Main function """
     # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
     # Create the GameView
-    menu_view = MenuView(Board())
+    menu_view = MenuView()
 
     # Show GameView on screen
     window.show_view(menu_view)
