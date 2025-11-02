@@ -1,6 +1,9 @@
+"""
+Game class
+"""
+import arcade
 from Board import Board
 import BoardGUI
-import arcade
 
 class Game:
     """
@@ -28,7 +31,7 @@ class Game:
             self.current_turn = "BLACK"
         else:
             self.current_turn = "WHITE"
-    
+
     # Logic for making a move
     def make_move(self, from_position, to_position):
         """
@@ -63,7 +66,7 @@ class Game:
         self.board.move(from_position, to_position)
         self.move_history.append((piece, from_position, to_position))
 
-        # Determine opponents color 
+        # Determine opponents color
         if self.current_turn == "WHITE":
             enemy_color = "BLACK"
         else:
@@ -78,18 +81,16 @@ class Game:
                 self.winner = self.current_turn
                 print(f"CHECKMATE! {self.winner} wins!")
                 self.is_game_over = True
-                # TODO: show the game over view
-
                 return True
-            
+
         # Switch to opponents turn
         self.switch_turn()
         return True
-    
+
     # Return the position of a piece
     def get_piece(self, position):
         return self.board.get_piece(position)
-    
+
     def find_king(self, color):
         """
         Locates the king of a given color on the board
@@ -100,7 +101,8 @@ class Game:
             for c in range(8):
                 piece = self.board.get_piece((r, c))
                 # Check if piece is correct color and is the king
-                if piece is not None and piece.piece_color == color and piece.__class__.__name__ == "King":
+                if (piece is not None and piece.piece_color == color and
+                        piece.__class__.__name__ == "King"):
                     return (r, c)
         return None
 
@@ -126,7 +128,7 @@ class Game:
                     if king_pos in piece.moveset:
                         return True
         return False
-    
+
     def is_checkmate(self, color):
         # TODO: change to constants
         # this isn't getting hit
@@ -134,6 +136,7 @@ class Game:
         if not king_pos:
             print("GAME OVER FROM is_checkmate")
             return True
+        return False
 
 
     # Display the board

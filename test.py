@@ -117,7 +117,7 @@ class MenuView(arcade.View):
         """ draws the menu """
         self.clear()
         self.manager.draw()
-        
+
 #CHANGE FROM BOARD INSTANCE TO GAME
 class GameView(arcade.View):
     """
@@ -254,7 +254,8 @@ class GameView(arcade.View):
         # draw a circle where the piece can move to
         if self.possible_moves is not None:
             for move in self.possible_moves:
-                arcade.draw_circle_filled((MARGIN + WIDTH) * move[1] + MARGIN + WIDTH // 2 + BOARD_OFFSET_X,
+                arcade.draw_circle_filled((MARGIN + WIDTH) * move[1] + MARGIN + WIDTH // 2 +
+                                          BOARD_OFFSET_X,
                                           (MARGIN + WIDTH) * move[0] + MARGIN + WIDTH // 2,
                                           20, arcade.color.RED)
         # draw the pieces

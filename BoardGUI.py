@@ -6,7 +6,6 @@ import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
-from Board import Board
 from Game import Game
 
 

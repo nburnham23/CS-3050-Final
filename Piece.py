@@ -1,3 +1,6 @@
+"""
+Piece class
+"""
 import arcade
 # TODO: Replace scale with constant for all pieces
 

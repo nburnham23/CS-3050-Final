@@ -1,3 +1,6 @@
+"""
+Pawn class
+"""
 from Piece import Piece, BOARD_LENGTH
 
 class Pawn(Piece):
@@ -8,7 +11,7 @@ class Pawn(Piece):
         self.promotion_available = False
 
         super().__init__(piece_color, start_position, image_path, scale)
-    
+
     def move(self, board):
         moveset = []
         row, col = self.curr_position
@@ -26,7 +29,7 @@ class Pawn(Piece):
             # ensure new_row is within bounds before checking board
             if 0 <= new_row < BOARD_LENGTH and board.get_piece((new_row, col)) is None:
                 moveset.append((new_row, col))
-        
+
         # Captures
         direction_capture = (-1, 1)
         for dx in direction_capture:
@@ -35,11 +38,10 @@ class Pawn(Piece):
                 target_square = board.get_piece((new_row, new_col))
                 if target_square and target_square.piece_color != self.piece_color:
                     moveset.append((new_row, new_col))
-        
         return moveset
-    
+
     # Checks if pawn has reached end of board and must be promoted
     def check_promotion(self):
-        row, col = self.curr_position
-        if row == 0 or row == BOARD_LENGTH - 1:
+        row = self.curr_position[0]
+        if row in (0, BOARD_LENGTH - 1):
             self.promotion_available = True
