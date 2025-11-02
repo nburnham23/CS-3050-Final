@@ -1,3 +1,6 @@
+"""
+Knight class
+"""
 from Piece import Piece, BOARD_LENGTH
 
 class Knight(Piece):
@@ -20,7 +23,5 @@ class Knight(Piece):
 
                 if target_square is None or target_square.piece_color != self.piece_color:
                     moveset.append((new_row, new_col))
-        
+
         return moveset
-        
-        

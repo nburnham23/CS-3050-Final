@@ -1,3 +1,6 @@
+"""
+King Class
+"""
 from Piece import Piece, BOARD_LENGTH
 
 class King(Piece):
@@ -7,7 +10,7 @@ class King(Piece):
     def move(self, board):
         moveset = []
         row, col = self.curr_position
-        
+
         # Vectors of queen's move directions
         # in order: southeast, south, southwest, west, northwest, north, northeast, east
         directions = [(1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1)]
@@ -18,5 +21,4 @@ class King(Piece):
                 target_square = board.get_piece((new_row, new_col))
                 if target_square is None or target_square.piece_color != self.piece_color:
                     moveset.append((new_row, new_col))
-        
         return moveset

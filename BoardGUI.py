@@ -6,7 +6,6 @@ import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
-import time
 import random
 from Board import Board
 from Game import Game
@@ -128,6 +127,8 @@ class GameView(arcade.View):
         Set up the application.
         """
         super().__init__()
+        self.game = game
+        self.chess_board = game.board
         self.game = game
         self.chess_board = game.board
         self.sprites = arcade.SpriteList()
@@ -276,7 +277,7 @@ class GameView(arcade.View):
         print(f"Click coordinates: ({x}, {y}). Grid coordinates: ({row}, {column})")
 
         # Make sure that the click is on the board
-        if  0 <= row < ROW_COUNT and 0 <= column < COLUMN_COUNT:
+        if 0 <= row < ROW_COUNT and 0 <= column < COLUMN_COUNT:
             # there is a piece selected and we can move it
             if self.selected_square:
                 # reset the color of the square
@@ -292,9 +293,14 @@ class GameView(arcade.View):
                 print(self.destination_square)
                 # attempt to move the piece to the destination square
                 moved = self.game.make_move(self.selected_square, self.destination_square)
+                moved = self.game.make_move(self.selected_square, self.destination_square)
                 # get the piece at the destination only if the move succeeded
                 if moved:
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
+                    if self.game.is_game_over:
+                        game_over_view = GameOverView(self.game.winner)
+                        self.window.show_view(game_over_view)
+                        return
                 else:
                     self.selected_piece = None
 
@@ -304,6 +310,7 @@ class GameView(arcade.View):
                 # reset the selected and destination squares and possible moves to None
                 self.selected_square = None
                 self.destination_square = None
+                self.possible_moves = None
 
                 # if the move succeeded, update sprite position and sprite list
                 if self.selected_piece:
@@ -344,6 +351,61 @@ class GameView(arcade.View):
                 self.grid[row][column] = 2
                 print("selected square: " )
                 print(self.selected_square)
+                piece = self.chess_board.get_piece((row, column))
+                self.possible_moves = piece.moveset
+
+class GameOverView(arcade.View):
+    def __init__(self, winner):
+        super().__init__()
+        # a UIManager to handle the UI.
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        self.background_color = arcade.color.WHITE
+        self.winner = winner
+
+        # Create a vertical BoxGroup to align buttons
+        self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
+
+        # Create the buttons
+        play_again_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Play Again", width=300
+        )
+        self.v_box.add(play_again_button)
+        play_again_button.on_click = self.on_click_play_again
+
+        quit_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Quit", width=300
+        )
+        self.v_box.add(quit_button)
+        quit_button.on_click = self.on_click_quit
+
+        # Create a widget to hold the v_box widget, that will center the buttons
+        ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
+        ui_anchor_layout.add(child=self.v_box, anchor_x="center_x", anchor_y="center_y")
+
+        self.manager.add(ui_anchor_layout)
+
+    def on_click_play_again(self, event):
+        print("play again:", event)
+        self.manager.disable()
+        self.window.show_view(MenuView())
+
+    def on_click_quit(self, event):
+        """ Closes the arcade window """
+        print('goodbye')
+        self.manager.disable()
+        arcade.exit()
+
+    def on_draw(self):
+        """ draws the menu """
+        self.clear()
+        arcade.draw_text(f"{self.winner} WINS!",
+                         self.window.width / 2,
+                         self.window.height / 2 + 100,
+                         arcade.color.BLACK,
+                         font_size=30,
+                         anchor_x="center")
+        self.manager.draw()
 
 def main():
     """ Main function """
@@ -351,7 +413,7 @@ def main():
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
     # Create the GameView
-    menu_view = MenuView(Board())
+    menu_view = MenuView()
 
     # Show GameView on screen
     window.show_view(menu_view)
