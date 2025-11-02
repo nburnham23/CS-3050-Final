@@ -17,6 +17,9 @@ class BotPlayer:
                 if piece is not None and piece.piece_color == self.color:
                     bot_pieces.append((row, col, piece))
 
+        # Make sure movesets are up to date
+        self.board.calculate_movesets()
+
         # Collect all valid moves that don’t capture own pieces
         valid_moves = []
         for row, col, piece in bot_pieces:

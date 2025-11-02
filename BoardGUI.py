@@ -7,7 +7,6 @@ import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 import random
-from Board import Board
 from Game import Game
 
 
@@ -292,7 +291,6 @@ class GameView(arcade.View):
                 print("destination square: ")
                 print(self.destination_square)
                 # attempt to move the piece to the destination square
-                moved = self.game.make_move(self.selected_square, self.destination_square)
                 moved = self.game.make_move(self.selected_square, self.destination_square)
                 # get the piece at the destination only if the move succeeded
                 if moved:

@@ -3,7 +3,6 @@ Game class
 """
 import arcade
 from Board import Board
-import BoardGUI
 import arcade
 from MyBot import BotPlayer
 
@@ -202,6 +201,9 @@ class Game:
         """
         Creat GUI window and show menu
         """
+        # Import BoardGUI here to avoid circular import at module import time
+        import BoardGUI
+
         window = arcade.Window(BoardGUI.WINDOW_WIDTH, BoardGUI.WINDOW_HEIGHT, BoardGUI.WINDOW_TITLE)
         # game = Game()
         menu_view = BoardGUI.MenuView()
