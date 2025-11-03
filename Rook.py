@@ -1,3 +1,6 @@
+"""
+Rook class
+"""
 from Piece import Piece, BOARD_LENGTH
 
 class Rook(Piece):
@@ -11,14 +14,14 @@ class Rook(Piece):
         # Vectors of rook's move directions
         # in order: east, south, west, north
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-        
+
         # get possible square for move
         for dx, dy in directions:
             new_row, new_col = row + dx, col + dy
 
             while 0 <= new_row < BOARD_LENGTH and 0 <= new_col < BOARD_LENGTH:
                 target_square = board.get_piece((new_row, new_col))
-            
+
                 if target_square is None:
                     moveset.append((new_row, new_col))
                 else:
@@ -29,5 +32,5 @@ class Rook(Piece):
                     break
                 new_row += dx
                 new_col += dy
-        
+
         return moveset

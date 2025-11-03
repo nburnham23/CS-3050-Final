@@ -6,7 +6,7 @@ import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
-from Board import Board
+import random
 from Game import Game
 
 
@@ -42,13 +42,12 @@ class MenuView(arcade.View):
     Allows the user to select their desired game mode
     TODO: change the on_click_ functions to appropriate functions
     """
-    def __init__(self, board: Board):
+    def __init__(self):
         super().__init__()
         # a UIManager to handle the UI.
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.background_color = arcade.color.WHITE
-        self.board = board
 
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
@@ -89,28 +88,30 @@ class MenuView(arcade.View):
         game = Game()
         game_view = GameView(game)
         self.window.show_view(game_view)
-        # TODO: set mode to two-player
+
     def on_click_ai_easy(self, event):
         """ Sets the game mode to Easy AI and creates the Game View """
         print("ai-easy:", event)
         self.manager.disable()
-        game = Game()
+        game = Game(bot=True)
         game_view = GameView(game)
         self.window.show_view(game_view)
-        # TODO: set mode to easy ai
+
     def on_click_ai_hard(self, event):
         """ Sets the game mode to Hard AI and creates the Game View """
         print("ai-hard:", event)
         self.manager.disable()
-        game = Game()
+        # temporarily using stupid bot
+        game = Game(bot=True)
         game_view = GameView(game)
         self.window.show_view(game_view)
-        # TODO: set mode to hard ai
+
     def on_click_quit(self, event):
         """ Closes the arcade window """
         print('goodbye')
         self.manager.disable()
         arcade.exit()
+
     def on_draw(self):
         """ draws the menu """
         self.clear()
@@ -127,11 +128,13 @@ class GameView(arcade.View):
         super().__init__()
         self.game = game
         self.chess_board = game.board
+        self.game = game
+        self.chess_board = game.board
         self.sprites = arcade.SpriteList()
         # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
-                piece = self.chess_board.board[row][column]
+                piece = self.chess_board.get_piece((row, column))
                 if piece is not None:
                     # Set the sprite's position on screen
                     piece.set_sprite_position()
@@ -157,10 +160,17 @@ class GameView(arcade.View):
                         self.grid[row].append(0)
 
         self.background_color = arcade.color.CHARCOAL
+
         self.selected_square = None
         self.destination_square = None # the destination for the selected piece
+        self.bot_selected_square = None
+        self.bot_destination_square = None # the destination for the bot's selected piece
+
         self.selected_piece = None
+        self.bot_selected_piece = None # the bot's selected piece
+
         self.possible_moves = None
+
         self.white_taken_sprites = arcade.SpriteList()
         self.black_taken_sprites = arcade.SpriteList()
 
@@ -181,7 +191,7 @@ class GameView(arcade.View):
         self.sprites = arcade.SpriteList()
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
-                piece = self.chess_board.board[row][column]
+                piece = self.chess_board.get_piece((row, column))
                 if piece is not None:
                     # Set the sprite's position on screen
                     piece.set_sprite_position()
@@ -259,6 +269,10 @@ class GameView(arcade.View):
         self.black_taken_sprites.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
+        # if bot is making a move, ignore player input
+        if self.game.bot_move_pending:
+            return
+
         # Change the x/y screen coordinates to grid coordinates
         column = int((x - BOARD_OFFSET_X) // (WIDTH + MARGIN))
         row = int((y - BOARD_OFFSET_Y) // (HEIGHT + MARGIN))
@@ -266,7 +280,7 @@ class GameView(arcade.View):
         print(f"Click coordinates: ({x}, {y}). Grid coordinates: ({row}, {column})")
 
         # Make sure that the click is on the board
-        if  0 <= row < ROW_COUNT and 0 <= column < COLUMN_COUNT:
+        if 0 <= row < ROW_COUNT and 0 <= column < COLUMN_COUNT:
             # there is a piece selected and we can move it
             if self.selected_square:
                 # reset the color of the square
@@ -285,6 +299,10 @@ class GameView(arcade.View):
                 # get the piece at the destination only if the move succeeded
                 if moved:
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
+                    if self.game.is_game_over:
+                        game_over_view = GameOverView(self.game.winner)
+                        self.window.show_view(game_over_view)
+                        return
                 else:
                     self.selected_piece = None
 
@@ -294,11 +312,38 @@ class GameView(arcade.View):
                 # reset the selected and destination squares and possible moves to None
                 self.selected_square = None
                 self.destination_square = None
+                self.possible_moves = None
 
                 # if the move succeeded, update sprite position and sprite list
                 if self.selected_piece:
                     self.selected_piece.set_sprite_position()
                     self.update_sprites()
+
+                    # if bot is playing, make bot move
+                    if self.game.bot_player and moved:
+                        # lock player input until bot move is complete
+                        self.game.bot_move_pending = True
+                        # make random time delay between 3-5 seconds to pretend bot is thinking
+                        delay_time = random.uniform(3, 5)
+
+                        # create bot move function to be scheduled after delay
+                        def bot_move_func(dt):
+                            try: 
+                                self.bot_selected_piece, self.bot_selected_square, self.bot_destination_square = self.game.bot_player.generate_move()
+                                print(f"Bot selected square: {self.bot_selected_square} containing {self.bot_selected_piece}, destination square: {self.bot_destination_square}")
+                                if self.bot_selected_piece:
+                                    # bot moved, update its board state again and sprites
+                                    self.game.make_move(self.bot_selected_square, self.bot_destination_square)
+
+                                    self.bot_selected_piece.set_sprite_position()
+                                    self.update_sprites()
+                            except Exception as e:
+                                print(f"Error during bot move: {e}")
+                            self.game.bot_move_pending = False
+                            # ensures bot_move_func only runs once
+                            arcade.unschedule(bot_move_func)
+                        arcade.schedule(bot_move_func, delay_time)
+
                 else:
                     print("Move failed; no piece at destination or invalid move")
 
@@ -311,6 +356,61 @@ class GameView(arcade.View):
                 self.grid[row][column] = 2
                 print("selected square: " )
                 print(self.selected_square)
+                piece = self.chess_board.get_piece((row, column))
+                self.possible_moves = piece.moveset
+
+class GameOverView(arcade.View):
+    def __init__(self, winner):
+        super().__init__()
+        # a UIManager to handle the UI.
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        self.background_color = arcade.color.WHITE
+        self.winner = winner
+
+        # Create a vertical BoxGroup to align buttons
+        self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
+
+        # Create the buttons
+        play_again_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Play Again", width=300
+        )
+        self.v_box.add(play_again_button)
+        play_again_button.on_click = self.on_click_play_again
+
+        quit_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Quit", width=300
+        )
+        self.v_box.add(quit_button)
+        quit_button.on_click = self.on_click_quit
+
+        # Create a widget to hold the v_box widget, that will center the buttons
+        ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
+        ui_anchor_layout.add(child=self.v_box, anchor_x="center_x", anchor_y="center_y")
+
+        self.manager.add(ui_anchor_layout)
+
+    def on_click_play_again(self, event):
+        print("play again:", event)
+        self.manager.disable()
+        self.window.show_view(MenuView())
+
+    def on_click_quit(self, event):
+        """ Closes the arcade window """
+        print('goodbye')
+        self.manager.disable()
+        arcade.exit()
+
+    def on_draw(self):
+        """ draws the menu """
+        self.clear()
+        arcade.draw_text(f"{self.winner} WINS!",
+                         self.window.width / 2,
+                         self.window.height / 2 + 100,
+                         arcade.color.BLACK,
+                         font_size=30,
+                         anchor_x="center")
+        self.manager.draw()
 
 def main():
     """ Main function """
@@ -318,7 +418,7 @@ def main():
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
     # Create the GameView
-    menu_view = MenuView(Board())
+    menu_view = MenuView()
 
     # Show GameView on screen
     window.show_view(menu_view)
