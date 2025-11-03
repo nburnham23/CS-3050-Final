@@ -85,9 +85,6 @@ class Game:
                 self.winner = self.current_turn
                 print(f"CHECKMATE! {self.winner} wins!")
                 self.is_game_over = True
-                # TODO: show the game over view
-                self.reset_game()
-                self.start_game()
                 return True
             
         # Switch to opponents turn
