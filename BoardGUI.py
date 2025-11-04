@@ -428,10 +428,27 @@ class PromotionView(arcade.View):
         super().__init__()
         self.game = game
         self.background_color = arcade.color.WHITE
+        self.white_taken = game.board.white_taken
+        self.black_taken = game.board.black_taken
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        # Create a vertical BoxGroup to align buttons
+        self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
+        # TODO: buttons will go here
+        '''
+        for piece in white/black taken:
+            draw a button with sprite image and name
+            allow 4 per row?
+            attach the on_click function which returns that piece
+        '''
+        # Create a widget to hold the v_box widget, that will center the buttons
+        ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
+        ui_anchor_layout.add(child=self.v_box, anchor_x="center_x", anchor_y="center_y")
+
+        self.manager.add(ui_anchor_layout)
 
     def on_draw(self):
         self.clear()
-
         arcade.draw_text("Select a piece to promote",
                          self.window.width / 2,
                          self.window.height / 2 + 100,
@@ -439,14 +456,14 @@ class PromotionView(arcade.View):
                          font_size=30,
                          anchor_x='center',
                          font_name="Kenney Blocks")
+        self.manager.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         print("mouse press", x, y)
 
-
 def main():
     """ Main function """
-
+    '''
     # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
@@ -470,7 +487,7 @@ def main():
 
     # Start the arcade game loop
     arcade.run()
-    '''
+
 
 if __name__ == "__main__":
     main()
