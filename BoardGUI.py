@@ -115,6 +115,13 @@ class MenuView(arcade.View):
     def on_draw(self):
         """ draws the menu """
         self.clear()
+        arcade.draw_text("Welcome to chess!",
+                         self.window.width / 2,
+                         self.window.height / 2 + 200,
+                         arcade.color.BLACK,
+                         font_size=30,
+                         anchor_x='center',
+                         font_name="Kenney Blocks")
         self.manager.draw()
 
 class GameView(arcade.View):
@@ -409,11 +416,37 @@ class GameOverView(arcade.View):
                          self.window.height / 2 + 100,
                          arcade.color.BLACK,
                          font_size=30,
-                         anchor_x="center")
+                         anchor_x="center",
+                         font_name="Kenney Blocks")
         self.manager.draw()
+
+class PromotionView(arcade.View):
+    """
+    View to show which pieces can be promoted when a pawn reaches the other side of the board
+    """
+    def __init__(self, game: Game):
+        super().__init__()
+        self.game = game
+        self.background_color = arcade.color.WHITE
+
+    def on_draw(self):
+        self.clear()
+
+        arcade.draw_text("Select a piece to promote",
+                         self.window.width / 2,
+                         self.window.height / 2 + 100,
+                         arcade.color.BLACK,
+                         font_size=30,
+                         anchor_x='center',
+                         font_name="Kenney Blocks")
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        print("mouse press", x, y)
+
 
 def main():
     """ Main function """
+
     # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
@@ -425,7 +458,19 @@ def main():
 
     # Start the arcade game loop
     arcade.run()
+    '''
+    # Create a window class. This is what actually shows up on screen
+    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
+    # Create the GameView
+    promotion_view = PromotionView(Game())
+
+    # Show GameView on screen
+    window.show_view(promotion_view)
+
+    # Start the arcade game loop
+    arcade.run()
+    '''
 
 if __name__ == "__main__":
     main()
