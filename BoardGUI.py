@@ -7,8 +7,14 @@ import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 import random
-from Game import Game
 
+from Bishop import Bishop
+from Board import img_path
+from Game import Game
+from Knight import Knight
+from Pawn import Pawn
+from Queen import Queen
+from Rook import Rook
 
 # Set how many rows and columns we will have
 ROW_COUNT = 8
@@ -424,34 +430,75 @@ class PromotionView(arcade.View):
     """
     View to show which pieces can be promoted when a pawn reaches the other side of the board
     """
-    def __init__(self, game: Game):
+    # TODO: pass a piece in and/or pass in a Game, and promote within the game.
+    def __init__(self, piece_color, position):
         super().__init__()
-        self.game = game
         self.background_color = arcade.color.WHITE
-        self.white_taken = game.board.white_taken
-        self.black_taken = game.board.black_taken
+        self.piece_color = piece_color
+        self.position = position
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
-        # TODO: buttons will go here
-        '''
-        for piece in white/black taken:
-            draw a button with sprite image and name
-            allow 4 per row?
-            attach the on_click function which returns that piece
-        '''
+        # create buttons for each piece that can be promoted
+        queen_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Queen", width=300
+        )
+        self.v_box.add(queen_button)
+        queen_button.on_click = self.on_click_queen_button
+
+        rook_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Rook", width=300
+        )
+        self.v_box.add(rook_button)
+        rook_button.on_click = self.on_click_rook_button
+
+        knight_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Knight", width=300
+        )
+        self.v_box.add(knight_button)
+        knight_button.on_click = self.on_click_knight_button
+
+        bishop_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Bishop", width=300
+        )
+        self.v_box.add(bishop_button)
+        bishop_button.on_click = self.on_click_bishop_button
+
+        pawn_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Pawn", width=300
+        )
+        self.v_box.add(pawn_button)
+        pawn_button.on_click = self.on_click_pawn_button
+
         # Create a widget to hold the v_box widget, that will center the buttons
         ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
         ui_anchor_layout.add(child=self.v_box, anchor_x="center_x", anchor_y="center_y")
 
         self.manager.add(ui_anchor_layout)
 
+    def on_click_queen_button(self, event):
+        print("Queen clicked")
+        return Queen(self.piece_color, self.position, img_path['queen'][self.piece_color])
+    def on_click_rook_button(self, event):
+        print("Rook clicked")
+        return Rook(self.piece_color, self.position, img_path['rook'][self.piece_color])
+    def on_click_knight_button(self, event):
+        # piece_color, start_position, image_path
+        print("Knight clicked")
+        return Knight(self.piece_color, self.position, img_path['knight'][self.piece_color])
+    def on_click_bishop_button(self, event):
+        print("Bishop clicked")
+        return Bishop(self.piece_color, self.position, img_path['bishop'][self.piece_color])
+    def on_click_pawn_button(self, event):
+        print("Pawn clicked")
+        return Pawn(self.piece_color, self.position, img_path['pawn'][self.piece_color])
+
     def on_draw(self):
         self.clear()
         arcade.draw_text("Select a piece to promote",
                          self.window.width / 2,
-                         self.window.height / 2 + 100,
+                         self.window.height - 100,
                          arcade.color.BLACK,
                          font_size=30,
                          anchor_x='center',
@@ -480,7 +527,7 @@ def main():
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
     # Create the GameView
-    promotion_view = PromotionView(Game())
+    promotion_view = PromotionView('WHITE', (6,0))
 
     # Show GameView on screen
     window.show_view(promotion_view)
