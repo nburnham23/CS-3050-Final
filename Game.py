@@ -98,43 +98,6 @@ class Game:
     def get_piece(self, position):
         return self.board.get_piece(position)
     
-    def find_king(self, color):
-        """
-        Locates the king of a given color on the board
-        Returns the position
-        """
-        # Loop through each row and column
-        for r in range(8):
-            for c in range(8):
-                piece = self.board.get_piece((r, c))
-                # Check if piece is correct color and is the king
-                if piece is not None and piece.piece_color == color and piece.__class__.__name__ == "King":
-                    return (r, c)
-        return None
-
-    def is_in_check(self, color):
-        """
-        Returns True if the king of given color is in check
-        """
-        king_pos = self.find_king(color)
-        if not king_pos:
-            print("GAME OVER FROM is_in_check")
-            return True
-        # Determine enemy color
-        if color == "WHITE":
-            enemy_color = "BLACK"
-        else:
-            enemy_color = "WHITE"
-        # Loop through each row and column
-        for r in range(8):
-            for c in range(8):
-                piece = self.board.get_piece((r, c))
-                # Check if piece is in moveset and can attack the king
-                if piece and piece.piece_color == enemy_color:
-                    if king_pos in piece.moveset:
-                        return True
-        return False
-    
     def is_checkmate(self, color):
         # TODO: change to constants
         # this isn't getting hit
@@ -190,7 +153,33 @@ class Game:
             print("GAME OVER FROM is_checkmate")
             return True
         return False
+    
+    def check_promotion(self):
+        """
+        Check all pawns on board for promotion
+        """
+        for r in range(8):
+            for c in range(8):
+                piece = self.board.get_piece((r, c))
+                if piece and piece.__class__.__name__ == "Pawn":
+                    piece.check_promotion()
+                    if piece.promotion_available:
+                        # Show promotion GUI
+                        import BoardGUI
 
+                        window = arcade.get_window()
+                        promotion_view = BoardGUI.PromotionView(self, piece.piece_color, piece.curr_position)
+                        window.show_view(promotion_view)
+    
+    def promote_pawn(self, new_piece_class, position):
+        """
+        Promote pawn at position to new_piece_class
+        """
+        row, col = position
+        # Remove the pawn from the board
+        self.board.get_piece((row, col)) = None
+        # Create the new piece and place it on the board
+        self.board.set_piece(position, new_piece_class)
 
     # Display the board
     def display_board(self):
