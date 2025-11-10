@@ -1,7 +1,6 @@
 """
 Game class
 """
-import arcade
 
 import Pawn
 from Board import Board
@@ -43,7 +42,6 @@ class Game:
         def receive_promoted_piece(new_piece):
             # replace pawn with new piece in board
             self.board.set_piece(position, new_piece)
-            print(f"Pawn promoted to {new_piece.__class__.__name__}")
             self.switch_turn()
 
         promotion_view = PromotionView(pawn, receive_promoted_piece, self.gui, position)

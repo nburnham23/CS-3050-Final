@@ -431,7 +431,6 @@ class PromotionView(arcade.View):
     """
     View to show which pieces can be promoted when a pawn reaches the other side of the board
     """
-    # TODO: pass a piece in and/or pass in a Game, and promote within the game.
     def __init__(self, pawn: Pawn, on_promote_callback, game_view: GameView, position):
         super().__init__()
         self.background_color = arcade.color.WHITE
@@ -516,7 +515,6 @@ class PromotionView(arcade.View):
         self.manager.disable()
         self.window.show_view(self.game_view)
 
-
     def on_draw(self):
         self.clear()
         arcade.draw_text("Select a piece to promote",
@@ -530,7 +528,7 @@ class PromotionView(arcade.View):
 
 def main():
     """ Main function """
-    '''
+
     # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
@@ -542,19 +540,6 @@ def main():
 
     # Start the arcade game loop
     arcade.run()
-    '''
-    # Create a window class. This is what actually shows up on screen
-    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-
-    # Create the GameView
-    promotion_view = PromotionView(Pawn('WHITE', (6,0), img_path['pawn']['WHITE']))
-
-    # Show GameView on screen
-    window.show_view(promotion_view)
-
-    # Start the arcade game loop
-    arcade.run()
-
 
 if __name__ == "__main__":
     main()
