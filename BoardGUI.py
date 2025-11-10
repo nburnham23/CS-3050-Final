@@ -186,6 +186,7 @@ class GameView(arcade.View):
 
         self.white_taken_sprites = arcade.SpriteList()
         self.black_taken_sprites = arcade.SpriteList()
+        self.game.gui = self
 
 
     def reset_color(self, row, column):
@@ -431,11 +432,13 @@ class PromotionView(arcade.View):
     View to show which pieces can be promoted when a pawn reaches the other side of the board
     """
     # TODO: pass a piece in and/or pass in a Game, and promote within the game.
-    def __init__(self, piece_color, position):
+    def __init__(self, pawn: Pawn, on_promote_callback, game_view: GameView, position):
         super().__init__()
         self.background_color = arcade.color.WHITE
-        self.piece_color = piece_color
+        self.piece_color = pawn.piece_color
         self.position = position
+        self.on_promote_callback = on_promote_callback
+        self.game_view = game_view
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         # Create a vertical BoxGroup to align buttons
@@ -479,20 +482,40 @@ class PromotionView(arcade.View):
 
     def on_click_queen_button(self, event):
         print("Queen clicked")
-        return Queen(self.piece_color, self.position, img_path['queen'][self.piece_color])
+        queen = Queen(self.piece_color, self.position, img_path['queen'][self.piece_color])
+        self.on_promote_callback(queen)
+        self.manager.disable()
+        self.window.show_view(self.game_view)
+
     def on_click_rook_button(self, event):
         print("Rook clicked")
-        return Rook(self.piece_color, self.position, img_path['rook'][self.piece_color])
+        rook = Rook(self.piece_color, self.position, img_path['rook'][self.piece_color])
+        self.on_promote_callback(rook)
+        self.manager.disable()
+        self.window.show_view(self.game_view)
+
     def on_click_knight_button(self, event):
         # piece_color, start_position, image_path
         print("Knight clicked")
-        return Knight(self.piece_color, self.position, img_path['knight'][self.piece_color])
+        knight = Knight(self.piece_color, self.position, img_path['knight'][self.piece_color])
+        self.on_promote_callback(knight)
+        self.manager.disable()
+        self.window.show_view(self.game_view)
+
     def on_click_bishop_button(self, event):
         print("Bishop clicked")
-        return Bishop(self.piece_color, self.position, img_path['bishop'][self.piece_color])
+        bishop = Bishop(self.piece_color, self.position, img_path['bishop'][self.piece_color])
+        self.on_promote_callback(bishop)
+        self.manager.disable()
+        self.window.show_view(self.game_view)
+
     def on_click_pawn_button(self, event):
         print("Pawn clicked")
-        return Pawn(self.piece_color, self.position, img_path['pawn'][self.piece_color])
+        pawn = Pawn(self.piece_color, self.position, img_path['pawn'][self.piece_color])
+        self.on_promote_callback(pawn)
+        self.manager.disable()
+        self.window.show_view(self.game_view)
+
 
     def on_draw(self):
         self.clear()
@@ -504,9 +527,6 @@ class PromotionView(arcade.View):
                          anchor_x='center',
                          font_name="Kenney Blocks")
         self.manager.draw()
-
-    def on_mouse_press(self, x, y, button, modifiers):
-        print("mouse press", x, y)
 
 def main():
     """ Main function """
@@ -527,7 +547,7 @@ def main():
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
 
     # Create the GameView
-    promotion_view = PromotionView('WHITE', (6,0))
+    promotion_view = PromotionView(Pawn('WHITE', (6,0), img_path['pawn']['WHITE']))
 
     # Show GameView on screen
     window.show_view(promotion_view)
