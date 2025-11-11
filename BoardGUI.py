@@ -484,6 +484,7 @@ class PromotionView(arcade.View):
         queen = Queen(self.piece_color, self.position, img_path['queen'][self.piece_color])
         self.on_promote_callback(queen)
         self.manager.disable()
+        self.game_view.update_sprites()
         self.window.show_view(self.game_view)
 
     def on_click_rook_button(self, event):
@@ -491,6 +492,7 @@ class PromotionView(arcade.View):
         rook = Rook(self.piece_color, self.position, img_path['rook'][self.piece_color])
         self.on_promote_callback(rook)
         self.manager.disable()
+        self.game_view.update_sprites()
         self.window.show_view(self.game_view)
 
     def on_click_knight_button(self, event):
@@ -499,6 +501,7 @@ class PromotionView(arcade.View):
         knight = Knight(self.piece_color, self.position, img_path['knight'][self.piece_color])
         self.on_promote_callback(knight)
         self.manager.disable()
+        self.game_view.update_sprites()
         self.window.show_view(self.game_view)
 
     def on_click_bishop_button(self, event):
@@ -506,6 +509,7 @@ class PromotionView(arcade.View):
         bishop = Bishop(self.piece_color, self.position, img_path['bishop'][self.piece_color])
         self.on_promote_callback(bishop)
         self.manager.disable()
+        self.game_view.update_sprites()
         self.window.show_view(self.game_view)
 
     def on_click_pawn_button(self, event):
@@ -513,6 +517,7 @@ class PromotionView(arcade.View):
         pawn = Pawn(self.piece_color, self.position, img_path['pawn'][self.piece_color])
         self.on_promote_callback(pawn)
         self.manager.disable()
+        self.game_view.update_sprites()
         self.window.show_view(self.game_view)
 
     def on_draw(self):
