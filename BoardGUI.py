@@ -6,6 +6,7 @@ import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
+
 import random
 
 from Bishop import Bishop
@@ -271,7 +272,9 @@ class GameView(arcade.View):
                 # Draw the box
                 arcade.draw_rect_filled(arcade.rect.XYWH(x, y, WIDTH, HEIGHT), color)
         # draw a circle where the piece can move to
-        if self.possible_moves is not None:
+        curr_turn = self.game.current_turn
+        if (self.possible_moves is not None and self.selected_piece is not None and
+                self.selected_piece.piece_color == curr_turn):
             for move in self.possible_moves:
                 arcade.draw_circle_filled((MARGIN + WIDTH) * move[1] + MARGIN + WIDTH // 2 +
                                           BOARD_OFFSET_X,
@@ -281,6 +284,23 @@ class GameView(arcade.View):
         self.sprites.draw()
         self.white_taken_sprites.draw()
         self.black_taken_sprites.draw()
+        # draw a box with whose turn it is
+        arcade.draw_rect_filled(arcade.rect.XYWH(
+            self.window.width - 50,
+            self.window.height - 40,
+            250,
+            100),
+            arcade.color.WHITE)
+        arcade.draw_text(
+        f"{curr_turn}'s turn",
+             self.window.width - 85,
+             self.window.height - 60,
+             arcade.color.BLACK,
+             font_size=15,
+             anchor_x='center',
+             font_name="Kenney Blocks"
+        )
+
 
     def on_mouse_press(self, x, y, button, modifiers):
         # if bot is making a move, ignore player input
@@ -372,6 +392,7 @@ class GameView(arcade.View):
                 print(self.selected_square)
                 piece = self.chess_board.get_piece((row, column))
                 self.possible_moves = piece.moveset
+                self.selected_piece = piece
 
 class GameOverView(arcade.View):
     def __init__(self, winner):
