@@ -19,13 +19,13 @@ class Pawn(Piece):
         direction_forward = 1 if self.piece_color == 'BLACK' else -1
 
         # one-square move
-        new_row = row + direction_forward
+        new_row = row - direction_forward
         if 0 <= new_row < BOARD_LENGTH and board.get_piece((new_row, col)) is None:
             moveset.append((new_row, col))
 
         # two-square move if not moved yet
         if not self.has_moved:
-            new_row = row + (direction_forward * 2)
+            new_row = row - (direction_forward * 2)
             # ensure new_row is within bounds before checking board
             if 0 <= new_row < BOARD_LENGTH and board.get_piece((new_row, col)) is None:
                 moveset.append((new_row, col))
@@ -33,7 +33,7 @@ class Pawn(Piece):
         # Captures
         direction_capture = (-1, 1)
         for dx in direction_capture:
-            new_row, new_col = row + direction_forward, col + dx
+            new_row, new_col = row - direction_forward, col + dx
             if 0 <= new_row < BOARD_LENGTH and 0 <= new_col < BOARD_LENGTH:
                 target_square = board.get_piece((new_row, new_col))
                 if target_square and target_square.piece_color != self.piece_color:

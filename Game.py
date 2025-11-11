@@ -1,10 +1,12 @@
 """
 Game class
 """
-import arcade
+
+import Pawn
 from Board import Board
 import arcade
 from MyBot import BotPlayer
+
 
 class Game:
     """
@@ -35,6 +37,17 @@ class Game:
             self.current_turn = "BLACK"
         else:
             self.current_turn = "WHITE"
+
+    def trigger_promotion(self, pawn, position):
+        from BoardGUI import PromotionView
+
+        def receive_promoted_piece(new_piece):
+            # replace pawn with new piece in board
+            self.board.set_piece(position, new_piece)
+            self.switch_turn()
+
+        promotion_view = PromotionView(pawn, receive_promoted_piece, self.gui, position)
+        self.gui.window.show_view(promotion_view)
     
     # Logic for making a move
     def make_move(self, from_position, to_position):
@@ -70,13 +83,20 @@ class Game:
         self.board.move(from_position, to_position)
         self.move_history.append((piece, from_position, to_position))
 
+        # check for promotion eligibility
+        if isinstance(piece, Pawn.Pawn):
+            final_row = 0 if piece.piece_color == "BLACK" else 7
+            if to_position[0] == final_row:
+                self.trigger_promotion(piece, to_position)
+                return True
+
         # Determine opponent color 
         if self.current_turn == "WHITE":
             enemy_color = "BLACK"
         else:
             enemy_color = "WHITE"
 
-        # Check if the move puts the oppenent in check
+        # Check if the move puts the opponent in check
         if self.is_in_check(enemy_color):
             # If enemy is in checkmate output in terminal
             print(f"{enemy_color} is in CHECK!")
@@ -106,7 +126,7 @@ class Game:
                 piece = self.board.get_piece((r, c))
                 # Check if piece is correct color and is the king
                 if piece is not None and piece.piece_color == color and piece.__class__.__name__ == "King":
-                    return (r, c)
+                    return r, c
         return None
 
     def is_in_check(self, color):
@@ -131,7 +151,7 @@ class Game:
                     if king_pos in piece.moveset:
                         return True
         return False
-    
+
     def is_checkmate(self, color):
         # TODO: change to constants
         # this isn't getting hit
@@ -164,9 +184,11 @@ class Game:
         arcade.close_window()
         self.__init__()
 
+
 def main():
     game = Game()
     game.start_game()
+
 
 if __name__ == "__main__":
     main()
