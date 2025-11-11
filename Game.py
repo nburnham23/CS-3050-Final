@@ -39,7 +39,7 @@ class Game:
             self.current_turn = "WHITE"
 
     def trigger_promotion(self, pawn, position):
-        from BoardGUI import PromotionView
+        from PromotionView import PromotionView
 
         def receive_promoted_piece(new_piece):
             # replace pawn with new piece in board
@@ -171,11 +171,11 @@ class Game:
         Creat GUI window and show menu
         """
         # Import BoardGUI here to avoid circular import at module import time
-        import BoardGUI
+        import MenuView
 
-        window = arcade.Window(BoardGUI.WINDOW_WIDTH, BoardGUI.WINDOW_HEIGHT, BoardGUI.WINDOW_TITLE)
+        window = arcade.Window(MenuView.WINDOW_WIDTH, MenuView.WINDOW_HEIGHT, MenuView.WINDOW_TITLE)
         # game = Game()
-        menu_view = BoardGUI.MenuView()
+        menu_view = MenuView.MenuView()
         window.show_view(menu_view)
         arcade.run()
 
