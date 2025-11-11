@@ -170,16 +170,6 @@ class Game:
                         window = arcade.get_window()
                         promotion_view = BoardGUI.PromotionView(self, piece.piece_color, piece.curr_position)
                         window.show_view(promotion_view)
-    
-    def promote_pawn(self, new_piece_class, position):
-        """
-        Promote pawn at position to new_piece_class
-        """
-        row, col = position
-        # Remove the pawn from the board
-        self.board.get_piece((row, col)) = None
-        # Create the new piece and place it on the board
-        self.board.set_piece(position, new_piece_class)
 
     # Display the board
     def display_board(self):

@@ -116,6 +116,29 @@ class Board():
         elif captured_piece and captured_piece.piece_color == 'WHITE':
             self.white_taken.append(captured_piece)
 
+        # Check if castling is attempted
+        if piece.__class__.__name__ == "King" and abs(new_position[1] - piece_position[1]) == 2:
+            # Kingside castling
+            if new_position[1] > piece_position[1]:
+                kingside_rook_position = (piece_position[0], 7)
+                kingside_rook = self.get_piece(kingside_rook_position)
+                if kingside_rook and kingside_rook.__class__.__name__ == "Rook" and not kingside_rook.has_moved:
+                    # Move the rook as part of castling
+                    kingside_rook.has_moved = True
+                    rook_end = (piece_position[0], piece_position[1] + 1)
+                    self.set_piece(rook_end, kingside_rook)
+                    self.set_piece(kingside_rook_position, None)
+            # Queenside castling
+            else:
+                queenside_rook_position = (piece_position[0], 0)
+                queenside_rook = self.get_piece(queenside_rook_position)
+                if queenside_rook and queenside_rook.__class__.__name__ == "Rook" and not queenside_rook.has_moved:
+                    # Move the rook as part of castling
+                    queenside_rook.has_moved = True
+                    rook_end = (piece_position[0], piece_position[1] - 1)
+                    self.set_piece(rook_end, queenside_rook)
+                    self.set_piece(queenside_rook_position, None)
+
         # Update pieces information
         piece.curr_position = new_position
 

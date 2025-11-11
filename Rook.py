@@ -7,6 +7,17 @@ class Rook(Piece):
     def __init__(self, piece_color, start_position, image_path, scale = 1):
         super().__init__(piece_color, start_position, image_path, scale)
 
+        # fields for detecting castling
+        self.has_moved = False
+        self.side = self.get_side()
+
+    def get_side(self):
+        if self.curr_position[1] == 0:
+            return "QUEEN"
+        elif self.curr_position[1] == 7:
+            return "KING"
+        return None
+
     def move(self, board):
         moveset = []
         row, col = self.curr_position
@@ -31,6 +42,6 @@ class Rook(Piece):
                     # stop when piece in direction
                     break
                 new_row += dx
-                new_col += dy
+                new_col += dy          
 
         return moveset
