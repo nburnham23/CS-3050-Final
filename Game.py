@@ -7,6 +7,7 @@ from Board import Board
 import arcade
 from MyBot import BotPlayer
 
+
 class Game:
     """
     Main game logic class for chess
@@ -39,6 +40,7 @@ class Game:
 
     def trigger_promotion(self, pawn, position):
         from BoardGUI import PromotionView
+
         def receive_promoted_piece(new_piece):
             # replace pawn with new piece in board
             self.board.set_piece(position, new_piece)
@@ -94,7 +96,7 @@ class Game:
         else:
             enemy_color = "WHITE"
 
-        # Check if the move puts the oppenent in check
+        # Check if the move puts the opponent in check
         if self.is_in_check(enemy_color):
             # If enemy is in checkmate output in terminal
             print(f"{enemy_color} is in CHECK!")
@@ -124,7 +126,7 @@ class Game:
                 piece = self.board.get_piece((r, c))
                 # Check if piece is correct color and is the king
                 if piece is not None and piece.piece_color == color and piece.__class__.__name__ == "King":
-                    return (r, c)
+                    return r, c
         return None
 
     def is_in_check(self, color):
@@ -182,9 +184,11 @@ class Game:
         arcade.close_window()
         self.__init__()
 
+
 def main():
     game = Game()
     game.start_game()
+
 
 if __name__ == "__main__":
     main()
