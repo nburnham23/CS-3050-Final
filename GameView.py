@@ -1,3 +1,6 @@
+"""
+GUI class for the game of chess
+"""
 import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons

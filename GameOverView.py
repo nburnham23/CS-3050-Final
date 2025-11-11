@@ -1,3 +1,6 @@
+"""
+Class to show the 'Game Over' window
+"""
 import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons

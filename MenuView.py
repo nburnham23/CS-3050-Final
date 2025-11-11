@@ -1,5 +1,5 @@
 """
-Menu View Module
+Menu View Module for choosing play mode in a game of chess
 """
 
 import arcade

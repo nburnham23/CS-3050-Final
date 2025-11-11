@@ -1,3 +1,7 @@
+"""
+GUI class for when a pawn can be promoted to another piece
+"""
+
 import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
