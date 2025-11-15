@@ -79,6 +79,8 @@ class Game:
             print("INVALID MOVE FOR PIECE")
             return False
 
+        # TODO: check for en passant
+
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
         self.move_history.append((piece, from_position, to_position))
@@ -159,6 +161,7 @@ class Game:
         if not king_pos:
             print("GAME OVER FROM is_checkmate")
             return True
+
 
     # Display the board
     def display_board(self):

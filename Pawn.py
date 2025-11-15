@@ -9,6 +9,7 @@ class Pawn(Piece):
         # Attribute for determining if pawn can move 2 spaces
         self.has_moved = False
         self.promotion_available = False
+        self.moved_forward_two = False
 
         super().__init__(piece_color, start_position, image_path, scale)
 
@@ -38,6 +39,18 @@ class Pawn(Piece):
                 target_square = board.get_piece((new_row, new_col))
                 if target_square and target_square.piece_color != self.piece_color:
                     moveset.append((new_row, new_col))
+
+        # En passant captures
+        for dx in direction_capture:
+            adj_col = col + dx
+            adj_square = (row, adj_col)
+            opponent_piece = board.get_piece(adj_square)
+            if opponent_piece is not None:
+                if opponent_piece.piece_color != self.piece_color:
+                    if opponent_piece.moved_forward_two:
+                        destination_square = (row + dx, adj_col)
+                        if board.get_piece(destination_square) is None:
+                            moveset.append(destination_square)
         return moveset
 
     # Checks if pawn has reached end of board and must be promoted
