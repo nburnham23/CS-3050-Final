@@ -79,7 +79,26 @@ class Game:
             print("INVALID MOVE FOR PIECE")
             return False
 
-        # TODO: check for en passant
+
+        # TODO: clean this up
+        if isinstance(piece, Pawn.Pawn):
+            # Pawn moving diagonally to an empty square = possible en passant
+            if to_position[1] - from_position[1] == -1 or to_position[1] - from_position[1] == 1:
+                # check to see that to_position is empty
+                if self.board.get_piece(to_position) is None:
+                    direction_forward = -1 if piece.piece_color == "WHITE" else 1
+                    captured_pawn_pos = (to_position[0] + direction_forward, to_position[1])
+                    captured_piece = self.board.get_piece(captured_pawn_pos)
+
+                    if (captured_piece and isinstance(captured_piece, Pawn.Pawn)
+                            and captured_piece.piece_color != piece.piece_color and captured_piece.just_moved_two):
+                        # Remove the pawn passed over
+                        self.board.set_piece(captured_pawn_pos, None)
+                        # Add to taken pieces list
+                        if piece.piece_color == "WHITE":
+                            self.board.black_taken.append(captured_piece)
+                        else:
+                            self.board.white_taken.append(captured_piece)
 
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
@@ -91,8 +110,21 @@ class Game:
             if to_position[0] == final_row:
                 self.trigger_promotion(piece, to_position)
                 return True
+        # TODO: fix this part
+        if isinstance(piece, Pawn.Pawn):
+            # Reset all other pawns' vulnerability
+            for r in range(8):
+                for c in range(8):
+                    p = self.board.get_piece((r, c))
+                    if isinstance(p, Pawn.Pawn):
+                        p.just_moved_two = False
 
-        # Determine opponent color 
+            # Mark if this pawn moved 2 squares
+            if abs(to_position[0] - from_position[0]) == 2:
+                piece.just_moved_two = True
+
+            piece.has_moved = True
+        # Determine opponent color
         if self.current_turn == "WHITE":
             enemy_color = "BLACK"
         else:

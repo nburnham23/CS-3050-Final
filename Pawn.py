@@ -9,9 +9,10 @@ class Pawn(Piece):
         # Attribute for determining if pawn can move 2 spaces
         self.has_moved = False
         self.promotion_available = False
-        self.moved_forward_two = False
+        self.just_moved_two = True
 
         super().__init__(piece_color, start_position, image_path, scale)
+
 
     def move(self, board):
         moveset = []
@@ -31,7 +32,7 @@ class Pawn(Piece):
             if 0 <= new_row < BOARD_LENGTH and board.get_piece((new_row, col)) is None:
                 moveset.append((new_row, col))
 
-        # Captures
+        # Regular Captures
         direction_capture = (-1, 1)
         for dx in direction_capture:
             new_row, new_col = row - direction_forward, col + dx
@@ -41,16 +42,22 @@ class Pawn(Piece):
                     moveset.append((new_row, new_col))
 
         # En passant captures
+        
         for dx in direction_capture:
             adj_col = col + dx
-            adj_square = (row, adj_col)
-            opponent_piece = board.get_piece(adj_square)
-            if opponent_piece is not None:
-                if opponent_piece.piece_color != self.piece_color:
-                    if opponent_piece.moved_forward_two:
-                        destination_square = (row + dx, adj_col)
-                        if board.get_piece(destination_square) is None:
-                            moveset.append(destination_square)
+            if 0 <= adj_col <= 7:
+                adj_square = (row, adj_col)
+                enemy_piece = board.get_piece(adj_square)
+
+                if (enemy_piece and isinstance(enemy_piece, Pawn) and enemy_piece.piece_color != self.piece_color
+                        and enemy_piece.just_moved_two):
+                    # landing square is diagonally forward into empty space
+                    en_passant_row = row - direction_forward
+                    en_passant_col = adj_col
+                    if board.get_piece((en_passant_row, en_passant_col)) is None:
+                        moveset.append((en_passant_row, en_passant_col))
+        
+        
         return moveset
 
     # Checks if pawn has reached end of board and must be promoted
