@@ -263,7 +263,7 @@ class GameView(arcade.View):
                         # lock player input until bot move is complete
                         self.game.bot_move_pending = True
                         # make random time delay between 3-5 seconds to pretend bot is thinking
-                        delay_time = random.uniform(3, 5)
+                        delay_time = random.uniform(1, 2)
 
                         # create bot move function to be scheduled after delay
                         def bot_move_func(dt):
