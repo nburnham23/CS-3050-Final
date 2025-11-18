@@ -7,6 +7,9 @@ class King(Piece):
     def __init__(self, piece_color, start_position, image_path, scale = 1):
         super().__init__(piece_color, start_position, image_path, scale)
 
+        # Fields for castling
+        self.has_moved = False
+
     def move(self, board):
         moveset = []
         row, col = self.curr_position
