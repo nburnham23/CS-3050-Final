@@ -9,7 +9,7 @@ class Pawn(Piece):
         # Attribute for determining if pawn can move 2 spaces
         self.has_moved = False
         self.promotion_available = False
-        self.just_moved_two = True
+        self.just_moved_two = False
 
         super().__init__(piece_color, start_position, image_path, scale)
 
@@ -42,13 +42,11 @@ class Pawn(Piece):
                     moveset.append((new_row, new_col))
 
         # En passant captures
-        
         for dx in direction_capture:
             adj_col = col + dx
             if 0 <= adj_col <= 7:
                 adj_square = (row, adj_col)
                 enemy_piece = board.get_piece(adj_square)
-
                 if (enemy_piece and isinstance(enemy_piece, Pawn) and enemy_piece.piece_color != self.piece_color
                         and enemy_piece.just_moved_two):
                     # landing square is diagonally forward into empty space

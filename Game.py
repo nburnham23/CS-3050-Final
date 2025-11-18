@@ -74,31 +74,32 @@ class Game:
             print("TRIED MOVING PIECE OUT OF TURN")
             return False
 
-        # Validate that to_position in selected pieces moveset
-        if to_position not in piece.moveset:
-            print("INVALID MOVE FOR PIECE")
-            return False
-
-
-        # TODO: clean this up
+        # TODO: clean this up, reset all pawns' just_moved_two to False, get possible move to be drawn
         if isinstance(piece, Pawn.Pawn):
-            # Pawn moving diagonally to an empty square = possible en passant
-            if to_position[1] - from_position[1] == -1 or to_position[1] - from_position[1] == 1:
+            # Pawn moving diagonally to an empty square => possible en passant
+            if to_position[1] - from_position[1] in (-1, 1):
                 # check to see that to_position is empty
                 if self.board.get_piece(to_position) is None:
-                    direction_forward = -1 if piece.piece_color == "WHITE" else 1
-                    captured_pawn_pos = (to_position[0] + direction_forward, to_position[1])
+                    captured_pawn_pos = (from_position[0], to_position[1])
                     captured_piece = self.board.get_piece(captured_pawn_pos)
-
-                    if (captured_piece and isinstance(captured_piece, Pawn.Pawn)
-                            and captured_piece.piece_color != piece.piece_color and captured_piece.just_moved_two):
-                        # Remove the pawn passed over
+                    print("move history: ", self.move_history)
+                    last_piece, start, end = self.move_history[-1]
+                    if isinstance(last_piece, Pawn.Pawn) and abs(start[0] - end[0]) == 2:
+                        print("last piece moved: ", last_piece)
+                        captured_piece.just_moved_two = True
+                        piece.calculate_moves(self.board)
+                    if captured_piece and isinstance(captured_piece, Pawn.Pawn):
                         self.board.set_piece(captured_pawn_pos, None)
-                        # Add to taken pieces list
                         if piece.piece_color == "WHITE":
                             self.board.black_taken.append(captured_piece)
                         else:
                             self.board.white_taken.append(captured_piece)
+
+
+        # Validate that to_position in selected pieces moveset
+        if to_position not in piece.moveset:
+            print("INVALID MOVE FOR PIECE")
+            return False
 
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
@@ -110,20 +111,8 @@ class Game:
             if to_position[0] == final_row:
                 self.trigger_promotion(piece, to_position)
                 return True
-        # TODO: fix this part
-        if isinstance(piece, Pawn.Pawn):
-            # Reset all other pawns' vulnerability
-            for r in range(8):
-                for c in range(8):
-                    p = self.board.get_piece((r, c))
-                    if isinstance(p, Pawn.Pawn):
-                        p.just_moved_two = False
+        piece.has_moved = True
 
-            # Mark if this pawn moved 2 squares
-            if abs(to_position[0] - from_position[0]) == 2:
-                piece.just_moved_two = True
-
-            piece.has_moved = True
         # Determine opponent color
         if self.current_turn == "WHITE":
             enemy_color = "BLACK"
