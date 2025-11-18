@@ -54,8 +54,7 @@ class Pawn(Piece):
                     en_passant_col = adj_col
                     if board.get_piece((en_passant_row, en_passant_col)) is None:
                         moveset.append((en_passant_row, en_passant_col))
-        
-        
+        self.moveset = moveset
         return moveset
 
     # Checks if pawn has reached end of board and must be promoted

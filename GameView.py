@@ -296,6 +296,7 @@ class GameView(arcade.View):
                 print("selected square: " )
                 print(self.selected_square)
                 piece = self.chess_board.get_piece((row, column))
+                piece.move(self.chess_board)
                 self.possible_moves = piece.moveset
                 self.selected_piece = piece
 
