@@ -74,11 +74,12 @@ class Game:
         if piece.piece_color != self.current_turn:
             print("TRIED MOVING PIECE OUT OF TURN")
             return False
-        self.check_en_passant(from_position, to_position)
-        # Validate that to_position in selected pieces moveset
+            # Validate that to_position in selected pieces moveset
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
             return False
+        self.check_en_passant(from_position, to_position)
+
 
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
