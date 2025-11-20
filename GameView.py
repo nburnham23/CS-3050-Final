@@ -39,7 +39,7 @@ class GameView(arcade.View):
     """
     Chess game class.
     """
-    def __init__(self, game: Game):
+    def __init__(self, game: Game, color_one, color_two):
         """
         Set up the application.
         """
@@ -49,6 +49,8 @@ class GameView(arcade.View):
         self.game = game
         self.chess_board = game.board
         self.sprites = arcade.SpriteList()
+        self.color_one = color_one
+        self.color_two = color_two
         # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
@@ -162,9 +164,9 @@ class GameView(arcade.View):
             for column in range(COLUMN_COUNT):
                 # Color the cells in Beige, Bistre, or Chartreuse according to position / state
                 if self.grid[row][column] == 0:
-                    color = arcade.color.BEIGE
+                    color = self.color_one
                 elif self.grid[row][column] == 1:
-                    color = arcade.color.BISTRE
+                    color = self.color_two
                 else:
                     # cell is Chartreuse if it is selected
                     color = arcade.color.CHARTREUSE
@@ -296,6 +298,7 @@ class GameView(arcade.View):
                 print("selected square: " )
                 print(self.selected_square)
                 piece = self.chess_board.get_piece((row, column))
+                piece.move(self.chess_board)
                 self.possible_moves = piece.moveset
                 self.selected_piece = piece
 

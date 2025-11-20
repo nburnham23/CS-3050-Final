@@ -49,6 +49,9 @@ class MenuView(arcade.View):
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.background_color = arcade.color.WHITE
+        self.color_one = arcade.color.BISTRE
+        self.color_two = arcade.color.BEIGE
+
 
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
@@ -76,18 +79,27 @@ class MenuView(arcade.View):
         self.v_box.add(quit_button)
         quit_button.on_click = self.on_click_quit
 
+        colors_button = arcade.gui.widgets.buttons.UIFlatButton(
+            text="Set Colors", width=200
+        )
+        colors_button.on_click = self.on_click_colors_button
+
+        colors_anchor = arcade.gui.widgets.layout.UIAnchorLayout()
+        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top", align_x=20, align_y=-20)
+
         # Create a widget to hold the v_box widget, that will center the buttons
         ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
         ui_anchor_layout.add(child=self.v_box, anchor_x="center_x", anchor_y="center_y")
 
         self.manager.add(ui_anchor_layout)
+        self.manager.add(colors_anchor)
 
     def on_click_two_player(self, event):
         """ Sets the game mode to two-player and creates the Game View """
         print("two-player:", event)
         self.manager.disable()
         game = Game()
-        game_view = GameView(game)
+        game_view = GameView(game, self.color_one, self.color_two)
         self.window.show_view(game_view)
 
     def on_click_ai_easy(self, event):
@@ -95,7 +107,7 @@ class MenuView(arcade.View):
         print("ai-easy:", event)
         self.manager.disable()
         game = Game(bot=True)
-        game_view = GameView(game)
+        game_view = GameView(game, self.color_one, self.color_two)
         self.window.show_view(game_view)
 
     def on_click_ai_hard(self, event):
@@ -104,8 +116,17 @@ class MenuView(arcade.View):
         self.manager.disable()
         # temporarily using stupid bot
         game = Game(bot=True)
-        game_view = GameView(game)
+        game_view = GameView(game, self.color_one, self.color_two)
         self.window.show_view(game_view)
+
+    def on_click_colors_button(self, event):
+        """shows view to set the colors of the game"""
+        from color_view import ColorView
+        def set_colors(color_one, color_two):
+            self.color_one = color_one
+            self.color_two = color_two
+        color_view = ColorView(self, set_colors)
+        self.window.show_view(color_view)
 
     def on_click_quit(self, event):
         """ Closes the arcade window """

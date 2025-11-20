@@ -46,9 +46,10 @@ class Game:
             self.board.set_piece(position, new_piece)
             self.switch_turn()
 
+        #TODO: self.gui?
         promotion_view = PromotionView(pawn, receive_promoted_piece, self.gui, position)
         self.gui.window.show_view(promotion_view)
-    
+
     # Logic for making a move
     def make_move(self, from_position, to_position):
         """
@@ -73,15 +74,27 @@ class Game:
         if piece.piece_color != self.current_turn:
             print("TRIED MOVING PIECE OUT OF TURN")
             return False
-
-        # Validate that to_position in selected pieces moveset
+            # Validate that to_position in selected pieces moveset
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
-            return False
+            return Falsex
+        self.check_en_passant(from_position, to_position)
+
 
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
         self.move_history.append((piece, from_position, to_position))
+        # If this pawn moved two squares, mark it
+        if isinstance(piece, Pawn.Pawn) and abs(from_position[0] - to_position[0]) == 2:
+            piece.just_moved_two = True
+        else:
+            piece.just_moved_two = False
+        # Clear everyone else's just_moved_two
+        for r in range(8):
+            for c in range(8):
+                p = self.board.get_piece((r, c))
+                if isinstance(p, Pawn.Pawn) and p != piece:
+                    p.just_moved_two = False
 
         # check for promotion eligibility
         if isinstance(piece, Pawn.Pawn):
@@ -89,8 +102,9 @@ class Game:
             if to_position[0] == final_row:
                 self.trigger_promotion(piece, to_position)
                 return True
+        piece.has_moved = True
 
-        # Determine opponent color 
+        # Determine opponent color
         if self.current_turn == "WHITE":
             enemy_color = "BLACK"
         else:
@@ -159,6 +173,31 @@ class Game:
         if not king_pos:
             print("GAME OVER FROM is_checkmate")
             return True
+
+    def check_en_passant(self, from_position, to_position):
+        # TODO: clean this up, reset all pawns' just_moved_two to False, get possible move to be drawn
+        # TODO: alter to return bool repping if en passant is possible that can be called from GameView
+        #   and then create another function that actually performs the en passant
+        piece = self.board.get_piece(from_position)
+        if isinstance(piece, Pawn.Pawn):
+            # Pawn moving diagonally to an empty square => possible en passant
+            if to_position[1] - from_position[1] in (-1, 1):
+                # check to see that to_position is empty
+                if self.board.get_piece(to_position) is None:
+                    captured_pawn_pos = (from_position[0], to_position[1])
+                    captured_piece = self.board.get_piece(captured_pawn_pos)
+                    print("move history: ", self.move_history)
+                    last_piece, start, end = self.move_history[-1]
+                    if last_piece == captured_piece and abs(start[0] - end[0]) == 2:
+                        print("last piece moved: ", last_piece)
+                        captured_piece.just_moved_two = True
+                        piece.calculate_moves(self.board)
+                    if captured_piece and isinstance(captured_piece, Pawn.Pawn):
+                        self.board.set_piece(captured_pawn_pos, None)
+                        if piece.piece_color == "WHITE":
+                            self.board.black_taken.append(captured_piece)
+                        else:
+                            self.board.white_taken.append(captured_piece)
 
     # Display the board
     def display_board(self):
