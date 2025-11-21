@@ -3,8 +3,6 @@ Easy Bot class
 """
 
 import random
-import time
-from Board import Board
 
 class BotPlayer:
     def __init__(self, color, board):

@@ -4,6 +4,7 @@ Bishop class
 from Piece import Piece, BOARD_LENGTH
 
 class Bishop(Piece):
+    """Bishop class"""
     def __init__(self, piece_color, start_position, image_path, scale = 1):
         super().__init__(piece_color, start_position, image_path, scale)
 

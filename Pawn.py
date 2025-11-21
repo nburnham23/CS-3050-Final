@@ -47,7 +47,8 @@ class Pawn(Piece):
             if 0 <= adj_col <= 7:
                 adj_square = (row, adj_col)
                 enemy_piece = board.get_piece(adj_square)
-                if (enemy_piece and isinstance(enemy_piece, Pawn) and enemy_piece.piece_color != self.piece_color
+                if (enemy_piece and isinstance(enemy_piece, Pawn)
+                        and enemy_piece.piece_color != self.piece_color
                         and enemy_piece.just_moved_two):
                     # landing square is diagonally forward into empty space
                     en_passant_row = row - direction_forward

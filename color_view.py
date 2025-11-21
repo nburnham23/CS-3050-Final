@@ -129,9 +129,11 @@ class ColorView(arcade.View):
 def main():
     # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
+    def test_func():
+        return True
 
     # Create the MenuView
-    color_view = ColorView(MenuView())
+    color_view = ColorView(MenuView(), test_func)
 
     # Show GameView on screen
     window.show_view(color_view)

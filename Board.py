@@ -36,7 +36,8 @@ img_path = {
     }
 }
 
-class Board():
+class Board:
+    """Board class"""
     def __init__(self):
         self.black_taken = []
         self.white_taken = []

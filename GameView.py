@@ -1,12 +1,12 @@
 """
 GUI class for the game of chess
 """
+import random
+
 import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
-
-import random
 
 from Game import Game
 
@@ -270,12 +270,15 @@ class GameView(arcade.View):
                         # create bot move function to be scheduled after delay
                         def bot_move_func(dt):
                             try:
-                                self.bot_selected_piece, self.bot_selected_square, self.bot_destination_square = self.game.bot_player.generate_move()
-                                print(f"Bot selected square: {self.bot_selected_square} containing {self.bot_selected_piece}, destination square: {self.bot_destination_square}")
+                                (self.bot_selected_piece, self.bot_selected_square,
+                                 self.bot_destination_square) = self.game.bot_player.generate_move()
+                                print(f"Bot selected square: {self.bot_selected_square} "
+                                      f"containing {self.bot_selected_piece}, "
+                                      f"destination square: {self.bot_destination_square}")
                                 if self.bot_selected_piece:
                                     # bot moved, update its board state again and sprites
-                                    self.game.make_move(self.bot_selected_square, self.bot_destination_square)
-
+                                    self.game.make_move(self.bot_selected_square,
+                                                        self.bot_destination_square)
                                     self.bot_selected_piece.set_sprite_position()
                                     self.update_sprites()
                             except Exception as e:
