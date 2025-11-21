@@ -122,20 +122,27 @@ class Board():
             if new_position[1] > piece_position[1]:
                 kingside_rook_position = (piece_position[0], 7)
                 kingside_rook = self.get_piece(kingside_rook_position)
-                # Move the rook as part of castling
-                kingside_rook.has_moved = True
-                rook_end = (piece_position[0], piece_position[1] + 1)
-                self.set_piece(rook_end, kingside_rook)
-                self.set_piece(kingside_rook_position, None)
+                if kingside_rook:
+                    # Move the rook as part of castling
+                    rook_end = (piece_position[0], piece_position[1] + 1)
+                    self.set_piece(rook_end, kingside_rook)
+                    self.set_piece(kingside_rook_position, None)
+
+                    kingside_rook.has_moved = True
+                    kingside_rook.curr_position = rook_end
+
             # Queenside castling
             else:
                 queenside_rook_position = (piece_position[0], 0)
                 queenside_rook = self.get_piece(queenside_rook_position)
-                # Move the rook as part of castling
-                queenside_rook.has_moved = True
-                rook_end = (piece_position[0], piece_position[1] - 1)
-                self.set_piece(rook_end, queenside_rook)
-                self.set_piece(queenside_rook_position, None)
+                if queenside_rook:
+                    # Move the rook as part of castling
+                    rook_end = (piece_position[0], piece_position[1] - 1)
+                    self.set_piece(rook_end, queenside_rook)
+                    self.set_piece(queenside_rook_position, None)
+
+                    queenside_rook.curr_position = rook_end
+                    queenside_rook.has_moved = True
 
         # Update pieces information
         piece.curr_position = new_position
