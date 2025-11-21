@@ -185,6 +185,8 @@ class GameView(arcade.View):
 
         self.possible_moves = None
 
+        self.castled_rook = None # the rook that moved during castling, if any
+
         self.white_taken_sprites = arcade.SpriteList()
         self.black_taken_sprites = arcade.SpriteList()
         self.game.gui = self
@@ -337,6 +339,15 @@ class GameView(arcade.View):
                         game_over_view = GameOverView(self.game.winner)
                         self.window.show_view(game_over_view)
                         return
+                    # Check if castling was performed, and update rook sprite position if so
+                    if self.selected_piece.__class__.__name__ == 'King' and self.destination_square[1] - self.selected_square[1] == 2:
+                        # Kingside castling
+                        self.castled_rook = self.chess_board.get_piece((self.destination_square[0], self.destination_square[1] - 1))
+                        self.castled_rook.set_sprite_position()
+                    if self.selected_piece.__class__.__name__ == 'King' and self.destination_square[1] - self.selected_square[1] == -2:
+                        # Queenside castling
+                        self.castled_rook = self.chess_board.get_piece((self.destination_square[0], self.destination_square[1] + 1))
+                        self.castled_rook.set_sprite_position()
                 else:
                     self.selected_piece = None
 
@@ -352,6 +363,9 @@ class GameView(arcade.View):
                 if self.selected_piece:
                     self.selected_piece.set_sprite_position()
                     self.update_sprites()
+
+                    if self.castled_rook:
+                        self.castled_rook = None
 
                     # if bot is playing, make bot move
                     if self.game.bot_player and moved:
