@@ -77,7 +77,7 @@ class Game:
             # Validate that to_position in selected pieces moveset
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
-            return Falsex
+            return False
         self.check_en_passant(from_position, to_position)
 
 
