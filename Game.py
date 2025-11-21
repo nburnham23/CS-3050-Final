@@ -137,6 +137,7 @@ class Game:
         if not king_pos:
             print("GAME OVER FROM is_in_check")
             return True
+        king_piece = self.board.get_piece((king_pos))
         # Determine enemy color
         if color == "WHITE":
             enemy_color = "BLACK"
@@ -149,7 +150,9 @@ class Game:
                 # Check if piece is in moveset and can attack the king
                 if piece and piece.piece_color == enemy_color:
                     if king_pos in piece.moveset:
+                        king_piece.in_check = True
                         return True
+        king_piece.in_check = False
         return False
 
     def is_checkmate(self, color):

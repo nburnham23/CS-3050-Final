@@ -9,6 +9,7 @@ class King(Piece):
 
         # Fields for castling
         self.has_moved = False
+        self.in_check = False
 
     def move(self, board):
         moveset = []
@@ -28,7 +29,7 @@ class King(Piece):
         # Check for castling moves
         # Castling conditions: king and rook have not moved, squares between are empty
         # TODO: squares between are not under attack, king is not in check
-        if not self.has_moved:
+        if not self.has_moved and not self.in_check:
             # Kingside castling
             kingside_rook_position = (row, BOARD_LENGTH - 1)
             kingside_rook = board.get_piece(kingside_rook_position)
