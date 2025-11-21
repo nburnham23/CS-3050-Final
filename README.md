@@ -3,5 +3,7 @@
 Authored by Noah Burnham, Matthew Clark, Liam Spence, and Even Stowell.
 
 ## Running the project
-To play a game of chess, run the `Game.py` file. You can select your mode (only the two-player and easy AI modes work at
-the moment).
+To play a game of chess, run the `Game.py` file. There are various modes to choose from: `two-player`, `easy AI`, and `hard AI`. The easy AI agent just chooses a random move, but the hard AI agent makes more calculated decisions, using the Stockfish API. You can also customize the colors of the board by clicking the `set colors` button. 
+
+## Chess Functionality
+We have implemented all the functionality of a traditional game of chess -- even en passant and castling!
