@@ -77,9 +77,8 @@ class Game:
             # Validate that to_position in selected pieces moveset
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
-            return Falsex
+            return False
         self.check_en_passant(from_position, to_position)
-
 
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
@@ -175,9 +174,6 @@ class Game:
             return True
 
     def check_en_passant(self, from_position, to_position):
-        # TODO: clean this up, reset all pawns' just_moved_two to False, get possible move to be drawn
-        # TODO: alter to return bool repping if en passant is possible that can be called from GameView
-        #   and then create another function that actually performs the en passant
         piece = self.board.get_piece(from_position)
         if isinstance(piece, Pawn.Pawn):
             # Pawn moving diagonally to an empty square => possible en passant
