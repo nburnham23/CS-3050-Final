@@ -13,7 +13,7 @@ class Game:
     Main game logic class for chess
     Class handles turns, moves, check/checkmate, and connects BoardGUI
     """
-    def __init__(self, bot=False):
+    def __init__(self, bot=False, bot_class=None, bot_color='BLACK'):
         """
         Initialize a new game
         """
@@ -28,7 +28,7 @@ class Game:
         # Keeps history of all moves made
         self.move_history = []
         # Optional: bot player
-        self.bot_player = BotPlayer("BLACK", self.board) if bot else None
+        self.bot_player = bot_class(bot_color, self.board) if bot and bot_class else None
         self.bot_move_pending = False
 
     # Function to switch the current turn between WHITE and BLACK
