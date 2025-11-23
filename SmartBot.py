@@ -1,3 +1,6 @@
+"""
+SmartBot class
+"""
 from Piece import Piece
 import random
 import copy
