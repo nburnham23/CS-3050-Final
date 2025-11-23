@@ -95,7 +95,15 @@ class Board():
             for piece in row:
                 if piece:
                     piece.calculate_moves(self)
-
+    
+    # Checks if a square is under attack by any piece of attacking_color
+    def square_under_attack(self, position, attacking_color):
+        for r in range(8):
+            for c in range(8):
+                piece = self.get_piece((r, c))
+                if piece and piece.piece_color == attacking_color and position in piece.moveset:
+                    return True
+        return False
 
     # Check if move is valid, then update board and piece's moveset
     def move(self, piece_position, new_position):
