@@ -97,55 +97,54 @@ class Game:
         
 
 
+
         # Make the actual move and append move to move_history
-        moved = self.board.move(from_position, to_position)
-        if moved:
-            self.move_history.append((piece, from_position, to_position))
-            # If this pawn moved two squares, mark it
-            if isinstance(piece, Pawn.Pawn) and abs(from_position[0] - to_position[0]) == 2:
-                piece.just_moved_two = True
-            else:
-                piece.just_moved_two = False
-            # Clear everyone else's just_moved_two
-            for r in range(8):
-                for c in range(8):
-                    p = self.board.get_piece((r, c))
-                    if isinstance(p, Pawn.Pawn) and p != piece:
-                        p.just_moved_two = False
-
-            # check for promotion eligibility
-            if isinstance(piece, Pawn.Pawn):
-                final_row = 0 if piece.piece_color == "BLACK" else 7
-                if to_position[0] == final_row:
-                    self.trigger_promotion(piece, to_position)
-                    return True
-            piece.has_moved = True
-
-            # Determine opponent color
-            if self.current_turn == "WHITE":
-                enemy_color = "BLACK"
-            else:
-                enemy_color = "WHITE"
-
-            # Check if the move puts the opponent in check
-            if self.is_in_check(enemy_color):
-                # If enemy is in checkmate output in terminal
-                print(f"{enemy_color} is in CHECK!")
-
-                # Check for checkmate
-                if self.is_checkmate(enemy_color):
-                    self.winner = self.current_turn
-                    print(f"CHECKMATE! {self.winner} wins!")
-                    self.is_game_over = True
-                    return True
-                
-            # Switch to opponents turn
-            self.switch_turn()
-            return True
+        self.board.move(from_position, to_position)
+        self.move_history.append((piece, from_position, to_position))
+        # If this pawn moved two squares, mark it
+        if isinstance(piece, Pawn.Pawn) and abs(from_position[0] - to_position[0]) == 2:
+            piece.just_moved_two = True
         else:
-            # Move was not successful
-            return False
+            piece.just_moved_two = False
+        # Clear everyone else's just_moved_two
+        for r in range(8):
+            for c in range(8):
+                p = self.board.get_piece((r, c))
+                if isinstance(p, Pawn.Pawn) and p != piece:
+                    p.just_moved_two = False
+
+        # check for promotion eligibility
+        if isinstance(piece, Pawn.Pawn):
+            final_row = 0 if piece.piece_color == "BLACK" else 7
+            if to_position[0] == final_row:
+                self.trigger_promotion(piece, to_position)
+                return True
+        piece.has_moved = True
+
+        # Determine opponent color
+        if self.current_turn == "WHITE":
+            enemy_color = "BLACK"
+        else:
+            enemy_color = "WHITE"
+
+        # Check if the move puts the opponent in check
+        if self.is_in_check(enemy_color):
+            # If enemy is in checkmate output in terminal
+            print(f"{enemy_color} is in CHECK!")
+            # Check for checkmate
+            if self.is_checkmate(enemy_color):
+                self.winner = self.current_turn
+                print(f"CHECKMATE! {self.winner} wins!")
+                self.is_game_over = True
+                return True
             
+        # Switch to opponents turn
+        self.switch_turn()
+        return True
+
+    # Return the position of a piece
+    def get_piece(self, position):
+        return self.board.get_piece(position)
     
     def find_king(self, color):
         """
@@ -169,6 +168,7 @@ class Game:
         if not king_pos:
             print("GAME OVER FROM is_in_check")
             return True
+        king_piece = self.board.get_piece((king_pos))
         # Determine enemy color
         if color == "WHITE":
             enemy_color = "BLACK"
@@ -181,7 +181,9 @@ class Game:
                 # Check if piece is in moveset and can attack the king
                 if piece and piece.piece_color == enemy_color:
                     if king_pos in piece.moveset:
+                        king_piece.in_check = True
                         return True
+        king_piece.in_check = False
         return False
 
     def is_checkmate(self, color):
