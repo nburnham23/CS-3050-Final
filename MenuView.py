@@ -6,7 +6,8 @@ import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
-
+from MyBot import BotPlayer
+from SmartBot import SmartBot
 from Game import Game
 
 from GameView import GameView
@@ -106,7 +107,7 @@ class MenuView(arcade.View):
         """ Sets the game mode to Easy AI and creates the Game View """
         print("ai-easy:", event)
         self.manager.disable()
-        game = Game(bot=True)
+        game = Game(bot=True, bot_class=BotPlayer)
         game_view = GameView(game, self.color_one, self.color_two)
         self.window.show_view(game_view)
 
@@ -114,8 +115,7 @@ class MenuView(arcade.View):
         """ Sets the game mode to Hard AI and creates the Game View """
         print("ai-hard:", event)
         self.manager.disable()
-        # temporarily using stupid bot
-        game = Game(bot=True)
+        game = Game(bot=True, bot_class=SmartBot)
         game_view = GameView(game, self.color_one, self.color_two)
         self.window.show_view(game_view)
 
