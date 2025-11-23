@@ -186,7 +186,7 @@ class Game:
         king_piece.in_check = False
         return False
 
-        def is_checkmate(self, color):
+    def is_checkmate(self, color):
         """
         Returns True if the given color is in checkmate
         """
