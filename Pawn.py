@@ -30,7 +30,8 @@ class Pawn(Piece):
             new_row = row - (direction_forward * 2)
             # ensure new_row is within bounds before checking board
             if 0 <= new_row < BOARD_LENGTH and board.get_piece((new_row, col)) is None:
-                moveset.append((new_row, col))
+                if board.get_piece((row - direction_forward, col)) is None:
+                    moveset.append((new_row, col))
 
         # Regular Captures
         direction_capture = (-1, 1)
