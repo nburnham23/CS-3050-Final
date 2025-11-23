@@ -94,9 +94,6 @@ class Game:
             self.board.calculate_movesets()
             print("ILLEGAL MOVE: MOVE LEAVES KING IN CHECK")
             return False
-        
-
-
 
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
