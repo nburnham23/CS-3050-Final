@@ -78,6 +78,23 @@ class Game:
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
             return False
+
+                
+        moving_piece = piece
+        captured_piece = self.board.get_piece(to_position)
+        self.board.set_piece(to_position, moving_piece)
+        self.board.set_piece(from_position, None)
+        moving_piece.curr_position = to_position
+        self.board.calculate_movesets()
+        if self.is_in_check(self.current_turn):
+            # Undo move
+            self.board.set_piece(from_position, moving_piece)
+            self.board.set_piece(to_position, captured_piece)
+            moving_piece.curr_position = from_position
+            self.board.calculate_movesets()
+            print("ILLEGAL MOVE: MOVE LEAVES KING IN CHECK")
+            return False
+        
         self.check_en_passant(from_position, to_position)
 
         # Make the actual move and append move to move_history
@@ -168,12 +185,43 @@ class Game:
         return False
 
     def is_checkmate(self, color):
-        # TODO: change to constants
-        # this isn't getting hit
-        king_pos = self.find_king(color)
-        if not king_pos:
-            print("GAME OVER FROM is_checkmate")
-            return True
+        """
+        Returns True if the given color is in checkmate
+        """
+        # If not in check can't be checkmate
+        if not self.is_in_check(color):
+            return False
+        # Try every piece belonging to color
+        for row in range(8):
+            for col in range(8):
+                piece = self.board.get_piece((row, col))
+                if piece and piece.piece_color == color:
+                    # Update moves
+                    piece.calculate_moves(self.board)
+                    for move in piece.moveset:
+                        from_pos = (row, col)
+                        to_pos = move
+                        # Save the board state before the move
+                        moving_piece = self.board.get_piece(from_pos)
+                        captured_piece = self.board.get_piece(to_pos)
+                        # Perform simulated move
+                        self.board.set_piece(to_pos, moving_piece)
+                        self.board.set_piece(from_pos, None)
+                        moving_piece.curr_position = to_pos
+                        # Update all moves after moving
+                        self.board.calculate_movesets()
+                        # Check wether this simulated move still leaves player in check
+                        still_in_check = self.is_in_check(color)
+                        # Undo all moves
+                        self.board.set_piece(from_pos, moving_piece)
+                        self.board.set_piece(to_pos, captured_piece)
+                        moving_piece.curr_position = from_pos
+                        # Recompoute moves after restoring board state
+                        self.board.calculate_movesets()
+                        # If move gets out of check, not checkmate
+                        if not still_in_check:
+                            return False
+        return True
 
     def check_en_passant(self, from_position, to_position):
         # TODO: clean this up, reset all pawns' just_moved_two to False, get possible move to be drawn
