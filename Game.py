@@ -78,7 +78,7 @@ class Game:
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
             return False
-
+        self.check_en_passant(from_position, to_position)
                 
         moving_piece = piece
         captured_piece = self.board.get_piece(to_position)
@@ -95,7 +95,7 @@ class Game:
             print("ILLEGAL MOVE: MOVE LEAVES KING IN CHECK")
             return False
         
-        self.check_en_passant(from_position, to_position)
+
 
         # Make the actual move and append move to move_history
         moved = self.board.move(from_position, to_position)
