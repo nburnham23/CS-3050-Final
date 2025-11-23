@@ -91,6 +91,8 @@ class GameView(arcade.View):
 
         self.possible_moves = None
 
+        self.castled_rook = None # the rook that moved during castling, if any
+
         self.white_taken_sprites = arcade.SpriteList()
         self.black_taken_sprites = arcade.SpriteList()
         self.game.gui = self
@@ -244,6 +246,15 @@ class GameView(arcade.View):
                         game_over_view = GameOverView(self.game.winner)
                         self.window.show_view(game_over_view)
                         return
+                    # Check if castling was performed, and update rook sprite position if so
+                    if self.selected_piece.__class__.__name__ == 'King' and self.destination_square[1] - self.selected_square[1] == 2:
+                        # Kingside castling
+                        self.castled_rook = self.chess_board.get_piece((self.destination_square[0], self.destination_square[1] - 1))
+                        self.castled_rook.set_sprite_position()
+                    if self.selected_piece.__class__.__name__ == 'King' and self.destination_square[1] - self.selected_square[1] == -2:
+                        # Queenside castling
+                        self.castled_rook = self.chess_board.get_piece((self.destination_square[0], self.destination_square[1] + 1))
+                        self.castled_rook.set_sprite_position()
                 else:
                     self.selected_piece = None
 
@@ -260,6 +271,9 @@ class GameView(arcade.View):
                     self.selected_piece.set_sprite_position()
                     self.update_sprites()
 
+                    if self.castled_rook:
+                        self.castled_rook = None
+
                     # if bot is playing, make bot move
                     if self.game.bot_player and moved:
                         # lock player input until bot move is complete
@@ -270,14 +284,16 @@ class GameView(arcade.View):
                         # create bot move function to be scheduled after delay
                         def bot_move_func(dt):
                             try:
-                                self.bot_selected_piece, self.bot_selected_square, self.bot_destination_square = self.game.bot_player.generate_move()
-                                print(f"Bot selected square: {self.bot_selected_square} containing {self.bot_selected_piece}, destination square: {self.bot_destination_square}")
-                                if self.bot_selected_piece:
-                                    # bot moved, update its board state again and sprites
-                                    self.game.make_move(self.bot_selected_square, self.bot_destination_square)
+                                moved = False
+                                while not moved:
+                                    self.bot_selected_piece, self.bot_selected_square, self.bot_destination_square = self.game.bot_player.generate_move()
+                                    print(f"Bot selected square: {self.bot_selected_square} containing {self.bot_selected_piece}, destination square: {self.bot_destination_square}")
+                                    if self.bot_selected_piece:
+                                        # bot moved, update its board state again and sprites
+                                        moved = self.game.make_move(self.bot_selected_square, self.bot_destination_square)
 
-                                    self.bot_selected_piece.set_sprite_position()
-                                    self.update_sprites()
+                                self.bot_selected_piece.set_sprite_position()
+                                self.update_sprites()
                             except Exception as e:
                                 print(f"Error during bot move: {e}")
                             self.game.bot_move_pending = False

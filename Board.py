@@ -116,6 +116,34 @@ class Board():
         elif captured_piece and captured_piece.piece_color == 'WHITE':
             self.white_taken.append(captured_piece)
 
+        # Check if castling is attempted
+        if piece.__class__.__name__ == "King" and abs(new_position[1] - piece_position[1]) == 2:
+            # Kingside castling
+            if new_position[1] > piece_position[1]:
+                kingside_rook_position = (piece_position[0], 7)
+                kingside_rook = self.get_piece(kingside_rook_position)
+                if kingside_rook:
+                    # Move the rook as part of castling
+                    rook_end = (piece_position[0], piece_position[1] + 1)
+                    self.set_piece(rook_end, kingside_rook)
+                    self.set_piece(kingside_rook_position, None)
+
+                    kingside_rook.has_moved = True
+                    kingside_rook.curr_position = rook_end
+
+            # Queenside castling
+            else:
+                queenside_rook_position = (piece_position[0], 0)
+                queenside_rook = self.get_piece(queenside_rook_position)
+                if queenside_rook:
+                    # Move the rook as part of castling
+                    rook_end = (piece_position[0], piece_position[1] - 1)
+                    self.set_piece(rook_end, queenside_rook)
+                    self.set_piece(queenside_rook_position, None)
+
+                    queenside_rook.curr_position = rook_end
+                    queenside_rook.has_moved = True
+
         # Update pieces information
         piece.curr_position = new_position
 
@@ -123,8 +151,12 @@ class Board():
         self.set_piece(new_position, piece)
         self.set_piece(piece_position, None)
 
-        # Update if pawn has moved
+        # Update if pawn, king, or rook has moved
         if isinstance(piece, Pawn):
+            piece.has_moved = True
+        elif isinstance(piece, King):
+            piece.has_moved = True
+        elif isinstance(piece, Rook):
             piece.has_moved = True
 
         # Update board state
