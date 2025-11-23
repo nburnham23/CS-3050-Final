@@ -107,6 +107,10 @@ class Board():
 
     # Check if move is valid, then update board and piece's moveset
     def move(self, piece_position, new_position):
+
+        # Ensure movesets are up to date
+        # self.calculate_movesets()
+
         piece = self.get_piece(piece_position)
         if piece is None:
             print("Piece does not exist")
@@ -126,6 +130,10 @@ class Board():
 
         # Check if castling is attempted
         if piece.__class__.__name__ == "King" and abs(new_position[1] - piece_position[1]) == 2:
+            # Check if squares in king's castling path are under attack
+            # if self.square_under_attack(piece_position, 'BLACK' if piece.piece_color == 'WHITE' else 'WHITE'):
+            #     print("Cannot castle while in check")
+            #     return False
             # Kingside castling
             if new_position[1] > piece_position[1]:
                 kingside_rook_position = (piece_position[0], 7)

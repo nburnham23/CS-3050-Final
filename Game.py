@@ -80,63 +80,54 @@ class Game:
             return False
         self.check_en_passant(from_position, to_position)
 
-
         # Make the actual move and append move to move_history
-        self.board.move(from_position, to_position)
-        self.move_history.append((piece, from_position, to_position))
-        # If this pawn moved two squares, mark it
-        if isinstance(piece, Pawn.Pawn) and abs(from_position[0] - to_position[0]) == 2:
-            piece.just_moved_two = True
+        moved = self.board.move(from_position, to_position)
+        if moved:
+            self.move_history.append((piece, from_position, to_position))
+            # If this pawn moved two squares, mark it
+            if isinstance(piece, Pawn.Pawn) and abs(from_position[0] - to_position[0]) == 2:
+                piece.just_moved_two = True
+            else:
+                piece.just_moved_two = False
+            # Clear everyone else's just_moved_two
+            for r in range(8):
+                for c in range(8):
+                    p = self.board.get_piece((r, c))
+                    if isinstance(p, Pawn.Pawn) and p != piece:
+                        p.just_moved_two = False
+
+            # check for promotion eligibility
+            if isinstance(piece, Pawn.Pawn):
+                final_row = 0 if piece.piece_color == "BLACK" else 7
+                if to_position[0] == final_row:
+                    self.trigger_promotion(piece, to_position)
+                    return True
+            piece.has_moved = True
+
+            # Determine opponent color
+            if self.current_turn == "WHITE":
+                enemy_color = "BLACK"
+            else:
+                enemy_color = "WHITE"
+
+            # Check if the move puts the opponent in check
+            if self.is_in_check(enemy_color):
+                # If enemy is in checkmate output in terminal
+                print(f"{enemy_color} is in CHECK!")
+
+                # Check for checkmate
+                if self.is_checkmate(enemy_color):
+                    self.winner = self.current_turn
+                    print(f"CHECKMATE! {self.winner} wins!")
+                    self.is_game_over = True
+                    return True
+                
+            # Switch to opponents turn
+            self.switch_turn()
+            return True
         else:
-            piece.just_moved_two = False
-        # Clear everyone else's just_moved_two
-        for r in range(8):
-            for c in range(8):
-                p = self.board.get_piece((r, c))
-                if isinstance(p, Pawn.Pawn) and p != piece:
-                    p.just_moved_two = False
-
-        # check for promotion eligibility
-        if isinstance(piece, Pawn.Pawn):
-            final_row = 0 if piece.piece_color == "BLACK" else 7
-            if to_position[0] == final_row:
-                self.trigger_promotion(piece, to_position)
-                return True
-        piece.has_moved = True
-
-        # Determine opponent color
-        if self.current_turn == "WHITE":
-            enemy_color = "BLACK"
-        else:
-            enemy_color = "WHITE"
-
-        # Check if the move puts the opponent in check
-        if self.is_in_check(enemy_color):
-            # If enemy is in checkmate output in terminal
-            print(f"{enemy_color} is in CHECK!")
-
-            # Update king's in_check status
-            king = self.board.get_piece(self.find_king(enemy_color))
-            if king:
-                print("SETTING KING IN CHECK TRUE")
-                king.in_check = True
-
-            # Check for checkmate
-            if self.is_checkmate(enemy_color):
-                self.winner = self.current_turn
-                print(f"CHECKMATE! {self.winner} wins!")
-                self.is_game_over = True
-                return True
-        else:
-            # Update king's in_check status
-            king = self.board.get_piece(self.find_king(enemy_color))
-            if king:
-                print("SETTING KING IN CHECK FALSE")
-                king.in_check = False
+            return False
             
-        # Switch to opponents turn
-        self.switch_turn()
-        return True
     
     def find_king(self, color):
         """
