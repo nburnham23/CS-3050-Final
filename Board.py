@@ -109,7 +109,7 @@ class Board():
     def move(self, piece_position, new_position):
 
         # Ensure movesets are up to date
-        # self.calculate_movesets()
+        self.calculate_movesets()
 
         piece = self.get_piece(piece_position)
         if piece is None:

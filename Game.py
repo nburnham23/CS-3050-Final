@@ -126,6 +126,7 @@ class Game:
             self.switch_turn()
             return True
         else:
+            # Move was not successful
             return False
             
     
