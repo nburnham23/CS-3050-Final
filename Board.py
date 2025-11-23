@@ -164,6 +164,35 @@ class Board():
 
         return True
 
+    def simulate_move(self, from_pos, to_pos):
+        """
+        Temporarily performs a move on the board and returns an undo function.
+        Usage:
+            undo = board.simulate_move(from_pos, to_pos)
+            # evaluate
+            undo()  # restore original state
+        """
+        start_piece = self.get_piece(from_pos)
+        end_piece = self.get_piece(to_pos)
+
+        # Perform the move
+        self.board[to_pos[0]][to_pos[1]] = start_piece
+        self.board[from_pos[0]][from_pos[1]] = None
+
+        # Update the piece's position temporarily
+        if start_piece:
+            orig_pos = start_piece.curr_position
+            start_piece.curr_position = to_pos
+
+        # Undo function
+        def undo():
+            self.board[from_pos[0]][from_pos[1]] = start_piece
+            self.board[to_pos[0]][to_pos[1]] = end_piece
+            if start_piece:
+                start_piece.curr_position = orig_pos
+
+        return undo
+
     # toString method
     def display(self):
         print(self.board)
