@@ -115,7 +115,6 @@ class MenuView(arcade.View):
         """ Sets the game mode to Hard AI and creates the Game View """
         print("ai-hard:", event)
         self.manager.disable()
-        # temporarily using stupid bot
         game = Game(bot=True, bot_class=SmartBot)
         game_view = GameView(game, self.color_one, self.color_two)
         self.window.show_view(game_view)
