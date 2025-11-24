@@ -226,7 +226,7 @@ class GameView(arcade.View):
                 if moved:
                     self.last_move_start = self.selected_square
                     self.last_move_end = self.destination_square
-                    self.update_sprites()
+                    
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
                     if self.game.is_game_over:
                         from GameOverView import GameOverView

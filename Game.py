@@ -2,11 +2,10 @@
 Game class
 """
 
-import Pawn
-from Board import Board
 import arcade
 
-
+import Pawn
+from Board import Board
 
 class Game:
     """
@@ -19,30 +18,31 @@ class Game:
         """
         # Create new chess board
         self.board = Board()
-        # Set current turn to white following chess rules
         self.current_turn = "WHITE"
-        # Store the winner color
         self.winner = None
-        # Track if game is over
         self.is_game_over = False
-        # Keeps history of all moves made
         self.move_history = []
-        # Optional: bot player
+        # Optional bot player
         self.bot_player = bot_class(bot_color, self.board) if bot and bot_class else None
         self.bot_move_pending = False
 
-    # Function to switch the current turn between WHITE and BLACK
     def switch_turn(self):
+        """
+        Switches current turn to other player
+        """
         if self.current_turn == "WHITE":
             self.current_turn = "BLACK"
         else:
             self.current_turn = "WHITE"
 
     def trigger_promotion(self, pawn, position):
+        """
+        Triggers the promotion view for a pawn at given position
+        """
         from PromotionView import PromotionView
 
         def receive_promoted_piece(new_piece):
-            # replace pawn with new piece in board
+            # Replace pawn with new piece in board
             self.board.set_piece(position, new_piece)
             self.switch_turn()
 
@@ -70,16 +70,20 @@ class Game:
         # Output piece selected (debug purposes)
         print(f"SELECTED PIECE: {piece.__class__.__name__}")
 
-        # If piece does not belong to current player print error statement
+        # Prevent player from moving opponent's pieces
         if piece.piece_color != self.current_turn:
             print("TRIED MOVING PIECE OUT OF TURN")
             return False
-            # Validate that to_position in selected pieces moveset
+        
+        # Validate that to_position in selected pieces moveset
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
             return False
+        
+        # Handle en passant if needed
         self.check_en_passant(from_position, to_position)
-                
+
+        # Simulate move to check for self-check
         potential_check = False
         moving_piece = piece
         captured_piece = self.board.get_piece(to_position)
@@ -95,12 +99,14 @@ class Game:
         moving_piece.curr_position = from_position
         self.board.calculate_movesets()
         if potential_check:
+            # Prevent move that leaves player in check
             print("ILLEGAL MOVE: MOVE LEAVES KING IN CHECK")
             return False
 
-        # Make the actual move and append move to move_history
+        # Make the validated move
         self.board.move(from_position, to_position)
         self.move_history.append((piece, from_position, to_position))
+
         # If this pawn moved two squares, mark it
         if isinstance(piece, Pawn.Pawn) and abs(from_position[0] - to_position[0]) == 2:
             piece.just_moved_two = True
@@ -113,13 +119,12 @@ class Game:
                 if isinstance(p, Pawn.Pawn) and p != piece:
                     p.just_moved_two = False
 
-        # check for promotion eligibility
+        # Check for promotion eligibility
         if isinstance(piece, Pawn.Pawn):
             final_row = 0 if piece.piece_color == "BLACK" else 7
             if to_position[0] == final_row:
                 self.trigger_promotion(piece, to_position)
                 return True
-        piece.has_moved = True
 
         # Determine opponent color
         if self.current_turn == "WHITE":
@@ -129,59 +134,66 @@ class Game:
 
         # Check if the move puts the opponent in check
         if self.is_in_check(enemy_color):
-            # If enemy is in checkmate output in terminal
             print(f"{enemy_color} is in CHECK!")
+
             # Check for checkmate
             if self.is_checkmate(enemy_color):
                 self.winner = self.current_turn
                 print(f"CHECKMATE! {self.winner} wins!")
                 self.is_game_over = True
-                # display the game over screen
+
+                # Display the game over screen
                 from GameOverView import GameOverView
                 self.gui.window.show_view(GameOverView(self.winner))
                 return True
-            
+
         # Switch to opponents turn
         self.switch_turn()
         return True
 
-    # Return the position of a piece
     def get_piece(self, position):
+        """
+        Returns the piece at the given position
+        """
         return self.board.get_piece(position)
-    
+
     def find_king(self, color):
         """
         Locates the king of a given color on the board
         Returns the position
         """
-        # Loop through each row and column
         for r in range(8):
             for c in range(8):
                 piece = self.board.get_piece((r, c))
                 # Check if piece is correct color and is the king
-                if piece is not None and piece.piece_color == color and piece.__class__.__name__ == "King":
-                    return r, c
+                if piece and piece.piece_color == color and piece.__class__.__name__ == "King":
+                    return (r, c)
+        # King not found
         return None
 
     def is_in_check(self, color):
         """
         Returns True if the king of given color is in check
         """
+        # Get king piece
         king_pos = self.find_king(color)
         if not king_pos:
+            # King not on board, should not happen but treat as checkmate
             print("GAME OVER FROM is_in_check")
             return True
-        king_piece = self.board.get_piece((king_pos))
+        king_piece = self.board.get_piece(king_pos)
+
         # Determine enemy color
         if color == "WHITE":
             enemy_color = "BLACK"
         else:
             enemy_color = "WHITE"
-        # Loop through each row and column
+            
+        
+        # Check if piece is in moveset and can attack the king
         for r in range(8):
             for c in range(8):
                 piece = self.board.get_piece((r, c))
-                # Check if piece is in moveset and can attack the king
                 if piece and piece.piece_color == enemy_color:
                     if king_pos in piece.moveset:
                         king_piece.in_check = True
@@ -196,39 +208,52 @@ class Game:
         # If not in check can't be checkmate
         if not self.is_in_check(color):
             return False
+
         # Try every piece belonging to color
         for row in range(8):
             for col in range(8):
                 piece = self.board.get_piece((row, col))
                 if piece and piece.piece_color == color:
-                    # Update moves
+                    # Ensure moves are up to date
                     piece.calculate_moves(self.board)
+
+                    # Test every move for this piece to see if it gets out of check
                     for move in piece.moveset:
                         from_pos = (row, col)
                         to_pos = move
+
                         # Save the board state before the move
                         moving_piece = self.board.get_piece(from_pos)
                         captured_piece = self.board.get_piece(to_pos)
+
                         # Perform simulated move
                         self.board.set_piece(to_pos, moving_piece)
                         self.board.set_piece(from_pos, None)
                         moving_piece.curr_position = to_pos
-                        # Update all moves after moving
+
+                        # Update all movesets after moving
                         self.board.calculate_movesets()
-                        # Check wether this simulated move still leaves player in check
+
+                        # Check whether this simulated move still leaves player in check
                         still_in_check = self.is_in_check(color)
-                        # Undo all moves
+
+                        # Undo move
                         self.board.set_piece(from_pos, moving_piece)
                         self.board.set_piece(to_pos, captured_piece)
                         moving_piece.curr_position = from_pos
+
                         # Recompoute moves after restoring board state
                         self.board.calculate_movesets()
+
                         # If move gets out of check, not checkmate
                         if not still_in_check:
                             return False
         return True
 
     def check_en_passant(self, from_position, to_position):
+        """
+        Check and perform en passant if applicable
+        """
         # TODO: clean this up, reset all pawns' just_moved_two to False, get possible move to be drawn
         # TODO: alter to return bool repping if en passant is possible that can be called from GameView
         #   and then create another function that actually performs the en passant
