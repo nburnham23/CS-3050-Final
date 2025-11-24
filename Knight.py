@@ -1,10 +1,10 @@
 """
 Knight class
 """
-from Piece import Piece, BOARD_LENGTH
-
+from Piece import Piece
+from constants import BOARD_LENGTH, SPRITE_SCALE
 class Knight(Piece):
-    def __init__(self, piece_color, start_position, image_path, scale = 1):
+    def __init__(self, piece_color, start_position, image_path, scale = SPRITE_SCALE):
         super().__init__(piece_color, start_position, image_path, scale)
 
     def move(self, board):
