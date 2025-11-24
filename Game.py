@@ -81,9 +81,8 @@ class Game:
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
             return False
-        self.check_en_passant(from_position, to_position)
-        # simulate the move to make sure that it doesn't leave the king in check
 
+        # simulate the move to make sure that it doesn't leave the king in check
         potential_check = False
         moving_piece = piece
         captured_piece = self.board.get_piece(to_position)
@@ -101,7 +100,6 @@ class Game:
         if potential_check:
             print("ILLEGAL MOVE: MOVE LEAVES KING IN CHECK")
             return False
-
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
         self.move_history.append((piece, from_position, to_position))
@@ -231,31 +229,6 @@ class Game:
                         if not still_in_check:
                             return False
         return True
-
-    def check_en_passant(self, from_position, to_position):
-        # TODO: clean this up, reset all pawns' just_moved_two to False, get possible move to be drawn
-        # TODO: alter to return bool repping if en passant is possible that can be called from GameView
-        #   and then create another function that actually performs the en passant
-        piece = self.board.get_piece(from_position)
-        if isinstance(piece, Pawn.Pawn):
-            # Pawn moving diagonally to an empty square => possible en passant
-            if to_position[1] - from_position[1] in (-1, 1):
-                # check to see that to_position is empty
-                if self.board.get_piece(to_position) is None:
-                    captured_pawn_pos = (from_position[0], to_position[1])
-                    captured_piece = self.board.get_piece(captured_pawn_pos)
-                    print("move history: ", self.move_history)
-                    last_piece, start, end = self.move_history[-1]
-                    if last_piece == captured_piece and abs(start[0] - end[0]) == 2:
-                        print("last piece moved: ", last_piece)
-                        captured_piece.just_moved_two = True
-                        piece.calculate_moves(self.board)
-                    if captured_piece and isinstance(captured_piece, Pawn.Pawn):
-                        self.board.set_piece(captured_pawn_pos, None)
-                        if piece.piece_color == "WHITE":
-                            self.board.black_taken.append(captured_piece)
-                        else:
-                            self.board.white_taken.append(captured_piece)
 
     # Display the board
     def display_board(self):
