@@ -4,6 +4,7 @@ Easy Bot class
 
 import random
 
+
 class BotPlayer:
     def __init__(self, color, board):
         self.color = color

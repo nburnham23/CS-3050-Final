@@ -1,10 +1,11 @@
 """
 Pawn class
 """
-from Piece import Piece, BOARD_LENGTH
+from Piece import Piece
+from constants import BOARD_LENGTH, SPRITE_SCALE
 
 class Pawn(Piece):
-    def __init__(self, piece_color, start_position, image_path, scale = 1):
+    def __init__(self, piece_color, start_position, image_path, scale = SPRITE_SCALE):
         super().__init__(piece_color, start_position, image_path, scale)
         # Attribute for determining if pawn can move 2 spaces
         self.has_moved = False
@@ -30,7 +31,8 @@ class Pawn(Piece):
             new_row = row - (direction_forward * 2)
             # ensure new_row is within bounds before checking board
             if 0 <= new_row < BOARD_LENGTH and board.get_piece((new_row, col)) is None:
-                moveset.append((new_row, col))
+                if board.get_piece((row - direction_forward, col)) is None:
+                    moveset.append((new_row, col))
 
         # Regular Captures
         direction_capture = (-1, 1)

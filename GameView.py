@@ -1,39 +1,19 @@
 """
 GUI class for the game of chess
 """
-import random
-
 import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 
+import random
+
+from Piece import Piece
+from constants import ROW_COUNT, COLUMN_COUNT, LEFT_CAPTURE_X, BASE_Y, RIGHT_CAPTURE_X, WIDTH, BOARD_OFFSET_X, MARGIN, \
+    BOARD_OFFSET_Y, HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, CAPTURED_PIECE_LIMIT, PLAYER_TURN_BOX_W, \
+    PLAYER_TURN_BOX_H, PLAYER_TURN_TEXT_H, PLAYER_TURN_TEXT_W
 from Game import Game
 
-ROW_COUNT = 8
-COLUMN_COUNT = 8
-
-# This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 80
-HEIGHT = 80
-
-# This sets the margin between each cell
-# and on the edges of the screen.
-MARGIN = 5
-CAPTURE_MARGIN = 2 # in columns
-
-BOARD_OFFSET_X = (WIDTH + MARGIN) * CAPTURE_MARGIN
-BOARD_OFFSET_Y = 0
-
-LEFT_CAPTURE_X = MARGIN + WIDTH // 2
-RIGHT_CAPTURE_X = BOARD_OFFSET_X + (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN) - WIDTH // 2
-
-BASE_Y = BOARD_OFFSET_Y + MARGIN + HEIGHT // 2
-
-# Do the math to figure out our screen dimensions
-WINDOW_WIDTH = (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN * 2) + MARGIN
-WINDOW_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
-WINDOW_TITLE = "Welcome to Chess!"
 
 class GameView(arcade.View):
     """
@@ -51,6 +31,9 @@ class GameView(arcade.View):
         self.sprites = arcade.SpriteList()
         self.color_one = color_one
         self.color_two = color_two
+        self.last_move_start = None
+        self.last_move_end = None
+
         # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
@@ -91,6 +74,8 @@ class GameView(arcade.View):
 
         self.possible_moves = None
 
+        self.castled_rook = None # the rook that moved during castling, if any
+
         self.white_taken_sprites = arcade.SpriteList()
         self.black_taken_sprites = arcade.SpriteList()
         self.game.gui = self
@@ -123,8 +108,7 @@ class GameView(arcade.View):
         for piece in self.chess_board.white_taken:
             if piece is not None:
                 # create two columns of captured pieces
-                # TODO: make 12 a constant
-                if row_one_index < 12:
+                if row_one_index < CAPTURED_PIECE_LIMIT:
                     piece.center_x = LEFT_CAPTURE_X
                     piece.center_y = BASE_Y * row_one_index
                     self.white_taken_sprites.append(piece)
@@ -140,8 +124,7 @@ class GameView(arcade.View):
         for piece in self.chess_board.black_taken:
             if piece is not None:
                 # create two columns of captured pieces
-                # TODO: change 12 to a constant
-                if row_one_index < 12:
+                if row_one_index < CAPTURED_PIECE_LIMIT:
                     piece.center_x = RIGHT_CAPTURE_X
                     piece.center_y = BASE_Y * row_one_index
                     self.white_taken_sprites.append(piece)
@@ -151,6 +134,28 @@ class GameView(arcade.View):
                     piece.center_y = BASE_Y * row_two_index
                     self.white_taken_sprites.append(piece)
                     row_two_index += 1
+
+    def filter_moveset(self, piece: Piece):
+        filtered_moveset = []
+        moving_piece = piece
+        from_position = moving_piece.curr_position
+        for move in piece.moveset:
+            potential_check = False
+            captured_piece = self.chess_board.get_piece(move)
+            self.chess_board.set_piece(move, moving_piece)
+            self.chess_board.set_piece(from_position, None)
+            moving_piece.curr_position = move
+            self.chess_board.calculate_movesets()
+            if self.game.is_in_check(self.game.current_turn):
+                potential_check = True
+            # Undo move
+            self.chess_board.set_piece(from_position, moving_piece)
+            self.chess_board.set_piece(move, captured_piece)
+            moving_piece.curr_position = from_position
+            self.chess_board.calculate_movesets()
+            if not potential_check:
+                filtered_moveset.append(move)
+        return filtered_moveset
 
     def on_draw(self):
         """
@@ -170,6 +175,10 @@ class GameView(arcade.View):
                 else:
                     # cell is Chartreuse if it is selected
                     color = arcade.color.CHARTREUSE
+                
+                # Highlight last move squares
+                if (row, column) == self.last_move_start or (row, column) == self.last_move_end:
+                    color = arcade.color.BITTER_LEMON
 
                 # Do the math to figure out where the box is
                 x = BOARD_OFFSET_X + (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
@@ -192,21 +201,20 @@ class GameView(arcade.View):
         self.black_taken_sprites.draw()
         # draw a box with whose turn it is
         arcade.draw_rect_filled(arcade.rect.XYWH(
-            self.window.width - 50,
-            self.window.height - 40,
+            PLAYER_TURN_BOX_W,
+            PLAYER_TURN_BOX_H,
             250,
             100),
             arcade.color.WHITE)
         arcade.draw_text(
         f"{curr_turn}'s turn",
-             self.window.width - 85,
-             self.window.height - 60,
+             PLAYER_TURN_TEXT_W,
+             PLAYER_TURN_TEXT_H,
              arcade.color.BLACK,
              font_size=15,
              anchor_x='center',
              font_name="Kenney Blocks"
         )
-
 
     def on_mouse_press(self, x, y, button, modifiers):
         # if bot is making a move, ignore player input
@@ -238,12 +246,24 @@ class GameView(arcade.View):
                 moved = self.game.make_move(self.selected_square, self.destination_square)
                 # get the piece at the destination only if the move succeeded
                 if moved:
+                    self.last_move_start = self.selected_square
+                    self.last_move_end = self.destination_square
+                    self.update_sprites()
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
                     if self.game.is_game_over:
                         from GameOverView import GameOverView
                         game_over_view = GameOverView(self.game.winner)
                         self.window.show_view(game_over_view)
                         return
+                    # Check if castling was performed, and update rook sprite position if so
+                    if self.selected_piece.__class__.__name__ == 'King' and self.destination_square[1] - self.selected_square[1] == 2:
+                        # Kingside castling
+                        self.castled_rook = self.chess_board.get_piece((self.destination_square[0], self.destination_square[1] - 1))
+                        self.castled_rook.set_sprite_position()
+                    if self.selected_piece.__class__.__name__ == 'King' and self.destination_square[1] - self.selected_square[1] == -2:
+                        # Queenside castling
+                        self.castled_rook = self.chess_board.get_piece((self.destination_square[0], self.destination_square[1] + 1))
+                        self.castled_rook.set_sprite_position()
                 else:
                     self.selected_piece = None
 
@@ -255,32 +275,39 @@ class GameView(arcade.View):
                 self.destination_square = None
                 self.possible_moves = None
 
+                self.game.display_board()
+
                 # if the move succeeded, update sprite position and sprite list
                 if self.selected_piece:
                     self.selected_piece.set_sprite_position()
                     self.update_sprites()
 
+                    if self.castled_rook:
+                        self.castled_rook = None
+
                     # if bot is playing, make bot move
                     if self.game.bot_player and moved:
                         # lock player input until bot move is complete
                         self.game.bot_move_pending = True
-                        # make random time delay between 3-5 seconds to pretend bot is thinking
+                        # make random time delay between 1-2 seconds to pretend bot is thinking
                         delay_time = random.uniform(1, 2)
 
                         # create bot move function to be scheduled after delay
                         def bot_move_func(dt):
                             try:
-                                (self.bot_selected_piece, self.bot_selected_square,
-                                 self.bot_destination_square) = self.game.bot_player.generate_move()
-                                print(f"Bot selected square: {self.bot_selected_square} "
-                                      f"containing {self.bot_selected_piece}, "
-                                      f"destination square: {self.bot_destination_square}")
-                                if self.bot_selected_piece:
-                                    # bot moved, update its board state again and sprites
-                                    self.game.make_move(self.bot_selected_square,
-                                                        self.bot_destination_square)
-                                    self.bot_selected_piece.set_sprite_position()
-                                    self.update_sprites()
+                                moved = False
+                                while not moved:
+                                    self.bot_selected_piece, self.bot_selected_square, self.bot_destination_square = self.game.bot_player.generate_move()
+                                    print(f"Bot selected square: {self.bot_selected_square} containing {self.bot_selected_piece}, destination square: {self.bot_destination_square}")
+                                    if self.bot_selected_piece:
+                                        # bot moved, update its board state again and sprites
+                                        moved = self.game.make_move(self.bot_selected_square, self.bot_destination_square)
+
+                                self.last_move_start = self.bot_selected_square
+                                self.last_move_end = self.bot_destination_square
+
+                                self.bot_selected_piece.set_sprite_position()
+                                self.update_sprites()
                             except Exception as e:
                                 print(f"Error during bot move: {e}")
                             self.game.bot_move_pending = False
@@ -302,7 +329,7 @@ class GameView(arcade.View):
                 print(self.selected_square)
                 piece = self.chess_board.get_piece((row, column))
                 piece.move(self.chess_board)
-                self.possible_moves = piece.moveset
+                self.possible_moves = self.filter_moveset(piece)
                 self.selected_piece = piece
 
 def main():

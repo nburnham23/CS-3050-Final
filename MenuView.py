@@ -6,36 +6,14 @@ import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
-
+from MyBot import BotPlayer
+from SmartBot import SmartBot
 from Game import Game
 
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, BUTTON_WIDTH, COLOR_ALIGN_X, COLOR_ALIGN_Y, \
+    MENU_TEXT_W, MENU_TEXT_H, MENU_FONT_SIZE
 from GameView import GameView
 
-# Set how many rows and columns we will have
-ROW_COUNT = 8
-COLUMN_COUNT = 8
-
-# This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 80
-HEIGHT = 80
-
-# This sets the margin between each cell
-# and on the edges of the screen.
-MARGIN = 5
-CAPTURE_MARGIN = 2 # in columns
-
-BOARD_OFFSET_X = (WIDTH + MARGIN) * CAPTURE_MARGIN
-BOARD_OFFSET_Y = 0
-
-LEFT_CAPTURE_X = MARGIN + WIDTH // 2
-RIGHT_CAPTURE_X = BOARD_OFFSET_X + (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN) - WIDTH // 2
-
-BASE_Y = BOARD_OFFSET_Y + MARGIN + HEIGHT // 2
-
-# Do the math to figure out our screen dimensions
-WINDOW_WIDTH = (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN * 2) + MARGIN
-WINDOW_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
-WINDOW_TITLE = "Welcome to chess!"
 
 class MenuView(arcade.View):
     """
@@ -58,19 +36,19 @@ class MenuView(arcade.View):
 
         # Create the buttons
         two_player_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Two-player mode", width=300
+            text="Two-player mode", width=BUTTON_WIDTH
         )
         self.v_box.add(two_player_button)
         two_player_button.on_click = self.on_click_two_player
 
         ai_easy_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Player v. Computer: Easy", width=300
+            text="Player v. Computer: Easy", width=BUTTON_WIDTH
         )
         self.v_box.add(ai_easy_button)
         ai_easy_button.on_click = self.on_click_ai_easy
 
         ai_hard_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Player v. Computer: Hard", width=300
+            text="Player v. Computer: Hard", width=BUTTON_WIDTH
         )
         self.v_box.add(ai_hard_button)
         ai_hard_button.on_click = self.on_click_ai_hard
@@ -80,12 +58,12 @@ class MenuView(arcade.View):
         quit_button.on_click = self.on_click_quit
 
         colors_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Set Colors", width=200
+            text="Set Colors", width=BUTTON_WIDTH
         )
         colors_button.on_click = self.on_click_colors_button
 
         colors_anchor = arcade.gui.widgets.layout.UIAnchorLayout()
-        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top", align_x=20, align_y=-20)
+        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top", align_x=COLOR_ALIGN_X, align_y=COLOR_ALIGN_Y)
 
         # Create a widget to hold the v_box widget, that will center the buttons
         ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
@@ -106,7 +84,7 @@ class MenuView(arcade.View):
         """ Sets the game mode to Easy AI and creates the Game View """
         print("ai-easy:", event)
         self.manager.disable()
-        game = Game(bot=True)
+        game = Game(bot=True, bot_class=BotPlayer)
         game_view = GameView(game, self.color_one, self.color_two)
         self.window.show_view(game_view)
 
@@ -114,8 +92,7 @@ class MenuView(arcade.View):
         """ Sets the game mode to Hard AI and creates the Game View """
         print("ai-hard:", event)
         self.manager.disable()
-        # temporarily using stupid bot
-        game = Game(bot=True)
+        game = Game(bot=True, bot_class=SmartBot)
         game_view = GameView(game, self.color_one, self.color_two)
         self.window.show_view(game_view)
 
@@ -138,10 +115,10 @@ class MenuView(arcade.View):
         """ draws the menu """
         self.clear()
         arcade.draw_text("Welcome to chess!",
-                         self.window.width / 2,
-                         self.window.height / 2 + 200,
+                         MENU_TEXT_W,
+                         MENU_TEXT_H,
                          arcade.color.BLACK,
-                         font_size=30,
+                         font_size=MENU_FONT_SIZE,
                          anchor_x='center',
                          font_name="Kenney Blocks")
         self.manager.draw()

@@ -96,10 +96,22 @@ class Board:
             for piece in row:
                 if piece:
                     piece.calculate_moves(self)
-
+    
+    # Checks if a square is under attack by any piece of attacking_color
+    def square_under_attack(self, position, attacking_color):
+        for r in range(8):
+            for c in range(8):
+                piece = self.get_piece((r, c))
+                if piece and piece.piece_color == attacking_color and position in piece.moveset:
+                    return True
+        return False
 
     # Check if move is valid, then update board and piece's moveset
     def move(self, piece_position, new_position):
+
+        # Ensure movesets are up to date
+        self.calculate_movesets()
+
         piece = self.get_piece(piece_position)
         if piece is None:
             print("Piece does not exist")
@@ -117,6 +129,52 @@ class Board:
         elif captured_piece and captured_piece.piece_color == 'WHITE':
             self.white_taken.append(captured_piece)
 
+        # check if en passant
+        if isinstance(piece, Pawn):
+            if new_position[1] != piece_position[1] and self.get_piece(new_position) is None:
+                captured_pos = (piece_position[0], new_position[1])
+                captured_piece = self.get_piece(captured_pos)
+                if isinstance(captured_piece, Pawn) and captured_piece.just_moved_two:
+                    self.set_piece(captured_pos, None)
+                    if captured_piece.piece_color == 'BLACK':
+                        self.black_taken.append(captured_piece)
+                    else:
+                        self.white_taken.append(captured_piece)
+
+        # Check if castling is attempted
+        if piece.__class__.__name__ == "King" and abs(new_position[1] - piece_position[1]) == 2:
+            # Kingside castling
+            if new_position[1] > piece_position[1]:
+                kingside_rook_position = (piece_position[0], 7)
+                kingside_rook = self.get_piece(kingside_rook_position)
+                if kingside_rook:
+                    # Move the rook as part of castling
+                    rook_end = (piece_position[0], piece_position[1] + 1)
+                    self.set_piece(rook_end, kingside_rook)
+                    self.set_piece(kingside_rook_position, None)
+
+                    kingside_rook.has_moved = True
+                    kingside_rook.curr_position = rook_end
+                else:
+                    print("Kingside rook not found for castling")
+                    return False
+
+            # Queenside castling
+            else:
+                queenside_rook_position = (piece_position[0], 0)
+                queenside_rook = self.get_piece(queenside_rook_position)
+                if queenside_rook:
+                    # Move the rook as part of castling
+                    rook_end = (piece_position[0], piece_position[1] - 1)
+                    self.set_piece(rook_end, queenside_rook)
+                    self.set_piece(queenside_rook_position, None)
+
+                    queenside_rook.curr_position = rook_end
+                    queenside_rook.has_moved = True
+                else:
+                    print("Queenside rook not found for castling")
+                    return False
+
         # Update pieces information
         piece.curr_position = new_position
 
@@ -124,14 +182,47 @@ class Board:
         self.set_piece(new_position, piece)
         self.set_piece(piece_position, None)
 
-        # Update if pawn has moved
+        # Update if pawn, king, or rook has moved
         if isinstance(piece, Pawn):
+            piece.has_moved = True
+        elif isinstance(piece, King):
+            piece.has_moved = True
+        elif isinstance(piece, Rook):
             piece.has_moved = True
 
         # Update board state
         self.calculate_movesets()
 
         return True
+
+    def simulate_move(self, from_pos, to_pos):
+        """
+        Temporarily performs a move on the board and returns an undo function.
+        Usage:
+            undo = board.simulate_move(from_pos, to_pos)
+            # evaluate
+            undo()  # restore original state
+        """
+        start_piece = self.get_piece(from_pos)
+        end_piece = self.get_piece(to_pos)
+
+        # Perform the move
+        self.board[to_pos[0]][to_pos[1]] = start_piece
+        self.board[from_pos[0]][from_pos[1]] = None
+
+        # Update the piece's position temporarily
+        if start_piece:
+            orig_pos = start_piece.curr_position
+            start_piece.curr_position = to_pos
+
+        # Undo function
+        def undo():
+            self.board[from_pos[0]][from_pos[1]] = start_piece
+            self.board[to_pos[0]][to_pos[1]] = end_piece
+            if start_piece:
+                start_piece.curr_position = orig_pos
+
+        return undo
 
     # toString method
     def display(self):
