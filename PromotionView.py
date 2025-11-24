@@ -15,7 +15,8 @@ from Piece import Piece
 from Queen import Queen
 from Rook import Rook
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, BUTTON_WIDTH, PROMOTION_FONT_SIZE, PROMOTION_TEXT_W, \
+    PROMOTION_TEXT_H
 from GameView import GameView
 from Game import Game
 
@@ -37,31 +38,31 @@ class PromotionView(arcade.View):
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
         # create buttons for each piece that can be promoted
         queen_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Queen", width=300
+            text="Queen", width=BUTTON_WIDTH
         )
         self.v_box.add(queen_button)
         queen_button.on_click = self.on_click_queen_button
 
         rook_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Rook", width=300
+            text="Rook", width=BUTTON_WIDTH
         )
         self.v_box.add(rook_button)
         rook_button.on_click = self.on_click_rook_button
 
         knight_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Knight", width=300
+            text="Knight", width=BUTTON_WIDTH
         )
         self.v_box.add(knight_button)
         knight_button.on_click = self.on_click_knight_button
 
         bishop_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Bishop", width=300
+            text="Bishop", width=BUTTON_WIDTH
         )
         self.v_box.add(bishop_button)
         bishop_button.on_click = self.on_click_bishop_button
 
         pawn_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Pawn", width=300
+            text="Pawn", width=BUTTON_WIDTH
         )
         self.v_box.add(pawn_button)
         pawn_button.on_click = self.on_click_pawn_button
@@ -116,10 +117,10 @@ class PromotionView(arcade.View):
     def on_draw(self):
         self.clear()
         arcade.draw_text("Select a piece to promote",
-                         self.window.width / 2,
-                         self.window.height - 100,
+                         PROMOTION_TEXT_W,
+                         PROMOTION_TEXT_H,
                          arcade.color.BLACK,
-                         font_size=30,
+                         font_size=PROMOTION_FONT_SIZE,
                          anchor_x='center',
                          font_name="Kenney Blocks")
         self.manager.draw()

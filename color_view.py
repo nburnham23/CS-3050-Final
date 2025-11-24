@@ -7,7 +7,7 @@ import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, BUTTON_WIDTH, COLOR_VIEW_TEXT_W, COLOR_VIEW_TEXT_H
 from MenuView import MenuView
 
 class ColorView(arcade.View):
@@ -28,25 +28,25 @@ class ColorView(arcade.View):
         self.v_box = arcade.gui.widgets.layout.UIBoxLayout(space_between=20)
         # create buttons for each piece that can be promoted
         brown_beige_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Brown & Beige", width=300
+            text="Brown & Beige", width=BUTTON_WIDTH
         )
         self.v_box.add(brown_beige_button)
         brown_beige_button.on_click = self.on_click_brown_beige_button
 
         white_green_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="White & Green", width=300
+            text="White & Green", width=BUTTON_WIDTH
         )
         self.v_box.add(white_green_button)
         white_green_button.on_click = self.on_click_white_green_button
 
         pink_purple_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Pink & Purple", width=300
+            text="Pink & Purple", width=BUTTON_WIDTH
         )
         self.v_box.add(pink_purple_button)
         pink_purple_button.on_click = self.on_click_pink_purple_button
 
         green_gold_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Green & Gold", width=300
+            text="Green & Gold", width=BUTTON_WIDTH
         )
         self.v_box.add(green_gold_button)
         green_gold_button.on_click = self.on_click_green_gold_button
@@ -92,8 +92,8 @@ class ColorView(arcade.View):
     def on_draw(self):
         self.clear()
         arcade.draw_text("Select a color scheme:",
-                         self.window.width / 2,
-                         self.window.height - 100,
+                         COLOR_VIEW_TEXT_W,
+                         COLOR_VIEW_TEXT_H,
                          arcade.color.BLACK,
                          font_size=30,
                          anchor_x='center',

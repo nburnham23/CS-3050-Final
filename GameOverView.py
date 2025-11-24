@@ -6,7 +6,8 @@ import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, WINNER_BOX_WIDTH, WINNER_BOX_HEIGHT, \
+    BUTTON_WIDTH, GAME_OVER_FONT_SIZE
 from MenuView import MenuView
 
 
@@ -24,13 +25,13 @@ class GameOverView(arcade.View):
 
         # Create the buttons
         play_again_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Play Again", width=300
+            text="Play Again", width=BUTTON_WIDTH
         )
         self.v_box.add(play_again_button)
         play_again_button.on_click = self.on_click_play_again
 
         quit_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Quit", width=300
+            text="Quit", width=BUTTON_WIDTH
         )
         self.v_box.add(quit_button)
         quit_button.on_click = self.on_click_quit
@@ -56,10 +57,10 @@ class GameOverView(arcade.View):
         """ draws the menu """
         self.clear()
         arcade.draw_text(f"{self.winner} WINS!",
-                         self.window.width / 2,
-                         self.window.height / 2 + 100,
+                         WINNER_BOX_WIDTH, # PLAYER_TURN_BOX_WIDTH
+                         WINNER_BOX_HEIGHT,
                          arcade.color.BLACK,
-                         font_size=30,
+                         font_size=GAME_OVER_FONT_SIZE,
                          anchor_x="center",
                          font_name="Kenney Blocks")
         self.manager.draw()

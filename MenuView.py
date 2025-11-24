@@ -10,7 +10,8 @@ from MyBot import BotPlayer
 from SmartBot import SmartBot
 from Game import Game
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, BUTTON_WIDTH, COLOR_ALIGN_X, COLOR_ALIGN_Y, \
+    MENU_TEXT_W, MENU_TEXT_H, MENU_FONT_SIZE
 from GameView import GameView
 
 
@@ -35,19 +36,19 @@ class MenuView(arcade.View):
 
         # Create the buttons
         two_player_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Two-player mode", width=300
+            text="Two-player mode", width=BUTTON_WIDTH
         )
         self.v_box.add(two_player_button)
         two_player_button.on_click = self.on_click_two_player
 
         ai_easy_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Player v. Computer: Easy", width=300
+            text="Player v. Computer: Easy", width=BUTTON_WIDTH
         )
         self.v_box.add(ai_easy_button)
         ai_easy_button.on_click = self.on_click_ai_easy
 
         ai_hard_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Player v. Computer: Hard", width=300
+            text="Player v. Computer: Hard", width=BUTTON_WIDTH
         )
         self.v_box.add(ai_hard_button)
         ai_hard_button.on_click = self.on_click_ai_hard
@@ -57,12 +58,12 @@ class MenuView(arcade.View):
         quit_button.on_click = self.on_click_quit
 
         colors_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Set Colors", width=200
+            text="Set Colors", width=BUTTON_WIDTH
         )
         colors_button.on_click = self.on_click_colors_button
 
         colors_anchor = arcade.gui.widgets.layout.UIAnchorLayout()
-        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top", align_x=20, align_y=-20)
+        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top", align_x=COLOR_ALIGN_X, align_y=COLOR_ALIGN_Y)
 
         # Create a widget to hold the v_box widget, that will center the buttons
         ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
@@ -114,10 +115,10 @@ class MenuView(arcade.View):
         """ draws the menu """
         self.clear()
         arcade.draw_text("Welcome to chess!",
-                         self.window.width / 2,
-                         self.window.height / 2 + 200,
+                         MENU_TEXT_W,
+                         MENU_TEXT_H,
                          arcade.color.BLACK,
-                         font_size=30,
+                         font_size=MENU_FONT_SIZE,
                          anchor_x='center',
                          font_name="Kenney Blocks")
         self.manager.draw()
