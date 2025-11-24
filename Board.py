@@ -36,8 +36,10 @@ img_path = {
     }
 }
 
-class Board:
-    """Board class"""
+class Board():
+    """
+    Board class representing the chess board and its state
+    """
     def __init__(self):
         self.black_taken = []
         self.white_taken = []
@@ -83,22 +85,34 @@ class Board:
         self.calculate_movesets()
 
     def get_piece(self, board_position):
+        """
+        Get the piece at the given board position
+        """
         row, col = board_position
         return self.board[row][col]
 
     def set_piece(self, board_position, piece):
+        """
+        Set the piece at the given board position
+        """
         row, col = board_position
         self.board[row][col] = piece
 
     # Updates all pieces' movesets
     def calculate_movesets(self):
+        """
+        Calculate movesets for all pieces on the board
+        """
         for row in self.board:
             for piece in row:
                 if piece:
                     piece.calculate_moves(self)
-    
+
     # Checks if a square is under attack by any piece of attacking_color
     def square_under_attack(self, position, attacking_color):
+        """
+        Checks if a square is under attack by any piece of attacking_color
+        """
         for r in range(8):
             for c in range(8):
                 piece = self.get_piece((r, c))
@@ -108,7 +122,9 @@ class Board:
 
     # Check if move is valid, then update board and piece's moveset
     def move(self, piece_position, new_position):
-
+        """
+        Check if move is valid, then update board and piece's moveset
+        """
         # Ensure movesets are up to date
         self.calculate_movesets()
 
@@ -226,4 +242,7 @@ class Board:
 
     # toString method
     def display(self):
+        """
+        Display the board state for debugging
+        """
         print(self.board)

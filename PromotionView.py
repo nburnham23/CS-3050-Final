@@ -11,14 +11,11 @@ from Bishop import Bishop
 from Board import img_path
 from Knight import Knight
 from Pawn import Pawn
-from Piece import Piece
 from Queen import Queen
 from Rook import Rook
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, BUTTON_WIDTH, PROMOTION_FONT_SIZE, PROMOTION_TEXT_W, \
-    PROMOTION_TEXT_H
+from constants import BUTTON_WIDTH, PROMOTION_FONT_SIZE, PROMOTION_TEXT_W, PROMOTION_TEXT_H
 from GameView import GameView
-from Game import Game
 
 
 class PromotionView(arcade.View):
@@ -61,19 +58,17 @@ class PromotionView(arcade.View):
         self.v_box.add(bishop_button)
         bishop_button.on_click = self.on_click_bishop_button
 
-        pawn_button = arcade.gui.widgets.buttons.UIFlatButton(
-            text="Pawn", width=BUTTON_WIDTH
-        )
-        self.v_box.add(pawn_button)
-        pawn_button.on_click = self.on_click_pawn_button
-
         # Create a widget to hold the v_box widget, that will center the buttons
         ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
         ui_anchor_layout.add(child=self.v_box, anchor_x="center_x", anchor_y="center_y")
 
         self.manager.add(ui_anchor_layout)
 
+    # Note: event argument must be present for buttons to work
     def on_click_queen_button(self, event):
+        """
+        Promote to Queen piece
+        """
         print("Queen clicked")
         queen = Queen(self.piece_color, self.position, img_path['queen'][self.piece_color])
         self.on_promote_callback(queen)
@@ -82,6 +77,9 @@ class PromotionView(arcade.View):
         self.window.show_view(self.game_view)
 
     def on_click_rook_button(self, event):
+        """
+        Promote to Rook piece
+        """
         print("Rook clicked")
         rook = Rook(self.piece_color, self.position, img_path['rook'][self.piece_color])
         self.on_promote_callback(rook)
@@ -90,6 +88,9 @@ class PromotionView(arcade.View):
         self.window.show_view(self.game_view)
 
     def on_click_knight_button(self, event):
+        """
+        Promote to Knight piece
+        """
         # piece_color, start_position, image_path
         print("Knight clicked")
         knight = Knight(self.piece_color, self.position, img_path['knight'][self.piece_color])
@@ -99,17 +100,12 @@ class PromotionView(arcade.View):
         self.window.show_view(self.game_view)
 
     def on_click_bishop_button(self, event):
+        """
+        Promote to Bishop piece
+        """
         print("Bishop clicked")
         bishop = Bishop(self.piece_color, self.position, img_path['bishop'][self.piece_color])
         self.on_promote_callback(bishop)
-        self.manager.disable()
-        self.game_view.update_sprites()
-        self.window.show_view(self.game_view)
-
-    def on_click_pawn_button(self, event):
-        print("Pawn clicked")
-        pawn = Pawn(self.piece_color, self.position, img_path['pawn'][self.piece_color])
-        self.on_promote_callback(pawn)
         self.manager.disable()
         self.game_view.update_sprites()
         self.window.show_view(self.game_view)
@@ -124,25 +120,3 @@ class PromotionView(arcade.View):
                          anchor_x='center',
                          font_name="Kenney Blocks")
         self.manager.draw()
-
-
-def main():
-    # Create a window class. This is what actually shows up on screen
-    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-
-    def test_func(piece: Piece):
-        print(f"{type(piece)} selected")
-
-    # Create the MenuView
-    promotion_view = PromotionView(Pawn("WHITE", (1,0), img_path['pawn']["WHITE"]),
-                                   test_func, GameView(Game()), (0,0))
-
-    # Show GameView on screen
-    window.show_view(promotion_view)
-
-    # Start the arcade game loop
-    arcade.run()
-
-
-if __name__ == "__main__":
-    main()

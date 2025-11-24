@@ -10,8 +10,9 @@ from MyBot import BotPlayer
 from SmartBot import SmartBot
 from Game import Game
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, BUTTON_WIDTH, COLOR_ALIGN_X, COLOR_ALIGN_Y, \
-    MENU_TEXT_W, MENU_TEXT_H, MENU_FONT_SIZE
+from constants import (
+    BUTTON_WIDTH, COLOR_ALIGN_X, COLOR_ALIGN_Y,
+    MENU_TEXT_W, MENU_TEXT_H, MENU_FONT_SIZE)
 from GameView import GameView
 
 
@@ -63,7 +64,8 @@ class MenuView(arcade.View):
         colors_button.on_click = self.on_click_colors_button
 
         colors_anchor = arcade.gui.widgets.layout.UIAnchorLayout()
-        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top", align_x=COLOR_ALIGN_X, align_y=COLOR_ALIGN_Y)
+        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top",
+                          align_x=COLOR_ALIGN_X, align_y=COLOR_ALIGN_Y)
 
         # Create a widget to hold the v_box widget, that will center the buttons
         ui_anchor_layout = arcade.gui.widgets.layout.UIAnchorLayout()
@@ -72,6 +74,7 @@ class MenuView(arcade.View):
         self.manager.add(ui_anchor_layout)
         self.manager.add(colors_anchor)
 
+    # Note: event argument must be present for buttons to work
     def on_click_two_player(self, event):
         """ Sets the game mode to two-player and creates the Game View """
         print("two-player:", event)
@@ -122,19 +125,3 @@ class MenuView(arcade.View):
                          anchor_x='center',
                          font_name="Kenney Blocks")
         self.manager.draw()
-
-def main():
-    # Create a window class. This is what actually shows up on screen
-    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-
-    # Create the MenuView
-    menu_view = MenuView()
-
-    # Show GameView on screen
-    window.show_view(menu_view)
-
-    # Start the arcade game loop
-    arcade.run()
-
-if __name__ == "__main__":
-    main()

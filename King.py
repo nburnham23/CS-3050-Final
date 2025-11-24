@@ -5,6 +5,9 @@ from Piece import Piece
 from constants import BOARD_LENGTH, SPRITE_SCALE
 
 class King(Piece):
+    """
+    King piece class
+    """
     def __init__(self, piece_color, start_position, image_path, scale = SPRITE_SCALE):
         super().__init__(piece_color, start_position, image_path, scale)
 
@@ -12,6 +15,9 @@ class King(Piece):
         self.has_moved = False
 
     def move(self, board):
+        """
+        King move calculation
+        """
         moveset = []
         row, col = self.curr_position
 
@@ -27,16 +33,12 @@ class King(Piece):
                     moveset.append((new_row, new_col))
 
         # Check for castling moves
-        # Castling conditions: king and rook have not moved, squares between are empty
-        # TODO: squares between are not under attack, king is not in check
+        # Castling conditions: king and rook have not moved, squares between are empty,
+        # Squares between are not under attack, king is not in check
         enemy_color = 'BLACK' if self.piece_color == 'WHITE' else 'WHITE'
 
+        # Check if king is in check
         king_in_check = board.square_under_attack(self.curr_position, enemy_color)
-
-        if king_in_check:
-            print(f"{self.piece_color} King is in check")
-        else:
-            print(f"{self.piece_color} King is NOT in check")
 
         if not self.has_moved and not king_in_check:
             # Kingside castling

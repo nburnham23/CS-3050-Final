@@ -5,6 +5,9 @@ from Piece import Piece
 from constants import BOARD_LENGTH, SPRITE_SCALE
 
 class Pawn(Piece):
+    """
+    Pawn piece class
+    """
     def __init__(self, piece_color, start_position, image_path, scale = SPRITE_SCALE):
         super().__init__(piece_color, start_position, image_path, scale)
         # Attribute for determining if pawn can move 2 spaces
@@ -60,8 +63,10 @@ class Pawn(Piece):
         self.moveset = moveset
         return moveset
 
-    # Checks if pawn has reached end of board and must be promoted
     def check_promotion(self):
+        """
+        Check if pawn has reached end of board and can be promoted
+        """
         row = self.curr_position[0]
         if row in (0, BOARD_LENGTH - 1):
             self.promotion_available = True

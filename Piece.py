@@ -4,11 +4,10 @@ Piece class
 import arcade
 from constants import SPRITE_SCALE, BOARD_OFFSET_X, MARGIN, WIDTH, BOARD_OFFSET_Y, HEIGHT
 
-
-# TODO: Replace scale with constant for all pieces
-
-
 class Piece(arcade.Sprite):
+    """
+    Parent class for all chess pieces
+    """
     def __init__(self, piece_color, board_position, image_path, scale = SPRITE_SCALE):
         self.piece_color = piece_color
         self.curr_position = board_position
@@ -18,6 +17,8 @@ class Piece(arcade.Sprite):
         super().__init__(image_path, scale)
 
     def calculate_moves(self, board):
+        """
+        Calculate the moveset for this piece based on its type and current board state"""
         # Clear moveset
         self.moveset = []
 
@@ -33,4 +34,7 @@ class Piece(arcade.Sprite):
 
     # Move function to be overriden by subclasses
     def move(self, board):
+        """
+        Placeholder move function to be overridden by subclasses
+        """
         return []
