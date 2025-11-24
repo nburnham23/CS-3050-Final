@@ -63,6 +63,9 @@ class Game:
 
         # Get the piece at the clicked on position
         piece = self.board.get_piece(from_position)
+        print("from_pos:", from_position)
+        print("to_pos:", to_position)
+        print("piece moveset: ", piece.moveset)
         if piece is None:
             print("NO PIECE SELECTED")
             return False
@@ -79,7 +82,7 @@ class Game:
             print("INVALID MOVE FOR PIECE")
             return False
         self.check_en_passant(from_position, to_position)
-                
+        # simulate the move to make sure that it doesn't leave the king in check
         moving_piece = piece
         captured_piece = self.board.get_piece(to_position)
         self.board.set_piece(to_position, moving_piece)
@@ -94,9 +97,6 @@ class Game:
             self.board.calculate_movesets()
             print("ILLEGAL MOVE: MOVE LEAVES KING IN CHECK")
             return False
-        
-
-
 
         # Make the actual move and append move to move_history
         self.board.move(from_position, to_position)
