@@ -77,7 +77,7 @@ class Game:
         if piece.piece_color != self.current_turn:
             print("TRIED MOVING PIECE OUT OF TURN")
             return False
-        
+
         # Validate that to_position in selected pieces moveset
         if to_position not in piece.moveset:
             print("INVALID MOVE FOR PIECE")
@@ -187,8 +187,7 @@ class Game:
             enemy_color = "BLACK"
         else:
             enemy_color = "WHITE"
-            
-        
+
         # Check if piece is in moveset and can attack the king
         for r in range(8):
             for c in range(8):
@@ -251,6 +250,9 @@ class Game:
 
     # Display the board
     def display_board(self):
+        """
+        Prints the board to console for debugging
+        """
         self.board.display()
 
     # Start the game with BoardGUI
@@ -270,11 +272,17 @@ class Game:
 
     # Reset game
     def reset_game(self):
+        """
+        Resets the game to initial state
+        """
         arcade.close_window()
         self.__init__()
 
 
 def main():
+    """
+    Main function to start the program
+    """
     game = Game()
     game.start_game()
 
