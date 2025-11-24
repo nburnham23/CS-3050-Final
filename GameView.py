@@ -8,6 +8,7 @@ import arcade.gui.widgets.layout
 
 import random
 
+from Piece import Piece
 from constants import ROW_COUNT, COLUMN_COUNT, LEFT_CAPTURE_X, BASE_Y, RIGHT_CAPTURE_X, WIDTH, BOARD_OFFSET_X, MARGIN, \
     BOARD_OFFSET_Y, HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, CAPTURED_PIECE_LIMIT, PLAYER_TURN_BOX_W, \
     PLAYER_TURN_BOX_H, PLAYER_TURN_TEXT_H, PLAYER_TURN_TEXT_W
@@ -134,6 +135,28 @@ class GameView(arcade.View):
                     self.white_taken_sprites.append(piece)
                     row_two_index += 1
 
+    def filter_moveset(self, piece: Piece):
+        filtered_moveset = piece.moveset
+        for move in piece.moveset:
+            # simulate the move to make sure that it doesn't leave the king in check
+            moving_piece = piece
+            from_position = piece.curr_position
+            to_position = move
+            captured_piece = self.chess_board.get_piece(to_position)
+            self.chess_board.set_piece(to_position, moving_piece)
+            self.chess_board.set_piece(from_position, None)
+            moving_piece.curr_position = to_position
+            self.chess_board.calculate_movesets()
+            if self.game.is_in_check(self.game.current_turn):
+                # Undo move
+                self.chess_board.set_piece(from_position, moving_piece)
+                self.chess_board.set_piece(to_position, captured_piece)
+                moving_piece.curr_position = from_position
+                filtered_moveset.remove(move)
+                self.chess_board.calculate_movesets()
+        piece.moveset = filtered_moveset
+        return filtered_moveset
+
     def on_draw(self):
         """
         Render the screen.
@@ -192,7 +215,6 @@ class GameView(arcade.View):
              anchor_x='center',
              font_name="Kenney Blocks"
         )
-
 
     def on_mouse_press(self, x, y, button, modifiers):
         # if bot is making a move, ignore player input

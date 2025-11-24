@@ -128,6 +128,18 @@ class Board():
         elif captured_piece and captured_piece.piece_color == 'WHITE':
             self.white_taken.append(captured_piece)
 
+        # check if en passant
+        if isinstance(piece, Pawn):
+            if new_position[1] != piece_position[1] and self.get_piece(new_position) is None:
+                captured_pos = (piece_position[0], new_position[1])
+                captured_piece = self.get_piece(captured_pos)
+                if isinstance(captured_piece, Pawn) and captured_piece.just_moved_two:
+                    self.set_piece(captured_pos, None)
+                    if captured_piece.piece_color == 'BLACK':
+                        self.black_taken.append(captured_piece)
+                    else:
+                        self.white_taken.append(captured_piece)
+
         # Check if castling is attempted
         if piece.__class__.__name__ == "King" and abs(new_position[1] - piece_position[1]) == 2:
             # Kingside castling
