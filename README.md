@@ -7,3 +7,6 @@ To play a game of chess, run the `Game.py` file. There are various modes to choo
 
 ## Chess Functionality
 We have implemented all the functionality of a traditional game of chess -- even en passant and castling!
+
+## Font
+To use the font in the code, download and install the "Kenney Blocks" font from https://kenney.nl/assets/kenney-fonts
