@@ -17,11 +17,10 @@ class BotPlayer:
         """Make a random valid move (avoiding moves onto own pieces)."""
         # Find all pieces belonging to this bot
         bot_pieces = []
-        for row in self.board.board:
-            for col in self.board.board[row]:
-                piece = self.board.get_piece((row, col))
-                if piece is not None and piece.piece_color == self.color:
-                    bot_pieces.append((row, col, piece))
+        for row_idx, row in enumerate(self.board.board):
+            for col_idx, piece in enumerate(row):
+                if piece and piece.piece_color == self.color:
+                    bot_pieces.append((row_idx, col_idx, piece))
 
         # Make sure movesets are up to date
         self.board.calculate_movesets()

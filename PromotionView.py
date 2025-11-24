@@ -64,6 +64,7 @@ class PromotionView(arcade.View):
 
         self.manager.add(ui_anchor_layout)
 
+    # Note: event argument must be present for buttons to work
     def on_click_queen_button(self, event):
         """
         Promote to Queen piece

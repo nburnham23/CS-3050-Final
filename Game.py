@@ -47,7 +47,6 @@ class Game:
             self.board.set_piece(position, new_piece)
             self.switch_turn()
 
-        #TODO: self.gui?
         promotion_view = PromotionView(pawn, receive_promoted_piece, self.gui, position)
         self.gui.window.show_view(promotion_view)
 
@@ -185,7 +184,7 @@ class Game:
             enemy_color = "BLACK"
         else:
             enemy_color = "WHITE"
-            
+
         # Check if piece is in moveset and can attack the king
         for r in range(8):
             for c in range(8):
@@ -274,7 +273,6 @@ class Game:
         Resets the game to initial state
         """
         arcade.close_window()
-        self.__init__()
 
 
 def main():

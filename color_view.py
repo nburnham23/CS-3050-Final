@@ -111,4 +111,3 @@ class ColorView(arcade.View):
                          anchor_x='center',
                          font_name="Kenney Blocks")
         self.manager.draw()
-

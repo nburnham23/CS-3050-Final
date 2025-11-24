@@ -300,11 +300,14 @@ class GameView(arcade.View):
                         delay_time = random.uniform(1, 2)
 
                         # create bot move function to be scheduled after delay
+                        # Note: dt argument must be present for function to work
                         def bot_move_func(dt):
                             try:
                                 moved = False
                                 while not moved:
-                                    self.bot_selected_piece, self.bot_selected_square, self.bot_destination_square = self.game.bot_player.generate_move()
+                                    (self.bot_selected_piece,
+                                     self.bot_selected_square,
+                                     self.bot_destination_square) = self.game.bot_player.generate_move()
                                     print(
                                         f"Bot selected square: {self.bot_selected_square}"
                                         f"containing {self.bot_selected_piece}, "

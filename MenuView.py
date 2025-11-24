@@ -64,7 +64,7 @@ class MenuView(arcade.View):
         colors_button.on_click = self.on_click_colors_button
 
         colors_anchor = arcade.gui.widgets.layout.UIAnchorLayout()
-        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top", 
+        colors_anchor.add(colors_button, anchor_x="left", anchor_y="top",
                           align_x=COLOR_ALIGN_X, align_y=COLOR_ALIGN_Y)
 
         # Create a widget to hold the v_box widget, that will center the buttons
@@ -74,6 +74,7 @@ class MenuView(arcade.View):
         self.manager.add(ui_anchor_layout)
         self.manager.add(colors_anchor)
 
+    # Note: event argument must be present for buttons to work
     def on_click_two_player(self, event):
         """ Sets the game mode to two-player and creates the Game View """
         print("two-player:", event)
