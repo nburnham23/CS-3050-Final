@@ -5,6 +5,9 @@ from Piece import Piece
 from constants import BOARD_LENGTH, SPRITE_SCALE
 
 class Rook(Piece):
+    """
+    Rook piece class
+    """
     def __init__(self, piece_color, start_position, image_path, scale = SPRITE_SCALE):
         super().__init__(piece_color, start_position, image_path, scale)
 
@@ -13,6 +16,9 @@ class Rook(Piece):
         self.side = self.get_side()
 
     def get_side(self):
+        """
+        Determine if rook is on queen's side or king's side based on starting position
+        """
         if self.curr_position[1] == 0:
             return "QUEEN"
         elif self.curr_position[1] == 7:
@@ -20,6 +26,9 @@ class Rook(Piece):
         return None
 
     def move(self, board):
+        """
+        Rook move calculation
+        """
         moveset = []
         row, col = self.curr_position
 
@@ -43,6 +52,6 @@ class Rook(Piece):
                     # stop when piece in direction
                     break
                 new_row += dx
-                new_col += dy          
+                new_col += dy
 
         return moveset
