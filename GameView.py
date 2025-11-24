@@ -11,10 +11,9 @@ import arcade.gui.widgets.layout
 
 from Piece import Piece
 from constants import (
-    ROW_COUNT, COLUMN_COUNT, LEFT_CAPTURE_X, BASE_Y, RIGHT_CAPTURE_X, 
-    WIDTH, BOARD_OFFSET_X, MARGIN, BOARD_OFFSET_Y, HEIGHT, WINDOW_WIDTH, 
-    WINDOW_HEIGHT, WINDOW_TITLE, CAPTURED_PIECE_LIMIT, PLAYER_TURN_BOX_W,
-    PLAYER_TURN_BOX_H, PLAYER_TURN_TEXT_H, PLAYER_TURN_TEXT_W)
+    ROW_COUNT, COLUMN_COUNT, LEFT_CAPTURE_X, BASE_Y, RIGHT_CAPTURE_X,
+    WIDTH, BOARD_OFFSET_X, MARGIN, BOARD_OFFSET_Y, HEIGHT, CAPTURED_PIECE_LIMIT,
+    PLAYER_TURN_BOX_W, PLAYER_TURN_BOX_H, PLAYER_TURN_TEXT_H, PLAYER_TURN_TEXT_W)
 from Game import Game
 
 
@@ -342,19 +341,3 @@ class GameView(arcade.View):
                 piece.move(self.chess_board)
                 self.possible_moves = piece.moveset
                 self.selected_piece = piece
-
-def main():
-    # Create a window class. This is what actually shows up on screen
-    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-
-    # Create the MenuView
-    game_view = GameView(Game())
-
-    # Show GameView on screen
-    window.show_view(game_view)
-
-    # Start the arcade game loop
-    arcade.run()
-
-if __name__ == "__main__":
-    main()

@@ -5,6 +5,9 @@ from Piece import Piece
 from constants import BOARD_LENGTH, SPRITE_SCALE
 
 class King(Piece):
+    """
+    King piece class
+    """
     def __init__(self, piece_color, start_position, image_path, scale = SPRITE_SCALE):
         super().__init__(piece_color, start_position, image_path, scale)
 

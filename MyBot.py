@@ -6,6 +6,9 @@ import random
 
 
 class BotPlayer:
+    """
+    Stupid bot that makes random valid moves avoiding its own pieces
+    """
     def __init__(self, color, board):
         self.color = color
         self.board = board
@@ -14,8 +17,8 @@ class BotPlayer:
         """Make a random valid move (avoiding moves onto own pieces)."""
         # Find all pieces belonging to this bot
         bot_pieces = []
-        for row in range(len(self.board.board)):
-            for col in range(len(self.board.board[row])):
+        for row in self.board.board:
+            for col in self.board.board[row]:
                 piece = self.board.get_piece((row, col))
                 if piece is not None and piece.piece_color == self.color:
                     bot_pieces.append((row, col, piece))

@@ -6,6 +6,7 @@ import arcade
 
 import Pawn
 from Board import Board
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 
 class Game:
     """
@@ -264,7 +265,7 @@ class Game:
         # Import BoardGUI here to avoid circular import at module import time
         import MenuView
 
-        window = arcade.Window(MenuView.WINDOW_WIDTH, MenuView.WINDOW_HEIGHT, MenuView.WINDOW_TITLE)
+        window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
         # game = Game()
         menu_view = MenuView.MenuView()
         window.show_view(menu_view)

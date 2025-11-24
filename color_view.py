@@ -7,9 +7,7 @@ import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 
-from constants import (
-    WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE,
-    BUTTON_WIDTH, COLOR_VIEW_TEXT_W, COLOR_VIEW_TEXT_H)
+from constants import BUTTON_WIDTH, COLOR_VIEW_TEXT_W, COLOR_VIEW_TEXT_H
 from MenuView import MenuView
 
 class ColorView(arcade.View):
@@ -114,20 +112,3 @@ class ColorView(arcade.View):
                          font_name="Kenney Blocks")
         self.manager.draw()
 
-
-def main():
-    # Create a window class. This is what actually shows up on screen
-    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-
-    # Create the MenuView
-    color_view = ColorView(MenuView())
-
-    # Show GameView on screen
-    window.show_view(color_view)
-
-    # Start the arcade game loop
-    arcade.run()
-
-
-if __name__ == "__main__":
-    main()
