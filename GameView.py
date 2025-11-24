@@ -240,6 +240,7 @@ class GameView(arcade.View):
                 moved = self.game.make_move(self.selected_square, self.destination_square)
                 # get the piece at the destination only if the move succeeded
                 if moved:
+                    self.update_sprites()
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
                     if self.game.is_game_over:
                         from GameOverView import GameOverView
@@ -265,6 +266,8 @@ class GameView(arcade.View):
                 self.selected_square = None
                 self.destination_square = None
                 self.possible_moves = None
+
+                self.game.display_board()
 
                 # if the move succeeded, update sprite position and sprite list
                 if self.selected_piece:

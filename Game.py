@@ -80,6 +80,7 @@ class Game:
             return False
         self.check_en_passant(from_position, to_position)
                 
+        potential_check = False
         moving_piece = piece
         captured_piece = self.board.get_piece(to_position)
         self.board.set_piece(to_position, moving_piece)
@@ -87,11 +88,13 @@ class Game:
         moving_piece.curr_position = to_position
         self.board.calculate_movesets()
         if self.is_in_check(self.current_turn):
-            # Undo move
-            self.board.set_piece(from_position, moving_piece)
-            self.board.set_piece(to_position, captured_piece)
-            moving_piece.curr_position = from_position
-            self.board.calculate_movesets()
+            potential_check = True
+        # Undo move
+        self.board.set_piece(from_position, moving_piece)
+        self.board.set_piece(to_position, captured_piece)
+        moving_piece.curr_position = from_position
+        self.board.calculate_movesets()
+        if potential_check:
             print("ILLEGAL MOVE: MOVE LEAVES KING IN CHECK")
             return False
 

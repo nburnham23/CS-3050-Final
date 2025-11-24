@@ -130,10 +130,6 @@ class Board():
 
         # Check if castling is attempted
         if piece.__class__.__name__ == "King" and abs(new_position[1] - piece_position[1]) == 2:
-            # Check if squares in king's castling path are under attack
-            # if self.square_under_attack(piece_position, 'BLACK' if piece.piece_color == 'WHITE' else 'WHITE'):
-            #     print("Cannot castle while in check")
-            #     return False
             # Kingside castling
             if new_position[1] > piece_position[1]:
                 kingside_rook_position = (piece_position[0], 7)
@@ -146,6 +142,9 @@ class Board():
 
                     kingside_rook.has_moved = True
                     kingside_rook.curr_position = rook_end
+                else:
+                    print("Kingside rook not found for castling")
+                    return False
 
             # Queenside castling
             else:
@@ -159,6 +158,9 @@ class Board():
 
                     queenside_rook.curr_position = rook_end
                     queenside_rook.has_moved = True
+                else:
+                    print("Queenside rook not found for castling")
+                    return False
 
         # Update pieces information
         piece.curr_position = new_position
