@@ -187,7 +187,7 @@ class Game:
             enemy_color = "BLACK"
         else:
             enemy_color = "WHITE"
-
+            
         # Check if piece is in moveset and can attack the king
         for r in range(8):
             for c in range(8):

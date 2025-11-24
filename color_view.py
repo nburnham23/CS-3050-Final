@@ -1,5 +1,5 @@
 """
-GUI class for when a pawn can be promoted to another piece
+GUI for board color selection
 """
 
 import arcade
@@ -7,7 +7,9 @@ import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, BUTTON_WIDTH, COLOR_VIEW_TEXT_W, COLOR_VIEW_TEXT_H
+from constants import (
+    WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE,
+    BUTTON_WIDTH, COLOR_VIEW_TEXT_W, COLOR_VIEW_TEXT_H)
 from MenuView import MenuView
 
 class ColorView(arcade.View):
@@ -58,6 +60,9 @@ class ColorView(arcade.View):
         self.manager.add(ui_anchor_layout)
 
     def on_click_brown_beige_button(self, event):
+        """
+        Set board colors to brown and beige
+        """
         print("Brown & Beige selected")
         self.color_one = arcade.color.BEIGE
         self.color_two = arcade.color.BISTRE
@@ -66,6 +71,9 @@ class ColorView(arcade.View):
         self.window.show_view(self.menu_view)
 
     def on_click_white_green_button(self, event):
+        """
+        Sets board colors to white and green
+        """
         print("White & Green selected")
         self.color_one = arcade.color.EGGSHELL
         self.color_two = arcade.color.BUD_GREEN
@@ -74,6 +82,9 @@ class ColorView(arcade.View):
         self.window.show_view(self.menu_view)
 
     def on_click_pink_purple_button(self, event):
+        """
+        Sets board colors to pink and purple
+        """
         print("Pink & Purple selected")
         self.color_one = arcade.color.FLUORESCENT_PINK
         self.color_two = arcade.color.PURPLE
@@ -82,6 +93,9 @@ class ColorView(arcade.View):
         self.window.show_view(self.menu_view)
 
     def on_click_green_gold_button(self, event):
+        """
+        Sets board colors to green and gold
+        """
         print("Green & Gold selected")
         self.color_one = arcade.color.BRITISH_RACING_GREEN
         self.color_two = arcade.color.GOLD

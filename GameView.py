@@ -1,17 +1,20 @@
 """
 GUI class for the game of chess
 """
+import random
+
 import arcade
 import arcade.gui
 import arcade.gui.widgets.buttons
 import arcade.gui.widgets.layout
 
-import random
 
 from Piece import Piece
-from constants import ROW_COUNT, COLUMN_COUNT, LEFT_CAPTURE_X, BASE_Y, RIGHT_CAPTURE_X, WIDTH, BOARD_OFFSET_X, MARGIN, \
-    BOARD_OFFSET_Y, HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, CAPTURED_PIECE_LIMIT, PLAYER_TURN_BOX_W, \
-    PLAYER_TURN_BOX_H, PLAYER_TURN_TEXT_H, PLAYER_TURN_TEXT_W
+from constants import (
+    ROW_COUNT, COLUMN_COUNT, LEFT_CAPTURE_X, BASE_Y, RIGHT_CAPTURE_X, 
+    WIDTH, BOARD_OFFSET_X, MARGIN, BOARD_OFFSET_Y, HEIGHT, WINDOW_WIDTH, 
+    WINDOW_HEIGHT, WINDOW_TITLE, CAPTURED_PIECE_LIMIT, PLAYER_TURN_BOX_W,
+    PLAYER_TURN_BOX_H, PLAYER_TURN_TEXT_H, PLAYER_TURN_TEXT_W)
 from Game import Game
 
 
@@ -136,6 +139,9 @@ class GameView(arcade.View):
                     row_two_index += 1
 
     def filter_moveset(self, piece: Piece):
+        """
+        Removes moves from a piece's moveset that would leave its own king in check
+        """
         filtered_moveset = piece.moveset
         for move in piece.moveset:
             # simulate the move to make sure that it doesn't leave the king in check
@@ -175,7 +181,7 @@ class GameView(arcade.View):
                 else:
                     # cell is Chartreuse if it is selected
                     color = arcade.color.CHARTREUSE
-                
+
                 # Highlight last move squares
                 if (row, column) == self.last_move_start or (row, column) == self.last_move_end:
                     color = arcade.color.BITTER_LEMON
@@ -248,7 +254,7 @@ class GameView(arcade.View):
                 if moved:
                     self.last_move_start = self.selected_square
                     self.last_move_end = self.destination_square
-                    
+
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
                     if self.game.is_game_over:
                         from GameOverView import GameOverView
@@ -256,14 +262,16 @@ class GameView(arcade.View):
                         self.window.show_view(game_over_view)
                         return
                     # Check if castling was performed, and update rook sprite position if so
-                    if self.selected_piece.__class__.__name__ == 'King' and self.destination_square[1] - self.selected_square[1] == 2:
-                        # Kingside castling
-                        self.castled_rook = self.chess_board.get_piece((self.destination_square[0], self.destination_square[1] - 1))
-                        self.castled_rook.set_sprite_position()
-                    if self.selected_piece.__class__.__name__ == 'King' and self.destination_square[1] - self.selected_square[1] == -2:
-                        # Queenside castling
-                        self.castled_rook = self.chess_board.get_piece((self.destination_square[0], self.destination_square[1] + 1))
-                        self.castled_rook.set_sprite_position()
+                    if self.selected_piece.__class__.__name__ == 'King':
+                        if self.destination_square[1] - self.selected_square[1] == 2:
+                            # Kingside castling
+                            self.castled_rook = self.chess_board.get_piece((self.destination_square[0], 5))
+                            self.castled_rook.set_sprite_position()
+                    if self.selected_piece.__class__.__name__ == 'King':
+                        if self.destination_square[1] - self.selected_square[1] == -2:
+                            # Queenside castling
+                            self.castled_rook = self.chess_board.get_piece((self.destination_square[0], 3))
+                            self.castled_rook.set_sprite_position()
                 else:
                     self.selected_piece = None
 
@@ -298,7 +306,10 @@ class GameView(arcade.View):
                                 moved = False
                                 while not moved:
                                     self.bot_selected_piece, self.bot_selected_square, self.bot_destination_square = self.game.bot_player.generate_move()
-                                    print(f"Bot selected square: {self.bot_selected_square} containing {self.bot_selected_piece}, destination square: {self.bot_destination_square}")
+                                    print(
+                                        f"Bot selected square: {self.bot_selected_square}"
+                                        f"containing {self.bot_selected_piece}, "
+                                        f"destination square: {self.bot_destination_square}")
                                     if self.bot_selected_piece:
                                         # bot moved, update its board state again and sprites
                                         moved = self.game.make_move(self.bot_selected_square, self.bot_destination_square)
@@ -308,7 +319,8 @@ class GameView(arcade.View):
 
                                 self.bot_selected_piece.set_sprite_position()
                                 self.update_sprites()
-                            except Exception as e:
+                            except AttributeError as e:
+                                # Bot could not make a move (no valid moves)
                                 print(f"Error during bot move: {e}")
                             self.game.bot_move_pending = False
                             # ensures bot_move_func only runs once
@@ -320,8 +332,7 @@ class GameView(arcade.View):
 
             # the user has not selected a piece, so the user will select one
             else:
-                # select the piece
-                # and color that square green
+                # select the piece and color that square green
                 self.selected_square = (row, column)
                 print(self.selected_square)
                 self.grid[row][column] = 2
