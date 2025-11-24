@@ -16,3 +16,6 @@ a combination, then choose what game mode you would like the play and your board
 If you'd like to play against our simple bot, choose the easy AI. This bot chooses its moves randomly. You should
 have an easy time beating this one. If you want more of a challenge, choose the hard AI. This bot uses a minimax
 algorithm to identify the optimal move at each turn. 
+
+## Font
+To use the font in the code, download and install the "Kenney Blocks" font from https://kenney.nl/assets/kenney-fonts
