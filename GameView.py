@@ -8,32 +8,11 @@ import arcade.gui.widgets.layout
 
 import random
 
+from constants import ROW_COUNT, COLUMN_COUNT, LEFT_CAPTURE_X, BASE_Y, RIGHT_CAPTURE_X, WIDTH, BOARD_OFFSET_X, MARGIN, \
+    BOARD_OFFSET_Y, HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, CAPTURED_PIECE_LIMIT, PLAYER_TURN_BOX_W, \
+    PLAYER_TURN_BOX_H, PLAYER_TURN_TEXT_H, PLAYER_TURN_TEXT_W
 from Game import Game
 
-ROW_COUNT = 8
-COLUMN_COUNT = 8
-
-# This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 80
-HEIGHT = 80
-
-# This sets the margin between each cell
-# and on the edges of the screen.
-MARGIN = 5
-CAPTURE_MARGIN = 2 # in columns
-
-BOARD_OFFSET_X = (WIDTH + MARGIN) * CAPTURE_MARGIN
-BOARD_OFFSET_Y = 0
-
-LEFT_CAPTURE_X = MARGIN + WIDTH // 2
-RIGHT_CAPTURE_X = BOARD_OFFSET_X + (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN) - WIDTH // 2
-
-BASE_Y = BOARD_OFFSET_Y + MARGIN + HEIGHT // 2
-
-# Do the math to figure out our screen dimensions
-WINDOW_WIDTH = (WIDTH + MARGIN) * (COLUMN_COUNT + CAPTURE_MARGIN * 2) + MARGIN
-WINDOW_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
-WINDOW_TITLE = "Welcome to Chess!"
 
 class GameView(arcade.View):
     """
@@ -125,8 +104,7 @@ class GameView(arcade.View):
         for piece in self.chess_board.white_taken:
             if piece is not None:
                 # create two columns of captured pieces
-                # TODO: make 12 a constant
-                if row_one_index < 12:
+                if row_one_index < CAPTURED_PIECE_LIMIT:
                     piece.center_x = LEFT_CAPTURE_X
                     piece.center_y = BASE_Y * row_one_index
                     self.white_taken_sprites.append(piece)
@@ -142,8 +120,7 @@ class GameView(arcade.View):
         for piece in self.chess_board.black_taken:
             if piece is not None:
                 # create two columns of captured pieces
-                # TODO: change 12 to a constant
-                if row_one_index < 12:
+                if row_one_index < CAPTURED_PIECE_LIMIT:
                     piece.center_x = RIGHT_CAPTURE_X
                     piece.center_y = BASE_Y * row_one_index
                     self.white_taken_sprites.append(piece)
@@ -194,15 +171,15 @@ class GameView(arcade.View):
         self.black_taken_sprites.draw()
         # draw a box with whose turn it is
         arcade.draw_rect_filled(arcade.rect.XYWH(
-            self.window.width - 50,
-            self.window.height - 40,
+            PLAYER_TURN_BOX_W,
+            PLAYER_TURN_BOX_H,
             250,
             100),
             arcade.color.WHITE)
         arcade.draw_text(
         f"{curr_turn}'s turn",
-             self.window.width - 85,
-             self.window.height - 60,
+             PLAYER_TURN_TEXT_W,
+             PLAYER_TURN_TEXT_H,
              arcade.color.BLACK,
              font_size=15,
              anchor_x='center',

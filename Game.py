@@ -5,7 +5,7 @@ Game class
 import Pawn
 from Board import Board
 import arcade
-from MyBot import BotPlayer
+
 
 
 class Game:
@@ -136,6 +136,9 @@ class Game:
                 self.winner = self.current_turn
                 print(f"CHECKMATE! {self.winner} wins!")
                 self.is_game_over = True
+                # display the game over screen
+                from GameOverView import GameOverView
+                self.gui.window.show_view(GameOverView(self.winner))
                 return True
             
         # Switch to opponents turn
