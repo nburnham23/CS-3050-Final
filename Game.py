@@ -30,6 +30,7 @@ class Game:
         # Optional: bot player
         self.bot_player = bot_class(bot_color, self.board) if bot and bot_class else None
         self.bot_move_pending = False
+        self.promotion_pending = False
 
     # Function to switch the current turn between WHITE and BLACK
     def switch_turn(self):
@@ -40,11 +41,12 @@ class Game:
 
     def trigger_promotion(self, pawn, position):
         from PromotionView import PromotionView
-
+        self.promotion_pending = True
         def receive_promoted_piece(new_piece):
             # replace pawn with new piece in board
             self.board.set_piece(position, new_piece)
             self.switch_turn()
+            self.promotion_pending = False
 
         #TODO: self.gui?
         promotion_view = PromotionView(pawn, receive_promoted_piece, self.gui, position)

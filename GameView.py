@@ -294,6 +294,8 @@ class GameView(arcade.View):
 
                         # create bot move function to be scheduled after delay
                         def bot_move_func(dt):
+                            if self.game.promotion_pending:
+                                return
                             try:
                                 moved = False
                                 while not moved:
