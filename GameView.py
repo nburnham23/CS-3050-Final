@@ -141,25 +141,25 @@ class GameView(arcade.View):
         """
         Removes moves from a piece's moveset that would leave its own king in check
         """
-        filtered_moveset = piece.moveset
+        filtered_moveset = []
+        moving_piece = piece
+        from_position = moving_piece.curr_position
         for move in piece.moveset:
-            # simulate the move to make sure that it doesn't leave the king in check
-            moving_piece = piece
-            from_position = piece.curr_position
-            to_position = move
-            captured_piece = self.chess_board.get_piece(to_position)
-            self.chess_board.set_piece(to_position, moving_piece)
+            potential_check = False
+            captured_piece = self.chess_board.get_piece(move)
+            self.chess_board.set_piece(move, moving_piece)
             self.chess_board.set_piece(from_position, None)
-            moving_piece.curr_position = to_position
+            moving_piece.curr_position = move
             self.chess_board.calculate_movesets()
             if self.game.is_in_check(self.game.current_turn):
-                # Undo move
-                self.chess_board.set_piece(from_position, moving_piece)
-                self.chess_board.set_piece(to_position, captured_piece)
-                moving_piece.curr_position = from_position
-                filtered_moveset.remove(move)
-                self.chess_board.calculate_movesets()
-        piece.moveset = filtered_moveset
+                potential_check = True
+            # Undo move
+            self.chess_board.set_piece(from_position, moving_piece)
+            self.chess_board.set_piece(move, captured_piece)
+            moving_piece.curr_position = from_position
+            self.chess_board.calculate_movesets()
+            if not potential_check:
+                filtered_moveset.append(move)
         return filtered_moveset
 
     def on_draw(self):
@@ -339,5 +339,5 @@ class GameView(arcade.View):
                 print(self.selected_square)
                 piece = self.chess_board.get_piece((row, column))
                 piece.move(self.chess_board)
-                self.possible_moves = piece.moveset
+                self.possible_moves = self.filter_moveset(piece)
                 self.selected_piece = piece

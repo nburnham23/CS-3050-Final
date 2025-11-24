@@ -64,9 +64,6 @@ class Game:
 
         # Get the piece at the clicked on position
         piece = self.board.get_piece(from_position)
-        print("from_pos:", from_position)
-        print("to_pos:", to_position)
-        print("piece moveset: ", piece.moveset)
         if piece is None:
             print("NO PIECE SELECTED")
             return False
