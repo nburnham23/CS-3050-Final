@@ -7,3 +7,12 @@ To play a game of chess, run the `Game.py` file. There are various modes to choo
 
 ## Chess Functionality
 We have implemented all the functionality of a traditional game of chess -- even en passant and castling!
+
+## Board Customization
+At the main menu, you may enter the color customization menu to choose a color combination for your board. Select
+a combination, then choose what game mode you would like the play and your board will be colored to your desire.
+
+## Playing against the bot
+If you'd like to play against our simple bot, choose the easy AI. This bot chooses its moves randomly. You should
+have an easy time beating this one. If you want more of a challenge, choose the hard AI. This bot uses a minimax
+algorithm to identify the optimal move at each turn. 

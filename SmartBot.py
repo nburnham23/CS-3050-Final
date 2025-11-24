@@ -44,6 +44,9 @@ class SmartBot:
             return random.choice(all_moves) if all_moves else (None, None, None)
 
     def minimax(self, depth, is_maximizing):
+        """
+        Evaluates a move's positional score and returns the optimal score
+        """
         if depth == 0:
             return self.evaluate_board()
 
@@ -66,6 +69,9 @@ class SmartBot:
             return best_score
 
     def get_all_moves(self, color=None):
+        """
+        Gets all possible moves that may be played by bot
+        """
         if color is None:
             color = self.color
         moves = []
