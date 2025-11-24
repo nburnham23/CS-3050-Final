@@ -95,10 +95,22 @@ class Board():
             for piece in row:
                 if piece:
                     piece.calculate_moves(self)
-
+    
+    # Checks if a square is under attack by any piece of attacking_color
+    def square_under_attack(self, position, attacking_color):
+        for r in range(8):
+            for c in range(8):
+                piece = self.get_piece((r, c))
+                if piece and piece.piece_color == attacking_color and position in piece.moveset:
+                    return True
+        return False
 
     # Check if move is valid, then update board and piece's moveset
     def move(self, piece_position, new_position):
+
+        # Ensure movesets are up to date
+        self.calculate_movesets()
+
         piece = self.get_piece(piece_position)
         if piece is None:
             print("Piece does not exist")
@@ -130,6 +142,9 @@ class Board():
 
                     kingside_rook.has_moved = True
                     kingside_rook.curr_position = rook_end
+                else:
+                    print("Kingside rook not found for castling")
+                    return False
 
             # Queenside castling
             else:
@@ -143,6 +158,9 @@ class Board():
 
                     queenside_rook.curr_position = rook_end
                     queenside_rook.has_moved = True
+                else:
+                    print("Queenside rook not found for castling")
+                    return False
 
         # Update pieces information
         piece.curr_position = new_position
