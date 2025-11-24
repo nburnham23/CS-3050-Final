@@ -30,6 +30,9 @@ class GameView(arcade.View):
         self.sprites = arcade.SpriteList()
         self.color_one = color_one
         self.color_two = color_two
+        self.last_move_start = None
+        self.last_move_end = None
+
         # append each piece sprite to the sprite list
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
@@ -149,6 +152,10 @@ class GameView(arcade.View):
                 else:
                     # cell is Chartreuse if it is selected
                     color = arcade.color.CHARTREUSE
+                
+                # Highlight last move squares
+                if (row, column) == self.last_move_start or (row, column) == self.last_move_end:
+                    color = arcade.color.BITTER_LEMON
 
                 # Do the math to figure out where the box is
                 x = BOARD_OFFSET_X + (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
@@ -217,6 +224,8 @@ class GameView(arcade.View):
                 moved = self.game.make_move(self.selected_square, self.destination_square)
                 # get the piece at the destination only if the move succeeded
                 if moved:
+                    self.last_move_start = self.selected_square
+                    self.last_move_end = self.destination_square
                     self.update_sprites()
                     self.selected_piece = self.chess_board.get_piece(self.destination_square)
                     if self.game.is_game_over:
@@ -271,6 +280,9 @@ class GameView(arcade.View):
                                     if self.bot_selected_piece:
                                         # bot moved, update its board state again and sprites
                                         moved = self.game.make_move(self.bot_selected_square, self.bot_destination_square)
+
+                                self.last_move_start = self.bot_selected_square
+                                self.last_move_end = self.bot_destination_square
 
                                 self.bot_selected_piece.set_sprite_position()
                                 self.update_sprites()
