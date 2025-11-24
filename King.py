@@ -40,11 +40,6 @@ class King(Piece):
         # Check if king is in check
         king_in_check = board.square_under_attack(self.curr_position, enemy_color)
 
-        if king_in_check:
-            print(f"{self.piece_color} King is in check")
-        else:
-            print(f"{self.piece_color} King is NOT in check")
-
         if not self.has_moved and not king_in_check:
             # Kingside castling
             kingside_rook_position = (row, BOARD_LENGTH - 1)
